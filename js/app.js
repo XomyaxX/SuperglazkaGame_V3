@@ -343,6 +343,16 @@ const BottomSheet = {
     this.gamePanelInner = document.getElementById('bsGamePanelInner');
     this.navNextBtn = document.getElementById('bsNavNextBtn');
     this.prevBtn = document.getElementById('bsPrevBtn');
+    this.gameIsland = document.getElementById('bsGameIsland');
+
+    if (this.gameIsland) {
+      this.gameIsland.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this._pendingGameType) {
+          App.startGame(this._pendingGameType);
+        }
+      });
+    }
 
     this.recalcSnapPoints();
     window.addEventListener('resize', () => this.recalcSnapPoints());
@@ -448,6 +458,17 @@ const BottomSheet = {
 
   hideNextButton() {
     if (this.navNextBtn) this.navNextBtn.classList.remove('active');
+  },
+
+  showGameIsland(gameType) {
+    this._pendingGameType = gameType;
+    if (this.gameIsland) this.gameIsland.style.display = 'flex';
+    this.expand();
+  },
+
+  hideGameIsland() {
+    this._pendingGameType = null;
+    if (this.gameIsland) this.gameIsland.style.display = 'none';
   },
 
   renderGameDock(games) {
@@ -870,6 +891,12 @@ const App = (function() {
     BottomSheet.renderGameDock(frameData?.availableGames || []);
     BottomSheet.renderGamePanel(frameData?.availableGames || []);
 
+    if (frameData?.game) {
+      BottomSheet.showGameIsland(frameData.game);
+    } else {
+      BottomSheet.hideGameIsland();
+    }
+
     AudioController.setFrameData(frameData);
     AudioController.play();
 
@@ -903,7 +930,7 @@ const App = (function() {
     const frameData = frames[currentFrameIdx];
     if (frameData && frameData.game) {
       gameAdvancePending = true;
-      startGame(frameData.game);
+      BottomSheet.showGameIsland(frameData.game);
       return;
     }
     if (currentFrameIdx < frames.length - 1) {
@@ -931,6 +958,12 @@ const App = (function() {
   // ─── GAME INTEGRATION ───
   function startGame(gameType) {
     AudioController.stop();
+    AudioController.activeTracks.video = false;
+    document.querySelectorAll('.frame.active video').forEach(v => {
+      v.pause();
+      v.currentTime = 0;
+      v.classList.remove('visible');
+    });
     if (gameType === 'runner') {
       showGameTransition('🏃 Мини-игра!', 'Помоги Суперглазке догнать Пикселька!', () => {
         if (typeof startRunnerGame === 'function') startRunnerGame();
@@ -1147,7 +1180,7 @@ const App = (function() {
       if (!episodeViewer || !episodeViewer.classList.contains('active')) return;
       if (e.key === 'ArrowRight' || e.key === ' ') {
         const frameData = frames[currentFrameIdx];
-        if (frameData && frameData.game) startGame(frameData.game);
+        if (frameData && frameData.game) BottomSheet.showGameIsland(frameData.game);
         else nextFrame();
       }
       if (e.key === 'ArrowLeft') prevFrame();
