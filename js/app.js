@@ -33,10 +33,17 @@ const AudioController = {
   timeoutId: null,
   frameData: null,
   stateChangeCallback: null,
+  savedTime: 0,
+  savedSrc: null,
+
+  _normalizeSrc(src) {
+    try { return new URL(src, location.href).href; } catch { return src; }
+  }
 
   setFrameData(frameData) {
     this.frameData = frameData;
     this.stop();
+    this.activeTracks.video = false;
     this.currentIdx = 0;
     this.buildQueue();
   },
@@ -84,6 +91,11 @@ const AudioController = {
     audio.volume = this.volume;
     audio.preload = 'auto';
     this.currentAudio = audio;
+
+    if (this.savedTime > 0 && this._normalizeSrc(item.src) === this.savedSrc) {
+      audio.currentTime = this.savedTime;
+      this.savedTime = 0;
+    }
 
     audio.onended = () => {
       this.clearTimeout();
@@ -178,10 +190,32 @@ const AudioController = {
       }
     } else {
       const wasPlaying = this.state === 'playing';
-      this.stop();
+      const wasVideo = this.state === 'video';
+      if (this.currentAudio) {
+        this.savedSrc = this._normalizeSrc(this.currentAudio.src);
+        this.savedTime = this.currentAudio.currentTime;
+      }
+      this.stopCurrent();
       this.buildQueue();
+      if (this.savedSrc) {
+        const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
+        if (newIdx !== -1) {
+          this.currentIdx = newIdx;
+        } else {
+          this.currentIdx = 0;
+          this.savedTime = 0;
+          this.savedSrc = null;
+        }
+      }
       if (wasPlaying && !this.activeTracks.video) {
-        this.play();
+        this.state = 'playing';
+        this.playNext();
+      } else if (wasVideo) {
+        this.state = 'video';
+        this.updateUI();
+      } else {
+        this.state = 'idle';
+        this.updateUI();
       }
     }
     this._notifyStateChange();
@@ -192,8 +226,6 @@ const AudioController = {
     this.stop();
     this.state = 'video';
     this.activeTracks.video = true;
-    this.activeTracks.narration = false;
-    this.activeTracks.dialogue = false;
     videoEl.muted = false;
     this._notifyStateChange();
     this.updateUI();
@@ -202,8 +234,6 @@ const AudioController = {
   onVideoEnded() {
     if (this.state === 'video') {
       this.activeTracks.video = false;
-      this.activeTracks.narration = true;
-      this.activeTracks.dialogue = true;
       this.state = 'idle';
       this.buildQueue();
       this.play();
@@ -678,10 +708,18 @@ const App = (function() {
     if (!direction) allFrames.forEach(f => f.style.transition = 'none');
 
     allFrames.forEach((f, i) => {
-      if (i !== idx) {
-        const v = f.querySelector('video');
-        if (v) { v.pause(); v.currentTime = 0; }
+      const v = f.querySelector('video');
+      const preview = f.querySelector('.frame-preview');
+      const previewInfo = f.querySelector('.frame-preview-info');
+      const playBtn = f.querySelector('.video-play-btn');
+      if (v) {
+        v.pause();
+        v.currentTime = 0;
+        v.classList.remove('visible');
       }
+      if (preview) preview.classList.remove('hidden');
+      if (previewInfo) previewInfo.classList.remove('hidden');
+      if (playBtn) playBtn.style.display = 'flex';
       f.classList.remove('active', 'above', 'below');
       if (i === idx) f.classList.add('active');
       else if (i < idx) f.classList.add('above');
@@ -700,23 +738,6 @@ const App = (function() {
     BottomSheet.setNarratorFull(frameData?.narration || '');
     BottomSheet.renderGameDock(frameData?.availableGames || []);
     BottomSheet.renderGamePanel(frameData?.availableGames || []);
-
-    const frame = allFrames[idx];
-    if (frame) {
-      const preview = frame.querySelector('.frame-preview');
-      const previewInfo = frame.querySelector('.frame-preview-info');
-      const playBtn = frame.querySelector('.video-play-btn');
-      const video = frame.querySelector('video');
-      if (preview) preview.classList.remove('hidden');
-      if (previewInfo) previewInfo.classList.remove('hidden');
-      if (playBtn) playBtn.style.display = 'flex';
-      if (video) {
-        video.classList.remove('visible');
-        video.pause();
-        video.currentTime = 0;
-        video.volume = AudioController.volume;
-      }
-    }
 
     AudioController.setFrameData(frameData);
     AudioController.play();
