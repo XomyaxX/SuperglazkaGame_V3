@@ -33,6 +33,7 @@ const AudioController = {
   timeoutId: null,
   frameData: null,
   stateChangeCallback: null,
+  audioStartCallback: null,
   savedTime: 0,
   savedSrc: null,
 
@@ -52,6 +53,10 @@ const AudioController = {
 
   onStateChange(fn) {
     this.stateChangeCallback = fn;
+  },
+
+  onAudioStart(fn) {
+    this.audioStartCallback = fn;
   },
 
   _notifyStateChange() {
@@ -93,6 +98,10 @@ const AudioController = {
     audio.volume = this.volume;
     audio.preload = 'auto';
     this.currentAudio = audio;
+
+    if (this.audioStartCallback) {
+      this.audioStartCallback(this.currentAudio);
+    }
 
     if (this.savedTime > 0 && this._normalizeSrc(item.src) === this.savedSrc) {
       audio.currentTime = this.savedTime;
@@ -700,6 +709,123 @@ const App = (function() {
     checkFrameEnd();
   }
 
+  // ─── SUBTITLE SYNC ───
+  function syncSubtitles(audio) {
+    if (!audio) return;
+    const frameData = AudioController.frameData;
+    if (!frameData?.audioSrc || !audio.src.includes(frameData.audioSrc)) return;
+
+    if (subtitleSyncCleanup) { subtitleSyncCleanup(); subtitleSyncCleanup = null; }
+    SubtitleOverlay.clear();
+
+    const narrationText = frameData.narration || '';
+    if (!narrationText) return;
+
+    const lines = splitLines(narrationText, 70);
+    const lineCount = lines.length;
+    let currentLineIdx = -1;
+
+    const updateLine = (lineIdx) => {
+      if (lineIdx === currentLineIdx) return;
+      currentLineIdx = lineIdx;
+      SubtitleOverlay.setText(lines[lineIdx]);
+    };
+
+    const fallbackTypewriter = () => {
+      let idx = 0;
+      const delay = Math.max(300, Math.min(800, 1000 / 2.2));
+      typeWriterInterval = setInterval(() => {
+        if (idx < lineCount) {
+          updateLine(idx);
+          idx++;
+        } else {
+          stopTypeWriter();
+          onTypewriterEnd();
+        }
+      }, delay);
+    };
+
+    const startSync = () => {
+      const duration = audio.duration;
+      if (!duration || !isFinite(duration)) {
+        fallbackTypewriter();
+        return;
+      }
+
+      const onTimeUpdate = () => {
+        const progress = audio.currentTime / duration;
+        const lineIdx = Math.min(lineCount - 1, Math.floor(progress * lineCount));
+        updateLine(lineIdx);
+      };
+
+      const onEnded = () => {
+        if (subtitleSyncCleanup) { subtitleSyncCleanup(); subtitleSyncCleanup = null; }
+        updateLine(lineCount - 1);
+        onTypewriterEnd();
+      };
+
+      audio.addEventListener('timeupdate', onTimeUpdate);
+      audio.addEventListener('ended', onEnded);
+      subtitleSyncCleanup = () => {
+        audio.removeEventListener('timeupdate', onTimeUpdate);
+        audio.removeEventListener('ended', onEnded);
+      };
+
+      onTimeUpdate();
+    };
+
+    if (audio.readyState >= 1) {
+      startSync();
+    } else {
+      const onMeta = () => {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        audio.removeEventListener('error', onErr);
+        startSync();
+      };
+      const onErr = () => {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        audio.removeEventListener('error', onErr);
+        fallbackTypewriter();
+      };
+      audio.addEventListener('loadedmetadata', onMeta);
+      audio.addEventListener('error', onErr);
+      subtitleSyncCleanup = () => {
+        audio.removeEventListener('loadedmetadata', onMeta);
+        audio.removeEventListener('error', onErr);
+      };
+    }
+  }
+
+  function fallbackTypewriter() {
+    const frameData = AudioController.frameData;
+    const narrationText = frameData?.narration || '';
+    if (!narrationText) {
+      typewriterEndedForFrame = true;
+      return;
+    }
+    const lines = splitLines(narrationText, 70);
+    const lineCount = lines.length;
+    let currentLineIdx = -1;
+
+    const updateLine = (lineIdx) => {
+      if (lineIdx === currentLineIdx) return;
+      currentLineIdx = lineIdx;
+      SubtitleOverlay.setText(lines[lineIdx]);
+    };
+
+    let idx = 0;
+    const delay = Math.max(300, Math.min(800, 1000 / 2.2));
+    typeWriterInterval = setInterval(() => {
+      if (idx < lineCount) {
+        updateLine(idx);
+        idx++;
+      } else {
+        stopTypeWriter();
+        onTypewriterEnd();
+      }
+    }, delay);
+  }
+
   // ─── SHOW FRAME ───
   function showFrame(idx, direction) {
     const allFrames = document.querySelectorAll('.frame');
@@ -749,81 +875,9 @@ const App = (function() {
 
     const narrationText = frameData?.narration || '';
     if (narrationText) {
-      const lines = splitLines(narrationText, 70);
-      const lineCount = lines.length;
-      let currentLineIdx = -1;
-
-      const updateLine = (lineIdx) => {
-        if (lineIdx === currentLineIdx) return;
-        currentLineIdx = lineIdx;
-        SubtitleOverlay.setText(lines[lineIdx]);
-      };
-
-      const fallbackTypewriter = () => {
-        let idx = 0;
-        const delay = Math.max(300, Math.min(800, 1000 / 2.2));
-        typeWriterInterval = setInterval(() => {
-          if (idx < lineCount) {
-            updateLine(idx);
-            idx++;
-          } else {
-            stopTypeWriter();
-            onTypewriterEnd();
-          }
-        }, delay);
-      };
-
       const narrationAudio = AudioController.currentAudio;
       if (narrationAudio && frameData?.audioSrc && narrationAudio.src.includes(frameData.audioSrc)) {
-        const startSync = () => {
-          const duration = narrationAudio.duration;
-          if (!duration || !isFinite(duration)) {
-            fallbackTypewriter();
-            return;
-          }
-
-          const onTimeUpdate = () => {
-            const progress = narrationAudio.currentTime / duration;
-            const lineIdx = Math.min(lineCount - 1, Math.floor(progress * lineCount));
-            updateLine(lineIdx);
-          };
-
-          const onEnded = () => {
-            if (subtitleSyncCleanup) { subtitleSyncCleanup(); subtitleSyncCleanup = null; }
-            updateLine(lineCount - 1);
-            onTypewriterEnd();
-          };
-
-          narrationAudio.addEventListener('timeupdate', onTimeUpdate);
-          narrationAudio.addEventListener('ended', onEnded);
-          subtitleSyncCleanup = () => {
-            narrationAudio.removeEventListener('timeupdate', onTimeUpdate);
-            narrationAudio.removeEventListener('ended', onEnded);
-          };
-
-          onTimeUpdate();
-        };
-
-        if (narrationAudio.readyState >= 1) {
-          startSync();
-        } else {
-          const onMeta = () => {
-            narrationAudio.removeEventListener('loadedmetadata', onMeta);
-            narrationAudio.removeEventListener('error', onErr);
-            startSync();
-          };
-          const onErr = () => {
-            narrationAudio.removeEventListener('loadedmetadata', onMeta);
-            narrationAudio.removeEventListener('error', onErr);
-            fallbackTypewriter();
-          };
-          narrationAudio.addEventListener('loadedmetadata', onMeta);
-          narrationAudio.addEventListener('error', onErr);
-          subtitleSyncCleanup = () => {
-            narrationAudio.removeEventListener('loadedmetadata', onMeta);
-            narrationAudio.removeEventListener('error', onErr);
-          };
-        }
+        syncSubtitles(narrationAudio);
       } else {
         fallbackTypewriter();
       }
@@ -1048,6 +1102,7 @@ const App = (function() {
   function init() {
     initSwipe();
     BottomSheet.init();
+    AudioController.onAudioStart((audio) => syncSubtitles(audio));
 
     const subOverlay = document.getElementById('subtitleOverlay');
     if (subOverlay) {
