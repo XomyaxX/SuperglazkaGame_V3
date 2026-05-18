@@ -573,8 +573,6 @@ const App = (function() {
 
   const mainMenu = document.getElementById('main-menu');
   const episodeViewer = document.getElementById('episode-viewer');
-  const splash = document.getElementById('splash');
-  const startBtn = document.getElementById('startBtn');
   const frameContainer = document.getElementById('frame-container');
 
   // ─── TYPEWRITER ───
@@ -1049,19 +1047,6 @@ const App = (function() {
       cinemaToggleBtn.addEventListener('click', () => {
         episodeViewer.classList.toggle('ui-hidden');
       });
-    }
-
-    if (startBtn && splash) {
-      startBtn.addEventListener('click', () => {
-        try {
-          const AC = window.AudioContext || window.webkitAudioContext;
-          if (AC) { const ac = new AC(); if (ac.state === 'suspended') ac.resume(); }
-        } catch(e) {}
-        splash.classList.add('hide');
-        setTimeout(() => { splash.style.display = 'none'; }, 600);
-        if (mainMenu) mainMenu.style.display = 'flex';
-      });
-      startBtn.addEventListener('touchend', (e) => { e.preventDefault(); startBtn.click(); }, {passive: false});
     }
 
     document.querySelectorAll('.chapter-card').forEach(card => {
