@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0618">
+<meta name="description" content="Суперглазка — интерактивный образовательный комикс о здоровье глаз с мини-играми для детей. Спаси планету Видеаль вместе с супергероиней!">
+<title>Суперглазка — Интерактивный комикс о здоровье глаз</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════════════════════ -->
+<nav class="land-nav" id="landNav">
+  <div class="land-logo">👁️ СУПЕРГЛАЗКА</div>
+  <div class="land-nav-links">
+    <a href="#about">О комиксе</a>
+    <a href="#features">Особенности</a>
+    <a href="#episodes">Эпизоды</a>
+    <a href="#characters">Герои</a>
+    <a href="app.html" class="land-nav-cta">▶ Начать</a>
+  </div>
+  <button class="land-nav-toggle" id="navToggle" aria-label="Меню">☰</button>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="land-nav-mobile" id="navMobile">
+  <button class="land-nav-mobile-close" id="navClose" aria-label="Закрыть">✕</button>
+  <a href="#about" class="nav-mobile-link">О комиксе</a>
+  <a href="#features" class="nav-mobile-link">Особенности</a>
+  <a href="#episodes" class="nav-mobile-link">Эпизоды</a>
+  <a href="#characters" class="nav-mobile-link">Герои</a>
+  <a href="app.html" class="land-nav-cta">▶ Начать</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-hero" id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="land-hero-content">
+    <div class="land-hero-badge">✨ Новая глава уже доступна</div>
+    <h1 class="land-hero-title">СУПЕРГЛАЗКА</h1>
+    <p class="land-hero-sub">Интерактивный комикс о здоровье глаз. Спаси планету Видеаль вместе с супергероиней!</p>
+    <div class="land-hero-btns">
+      <a href="app.html" class="land-btn-primary">▶ Начать приключение</a>
+      <a href="#about" class="land-btn-secondary">Узнать больше</a>
+    </div>
+  </div>
+  <a href="#about" class="land-hero-scroll">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    <span>Листай вниз</span>
+  </a>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ABOUT SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-section land-about" id="about">
+  <h2 class="land-section-title">О комиксе</h2>
+  <p class="land-section-sub">Погружение в волшебный мир, где здоровье глаз — главная суперсила</p>
+  <div class="land-about-card reveal">
+    <p>Далеко-далеко во Вселенной существует планета <span class="land-about-highlight">Видеаль</span> — мир, где каждый житель посвящает себя защите зрения детей на Земле. Но однажды планету угрожает поглотить Великая Тьма...</p>
+    <p>Из древнего ритуала появляется девочка с огромными голубыми глазами — <span class="land-about-highlight">Суперглазка</span>. В красном костюме с белым плащом она отправляется в путешествие, чтобы спасти Видеаль и научить детей заботиться о своих глазах.</p>
+    <p>Вместе с верными друзьями — Ваней, Мудрым Хрусталиком и Советником — она проходит через увлекательные приключения, мини-игры и тренировки для глаз. Каждый кадр озвучен, каждый выбор имеет значение!</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FEATURES SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-section land-features" id="features">
+  <h2 class="land-section-title">Особенности</h2>
+  <p class="land-section-sub">Что делает Суперглазку уникальным проектом для детей</p>
+  <div class="land-features-grid">
+    <div class="land-feature-card reveal">
+      <div class="land-feature-icon">📖</div>
+      <div class="land-feature-title">Интерактивный комикс</div>
+      <div class="land-feature-desc">Каждый кадр — это полноэкранная панель с диалогами, озвучкой и видеовставками. Листай как сторис!</div>
+    </div>
+    <div class="land-feature-card reveal">
+      <div class="land-feature-icon">🎮</div>
+      <div class="land-feature-title">Мини-игры</div>
+      <div class="land-feature-desc">Тренируй глаза вместе с героями: бегалка, гимнастика, моргание и битва со злодеем Ленивусом!</div>
+    </div>
+    <div class="land-feature-card reveal">
+      <div class="land-feature-icon">🎧</div>
+      <div class="land-feature-title">Озвучка</div>
+      <div class="land-feature-desc">Профессиональная аудионаррация каждого кадра. Слушай историю, как аудиоспектакль!</div>
+    </div>
+    <div class="land-feature-card reveal">
+      <div class="land-feature-icon">🎬</div>
+      <div class="land-feature-title">Видео</div>
+      <div class="land-feature-desc">AI-генерированные видеовставки оживляют кадры комикса и погружают в атмосферу.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EPISODES SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-section land-episodes" id="episodes">
+  <h2 class="land-section-title">Эпизоды</h2>
+  <p class="land-section-sub">Выбери, с чего начать своё путешествие</p>
+  <div class="land-episodes-grid">
+    <div class="land-episode-card reveal">
+      <img class="land-episode-img" src="assets/episodes/episode-01/cover.png" alt="Эпизод 1 — Рождение героини" loading="lazy">
+      <div class="land-episode-body">
+        <div class="land-episode-num">Эпизод 1</div>
+        <div class="land-episode-name">Рождение героини</div>
+        <div class="land-episode-desc">Планета Видеаль в опасности. Древний ритуал призывает защитницу — девочку с суперсилой зрения.</div>
+        <a href="app.html" class="land-episode-btn">▶ Читать</a>
+      </div>
+    </div>
+    <div class="land-episode-card reveal">
+      <img class="land-episode-img" src="assets/episodes/episode-02/cover.png" alt="Эпизод 2 — Кто я?" loading="lazy">
+      <div class="land-episode-body">
+        <div class="land-episode-num">Эпизод 2</div>
+        <div class="land-episode-name">Кто я?</div>
+        <div class="land-episode-desc">Суперглазка узнаёт о своей миссии. Тренировки, первые испытания и встреча с тьмой.</div>
+        <a href="app.html" class="land-episode-btn">▶ Читать</a>
+      </div>
+    </div>
+    <div class="land-episode-card locked reveal">
+      <div class="land-episode-badge">Скоро</div>
+      <img class="land-episode-img" src="assets/episodes/episode-03/cover.png" alt="Эпизод 3 — Скоро" loading="lazy" style="filter: grayscale(0.6);">
+      <div class="land-episode-body">
+        <div class="land-episode-num">Эпизод 3</div>
+        <div class="land-episode-name">Великая битва</div>
+        <div class="land-episode-desc">Финальное противостояние с Великой Тьмой. Всё будущее планеты Видеаль в твоих руках!</div>
+        <div class="land-episode-lock">🔒 Скоро...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CHARACTERS SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-section land-characters" id="characters">
+  <h2 class="land-section-title">Герои</h2>
+  <p class="land-section-sub">Познакомься с главными персонажами комикса</p>
+  <div class="land-char-grid">
+    <div class="land-char-card reveal">
+      <div class="land-char-avatar">
+        <img src="assets/shared/characters/superglazka.png" alt="Суперглазка">
+      </div>
+      <div class="land-char-name">Суперглазка</div>
+      <div class="land-char-role">Главная героиня</div>
+      <div class="land-char-desc">Девочка из древнего ритуала с суперсилой зрения. В красном костюме с белым плащом защищает детей.</div>
+    </div>
+    <div class="land-char-card reveal">
+      <div class="land-char-avatar">
+        <img src="assets/shared/characters/vanya.png" alt="Ваня">
+      </div>
+      <div class="land-char-name">Ваня</div>
+      <div class="land-char-role">Верный друг</div>
+      <div class="land-char-desc">Земной мальчик, который первым поверил в Суперглазку. Помогает ей в миссии спасти глаза детей.</div>
+    </div>
+    <div class="land-char-card reveal">
+      <div class="land-char-avatar">
+        <img src="assets/shared/characters/wise-crystal.png" alt="Мудрый Хрусталик">
+      </div>
+      <div class="land-char-name">Мудрый Хрусталик</div>
+      <div class="land-char-role">Правитель Видеаля</div>
+      <div class="land-char-desc">Мудрый правитель планеты Видеаль. Провёл ритуал Призыва и стал наставником Суперглазки.</div>
+    </div>
+    <div class="land-char-card reveal">
+      <div class="land-char-avatar">
+        <img src="assets/shared/characters/lenivus.png" alt="Ленивус">
+      </div>
+      <div class="land-char-name">Ленивус</div>
+      <div class="land-char-role">Главный злодей</div>
+      <div class="land-char-desc">Великое Зло, угрожающее поглотить Видеаль. Его слабость — активные и здоровые глаза!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CTA SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-cta" id="cta">
+  <h2 class="land-cta-title">Готов к приключению?</h2>
+  <p class="land-cta-sub">Начни читать комикс прямо сейчас — бесплатно и без регистрации</p>
+  <a href="app.html" class="land-btn-primary" style="font-size: 20px; padding: 20px 48px;">▶ Начать чтение</a>
+  <div class="land-cta-badges">
+    <div class="land-cta-badge">✅ Бесплатно</div>
+    <div class="land-cta-badge">👶 Для детей 6–12 лет</div>
+    <div class="land-cta-badge">📱 Работает на телефоне</div>
+    <div class="land-cta-badge">🎮 С мини-играми</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════════════════ -->
+<footer class="land-footer">
+  <p>Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · Суперглазка · 2025</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+/* ─── PARTICLES ─── */
+(function() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let w, h;
+
+  function resize() {
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+
+  function createParticles() {
+    particles = [];
+    const count = Math.min(Math.floor(w * h / 12000), 80);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 2 + 0.5,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3,
+        alpha: Math.random() * 0.5 + 0.2,
+        color: Math.random() > 0.5 ? '168, 85, 247' : '6, 182, 212'
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + p.color + ',' + p.alpha + ')';
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0 || p.x > w) p.dx *= -1;
+      if (p.y < 0 || p.y > h) p.dy *= -1;
+    });
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = 'rgba(168, 85, 247,' + (0.08 * (1 - dist / 120)) + ')';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); createParticles(); });
+  resize();
+  createParticles();
+  draw();
+})();
+
+/* ─── NAV SCROLL EFFECT ─── */
+const nav = document.getElementById('landNav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ─── MOBILE NAV ─── */
+const navToggle = document.getElementById('navToggle');
+const navClose = document.getElementById('navClose');
+const navMobile = document.getElementById('navMobile');
+const navMobileLinks = document.querySelectorAll('.nav-mobile-link');
+
+navToggle.addEventListener('click', () => navMobile.classList.add('open'));
+navClose.addEventListener('click', () => navMobile.classList.remove('open'));
+navMobileLinks.forEach(link => {
+  link.addEventListener('click', () => navMobile.classList.remove('open'));
+});
+
+/* ─── SCROLL REVEAL ─── */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>

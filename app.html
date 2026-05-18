@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0618">
+<title>Суперглазка — Интерактивный комикс</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SPLASH SCREEN
+     ═══════════════════════════════════════════════════════════ -->
+<div id="splash">
+  <div class="sp-title">СУПЕРГЛАЗКА</div>
+  <div class="sp-sub">Развлекательно-образовательный<br>интерактивный комикс</div>
+  <button class="sp-btn" id="startBtn">▶ Начать</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN MENU
+     ═══════════════════════════════════════════════════════════ -->
+<div id="main-menu" style="display:none">
+  <button class="profile-btn" title="Профиль">
+    <span>👤</span>
+    <span class="profile-coins-val">0</span>
+    <span>🪙</span>
+  </button>
+
+  <div class="menu-title">СУПЕРГЛАЗКА</div>
+  <div class="menu-sub">Интерактивный комикс</div>
+
+  <div class="chapters-grid">
+    <!-- Episode 1 -->
+    <div class="chapter-card" data-episode="1">
+      <svg class="chapter-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" stroke="url(#grad1)" stroke-width="2" fill="rgba(168,85,247,0.1)"/>
+        <ellipse cx="50" cy="50" rx="28" ry="20" stroke="url(#grad1)" stroke-width="2.5" fill="rgba(6,182,212,0.15)"/>
+        <circle cx="50" cy="50" r="10" fill="url(#grad1)"/>
+        <circle cx="53" cy="47" r="3" fill="white" opacity="0.8"/>
+        <defs>
+          <linearGradient id="grad1" x1="0" y1="0" x2="100" y2="100">
+            <stop offset="0%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#06b6d4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="chapter-num">Эпизод 1</div>
+      <div class="chapter-name">Рождение героини</div>
+    </div>
+
+    <!-- Episode 2 -->
+    <div class="chapter-card" data-episode="2">
+      <svg class="chapter-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" stroke="url(#grad2)" stroke-width="2" fill="rgba(6,182,212,0.1)"/>
+        <ellipse cx="50" cy="50" rx="28" ry="20" stroke="url(#grad2)" stroke-width="2.5" fill="rgba(168,85,247,0.15)"/>
+        <circle cx="50" cy="50" r="10" fill="url(#grad2)"/>
+        <circle cx="53" cy="47" r="3" fill="white" opacity="0.8"/>
+        <defs>
+          <linearGradient id="grad2" x1="0" y1="0" x2="100" y2="100">
+            <stop offset="0%" stop-color="#06b6d4"/>
+            <stop offset="100%" stop-color="#a855f7"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="chapter-num">Эпизод 2</div>
+      <div class="chapter-name">Кто я?</div>
+    </div>
+
+    <!-- Episode 3 (locked) -->
+    <div class="chapter-card locked" data-episode="3">
+      <svg class="chapter-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="rgba(255,255,255,0.03)"/>
+        <ellipse cx="50" cy="50" rx="28" ry="20" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" fill="none"/>
+        <circle cx="50" cy="50" r="10" fill="rgba(255,255,255,0.2)"/>
+        <text x="50" y="78" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10" font-family="Nunito" font-weight="800">🔒</text>
+      </svg>
+      <div class="chapter-num">Эпизод 3</div>
+      <div class="chapter-name">Скоро...</div>
+      <div class="chapter-badge">Заблокировано</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     EPISODE VIEWER
+     ═══════════════════════════════════════════════════════════ -->
+<div id="episode-viewer">
+  <!-- ═══════════════════════════════════════════════════════════
+       TOP BAR
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="frame-top-bar" id="frameTopBar">
+    <button class="back-btn" id="viewerBackBtn" title="Назад в меню">←</button>
+    <div class="progress-dots" id="progressDots"></div>
+    <button class="cinema-toggle-btn" id="cinemaToggleBtn" title="Скрыть/показать интерфейс">👁️</button>
+    <button class="profile-btn" id="viewerProfileBtn" title="Профиль">
+      <span>👤</span>
+      <span class="profile-coins-val">0</span>
+      <span>🪙</span>
+    </button>
+  </div>
+
+  <!-- Dynamic frame container -->
+  <div id="frame-container"></div>
+
+  <!-- Floating subtitle overlay (above bottom sheet, below top bar) -->
+  <div class="subtitle-overlay" id="subtitleOverlay">
+    <span class="sub-line" id="subLine"></span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       BOTTOM SHEET
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="bs-backdrop" id="bsBackdrop"></div>
+  <div class="bottom-sheet collapsed" id="bottomSheet">
+    <div class="bs-drag-handle" id="bsDragHandle"></div>
+    <div class="bs-subtitle" id="bsSubtitle">
+      <span class="bs-subtitle-icon" id="bsSubtitleIcon">🎙️</span>
+      <span class="bs-subtitle-text" id="bsSubtitleText"></span>
+    </div>
+    <div class="bs-controls" id="bsControls">
+      <button class="bs-audio-toggle" id="bsAudioToggle" title="Аудио меню">🔊</button>
+    </div>
+    <div class="bs-expanded" id="bsExpanded">
+      <div class="bs-narrator-full" id="bsNarratorFull"></div>
+
+      <div class="bs-audio-panel" id="bsAudioPanel">
+        <div class="bs-section-title">🎵 Аудио</div>
+        <div class="bs-track-row" id="bsTrackNarration">
+          <div class="bs-track-info">
+            <div class="bs-track-icon" id="bsIconNarration">🎙️</div>
+            <div class="bs-track-meta">
+              <div class="bs-track-name">Рассказчик</div>
+              <div class="bs-track-status" id="bsStatusNarration">Выкл</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="bsToggleNarration"></div>
+        </div>
+        <div class="bs-track-row" id="bsTrackDialogue">
+          <div class="bs-track-info">
+            <div class="bs-track-icon" id="bsIconDialogue">🗣️</div>
+            <div class="bs-track-meta">
+              <div class="bs-track-name">Диалоги</div>
+              <div class="bs-track-status" id="bsStatusDialogue">Выкл</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="bsToggleDialogue"></div>
+        </div>
+        <div class="bs-track-row" id="bsTrackVideo">
+          <div class="bs-track-info">
+            <div class="bs-track-icon" id="bsIconVideo">🎬</div>
+            <div class="bs-track-meta">
+              <div class="bs-track-name">Видео</div>
+              <div class="bs-track-status" id="bsStatusVideo">Выкл</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="bsToggleVideo"></div>
+        </div>
+        <div class="bs-volume-row">
+          <span class="vol-icon">🔉</span>
+          <input type="range" class="bs-volume-slider" id="bsVolumeSlider" min="0" max="100" value="80">
+          <span class="vol-icon">🔊</span>
+        </div>
+      </div>
+
+      <div class="bs-game-panel" id="bsGamePanel">
+        <div class="bs-section-title">🎮 Мини-игры</div>
+        <div id="bsGamePanelInner"></div>
+      </div>
+
+      <div class="bs-nav">
+        <button class="bs-nav-btn" id="bsPrevBtn">◀ Назад</button>
+        <button class="bs-nav-btn" id="bsNavNextBtn">Далее ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GAME TRANSITION OVERLAY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="game-transition-overlay">
+  <div class="tr-badge"><span style="font-size:50px">🎮</span></div>
+  <div class="gt-title tr-title">Мини-игра!</div>
+  <div class="gt-sub tr-sub">Готовься к испытанию...</div>
+  <button class="gt-btn tr-btn">Играть! 🚀</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     RUNNER GAME OVERLAYS (legacy compatibility)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="tr-overlay-runner">
+  <div class="tr-badge"><span style="font-size:50px">🏃</span></div>
+  <div class="tr-title">Мини-игра!</div>
+  <div class="tr-sub">Помоги Суперглазке догнать Пикселька на столе!<br>Уворачивайся от посуды.</div>
+  <button class="tr-btn" onclick="startRunnerGame()">Играть! 🚀</button>
+</div>
+
+<div class="overlay" id="game-overlay-runner">
+  <div class="game-header">
+    <div class="score-pill"><span class="score-lbl">Уровень</span><span class="score-val" id="runner-time">1</span></div>
+    <div class="lives-val" id="runner-lives">❤️❤️❤️</div>
+  </div>
+  <canvas id="runner-canvas" width="360" height="480"></canvas>
+  <div class="runner-controls">
+    <div class="runner-hint">👆 ТАП = прыжок · Два тапа = двойной прыжок</div>
+    <div class="runner-stats">
+      <div class="runner-stat"><div class="runner-stat-val">💚</div><div class="runner-stat-lbl">+жизнь</div></div>
+      <div class="runner-stat"><div class="runner-stat-val">⭐</div><div class="runner-stat-lbl">медленно</div></div>
+      <div class="runner-stat"><div class="runner-stat-val">🛡️</div><div class="runner-stat-lbl">щит</div></div>
+    </div>
+    <button onclick="closeRunner(true)" style="background:none;border:1px solid rgba(255,255,255,.2);border-radius:30px;color:rgba(255,255,255,.5);padding:10px 28px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Пропустить</button>
+  </div>
+</div>
+
+<div class="overlay" id="runner-stats-overlay">
+  <div class="stats-title">🏃 Погоня завершена!</div>
+  <div class="win-stars" style="margin:10px 0;">
+    <span class="win-star" id="runner-star-1">⭐</span>
+    <span class="win-star" id="runner-star-2">⭐</span>
+    <span class="win-star" id="runner-star-3">⭐</span>
+  </div>
+  <div class="stats-card">
+    <div class="stats-time" id="runner-stats-time">⏱️ Время: 0:00</div>
+    <div class="stats-section"><h3>❤️ Жизни</h3><div class="stat-row"><span>Осталось жизней:</span><span class="stat-value" id="runner-stats-lives">3/3</span></div></div>
+    <div class="stats-section"><h3>💎 Бонусы</h3><div class="stat-row"><span>Собрано:</span><span class="stat-value" id="runner-stats-bonuses">0</span></div></div>
+    <div class="stats-section"><h3>🎯 Результат</h3><div class="stat-row"><span>Дистанция:</span><span class="stat-value">2000м</span></div><div class="stat-row"><span>Статус:</span><span class="stat-value" id="runner-stats-status">Победа!</span></div></div>
+    <div class="total-score" id="runner-total-score">🏆 Оценка: ⭐⭐⭐</div>
+  </div>
+  <button class="tr-btn" onclick="showRunnerRegistration()" style="margin-top:20px;">Продолжить ➜</button>
+</div>
+
+<div class="overlay" id="runner-registration-overlay">
+  <div class="reg-title">🌟 Стань частью команды!</div>
+  <div class="reg-card">
+    <div class="reg-description">Зарегистрируйся, чтобы:<br>✨ Сохранить свой прогресс<br>🏅 Получать награды за победы<br>📖 Открыть следующую серию комикса<br>🎮 Участвовать в соревнованиях</div>
+    <form class="reg-form" id="runner-reg-form">
+      <input type="text" class="reg-input" id="runner-reg-nickname" placeholder="Придумай никнейм" required maxlength="20">
+      <input type="email" class="reg-input" id="runner-reg-email" placeholder="Email родителя" required>
+      <label class="reg-checkbox"><input type="checkbox" id="runner-reg-confirm" required><span>Родители разрешили играть</span></label>
+      <button type="submit" class="tr-btn" style="width:100%;">🚀 Зарегистрироваться</button>
+    </form>
+    <button class="reg-skip" onclick="skipRunnerRegistration()">Продолжить без регистрации →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GYM GAME OVERLAYS (legacy compatibility)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="tr-overlay-gym">
+  <div class="tr-badge"><span style="font-size:50px">⚔️</span></div>
+  <div class="tr-title">Ваня против Ленивуса!</div>
+  <div class="tr-sub">Помоги Ване победить Ленивуса!<br>Используй три супер-атаки: Лазер, Прицел и Слёзы.</div>
+  <button class="tr-btn" onclick="startGymGame()">В бой! 🚀</button>
+</div>
+
+<div class="overlay" id="game-overlay-gym">
+  <video class="boss-bg-video" id="boss-video" autoplay muted loop playsinline preload="auto">
+    <source src="assets/videos/lenivus.mp4" type="video/mp4">
+    <img src="assets/shared/characters/lenivus.png" class="boss-bg-video" alt="Ленивус">
+  </video>
+  <div class="boss-overlay-darken"></div>
+  <div class="gym-header-new">
+    <div class="boss-hp-display"><span class="boss-label">👁️ ЛЕНИВУС</span><div class="boss-hp-bar-large"><div class="boss-hp-fill-large" id="boss-hp-fill" style="width:100%"></div></div></div>
+    <div class="rays-counter-new"><span class="rays-label">Лучики</span><span class="rays-icons" id="gym-rays">⚪⚪⚪</span></div>
+  </div>
+  <div class="player-vanya" id="player-vanya"><img src="assets/shared/characters/vanya.png" alt="Ваня"><div class="player-charge-indicator" id="player-charge"></div></div>
+  <div class="attack-effects" id="attack-effects"></div>
+  <div class="phase-controls" id="phase-container"></div>
+  <button class="skip-btn" onclick="closeGym(true)">Пропустить ▸</button>
+</div>
+
+<div class="overlay" id="win-overlay">
+  <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
+  <div class="win-title" id="win-title">Отлично!</div>
+  <div class="win-sub" id="win-sub">Ты справился!<br>Продолжение в комиксе...</div>
+  <button class="win-btn" onclick="closeWinContinue()">Продолжить ➜</button>
+</div>
+
+<div class="overlay" id="stats-overlay">
+  <div class="stats-title">🎉 Отличная работа!</div>
+  <div class="stats-card">
+    <div class="stats-time" id="stats-time">⏱️ Время: 0:00</div>
+    <div class="stats-section"><h3>⚡ Солнечный Луч</h3><div class="stat-row"><span>Попаданий:</span><span class="stat-value" id="stats-p1-hits">0/8</span></div><div class="stat-row"><span>Точность:</span><span class="stat-value" id="stats-p1-acc">0%</span></div></div>
+    <div class="stats-section"><h3>🎯 Точный Прицел</h3><div class="stat-row"><span>Попаданий:</span><span class="stat-value" id="stats-p2-hits">0/5</span></div><div class="stat-row"><span>Среднее время наведения:</span><span class="stat-value" id="stats-p2-time">0с</span></div></div>
+    <div class="stats-section"><h3>💧 Слезный Водопад</h3><div class="stat-row"><span>Водопадов:</span><span class="stat-value" id="stats-p3-hits">0/4</span></div><div class="stat-row"><span>Всего морганий:</span><span class="stat-value" id="stats-p3-blinks">0</span></div></div>
+    <div class="total-score" id="stats-score">🏆 Общий счёт: 0</div>
+  </div>
+  <button class="tr-btn" onclick="showRegistration()" style="margin-top:20px;">Продолжить ➜</button>
+</div>
+
+<div class="overlay" id="registration-overlay">
+  <div class="reg-title">🌟 Стань частью команды!</div>
+  <div class="reg-card">
+    <div class="reg-description">Зарегистрируйся, чтобы:<br>✨ Сохранить свой прогресс<br>🏅 Получать награды за тренировки<br>📖 Открыть следующую серию комикса<br>🎮 Участвовать в соревнованиях</div>
+    <form class="reg-form" id="reg-form">
+      <input type="text" class="reg-input" id="reg-nickname" placeholder="Придумай никнейм" required maxlength="20">
+      <input type="email" class="reg-input" id="reg-email" placeholder="Email родителя" required>
+      <label class="reg-checkbox"><input type="checkbox" id="reg-confirm" required><span>Родители разрешили играть</span></label>
+      <button type="submit" class="tr-btn" style="width:100%;">🚀 Зарегистрироваться</button>
+    </form>
+    <button class="reg-skip" onclick="skipRegistration()">Продолжить без регистрации →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PROFILE MODAL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="profile-modal">
+  <div class="profile-card">
+    <button class="profile-modal-close">✕</button>
+    <div class="profile-avatar">👤</div>
+    <input type="text" class="profile-nickname" value="Игрок" maxlength="20">
+    <div class="profile-coins-big">0 <span>🪙</span></div>
+    <div class="profile-section-title">📖 Эпизоды</div>
+    <div class="profile-episodes"></div>
+    <div class="profile-section-title">🎮 Мини-игры</div>
+    <div class="profile-games"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     BLINK GAME OVERLAY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="game-overlay-blink">
+  <div class="game-header">
+    <div class="score-pill"><span class="score-lbl">Раунд</span><span class="score-val" id="blink-round">1/3</span></div>
+    <div class="score-pill"><span class="score-lbl">Время</span><span class="score-val" id="blink-timer">5</span></div>
+  </div>
+  <canvas id="blink-canvas" width="400" height="300"></canvas>
+  <div class="blink-controls">
+    <div class="blink-hint" id="blink-hint">Кликай по экрану, чтобы моргать!</div>
+    <div class="blink-progress-bar"><div class="blink-progress-fill" id="blink-progress" style="width:0%"></div></div>
+  </div>
+  <button class="skip-btn" onclick="closeBlink(true)">Пропустить ▸</button>
+</div>
+
+<div class="overlay" id="blink-win-overlay">
+  <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
+  <div class="win-title">Молодец!</div>
+  <div class="win-sub">Глаза в порядке!<br>+100 🪙</div>
+  <button class="win-btn" onclick="closeBlinkContinue()">Продолжить ➜</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TRACKER GAME OVERLAY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="game-overlay-tracker">
+  <div class="game-header">
+    <div class="score-pill"><span class="score-lbl">Фаза</span><span class="score-val" id="tracker-phase">1/4</span></div>
+  </div>
+  <canvas id="tracker-canvas" width="500" height="400"></canvas>
+  <div class="tracker-controls">
+    <div class="tracker-hint" id="tracker-hint">Следи за шариком глазами 👀</div>
+    <div class="tracker-progress-bar"><div class="tracker-progress-fill" id="tracker-progress" style="width:0%"></div></div>
+  </div>
+  <button class="skip-btn" onclick="closeTracker(true)">Пропустить ▸</button>
+</div>
+
+<div class="overlay" id="tracker-win-overlay">
+  <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
+  <div class="win-title">Отлично!</div>
+  <div class="win-sub">Глаза отдохнули!<br>+100 🪙</div>
+  <button class="win-btn" onclick="closeTrackerContinue()">Продолжить ➜</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TRANSITION OVERLAY
+     ═══════════════════════════════════════════════════════════ -->
+<div id="transition-overlay">
+  <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="40" stroke="url(#trGrad)" stroke-width="3" fill="none" opacity="0.5">
+      <animate attributeName="r" values="40;45;40" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <defs>
+      <linearGradient id="trGrad" x1="0" y1="0" x2="100" y2="100">
+        <stop offset="0%" stop-color="#a855f7"/>
+        <stop offset="100%" stop-color="#06b6d4"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="transition-text">Следующий кадр...</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════════════════════ -->
+<script src="js/player.js"></script>
+<script src="js/episodes/episode-01.js"></script>
+<script src="js/episodes/episode-02.js"></script>
+<script src="js/episodes/index.js"></script>
+<script src="js/app.js"></script>
+<script src="js/game_runner.js"></script>
+<script src="js/game_gymnastics.js"></script>
+<script src="js/game_blink.js"></script>
+<script src="js/game_tracker.js"></script>
+</body>
+</html>
