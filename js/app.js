@@ -246,12 +246,9 @@ const AudioController = {
     if (dialIcon) dialIcon.classList.toggle('playing', this.state === 'playing' && this.currentIdx > 0);
     if (vidIcon) vidIcon.classList.toggle('playing', this.state === 'video');
 
-    const btn = document.getElementById('bsAudioToggle');
-    if (btn) {
-      btn.classList.toggle('playing', this.state === 'playing' || this.state === 'video');
-      if (this.state === 'video') btn.textContent = '🎬';
-      else if (this.state === 'playing') btn.textContent = '⏸';
-      else btn.textContent = '🔊';
+    const audioMenuBtn = document.getElementById('audioMenuBtn');
+    if (audioMenuBtn) {
+      audioMenuBtn.classList.toggle('active', this.state === 'playing' || this.state === 'video');
     }
   }
 };
@@ -313,16 +310,6 @@ const BottomSheet = {
         this.expand();
       }
     });
-
-    const audioToggle = document.getElementById('bsAudioToggle');
-    if (audioToggle) {
-      audioToggle.addEventListener('click', () => {
-        if (AudioController.state === 'playing') AudioController.pause();
-        else if (AudioController.state === 'paused') AudioController.resume();
-        else if (AudioController.state === 'video') AudioController.toggleTrack('video');
-        else AudioController.play();
-      });
-    }
 
     ['Narration', 'Dialogue', 'Video'].forEach(type => {
       const toggle = document.getElementById('bsToggle' + type);
@@ -1046,6 +1033,20 @@ const App = (function() {
     if (cinemaToggleBtn) {
       cinemaToggleBtn.addEventListener('click', () => {
         episodeViewer.classList.toggle('ui-hidden');
+      });
+    }
+
+    const audioMenuBtn = document.getElementById('audioMenuBtn');
+    const audioDropdown = document.getElementById('audioDropdown');
+    if (audioMenuBtn && audioDropdown) {
+      audioMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioDropdown.classList.toggle('visible');
+      });
+      document.addEventListener('click', (e) => {
+        if (!audioDropdown.contains(e.target) && e.target !== audioMenuBtn) {
+          audioDropdown.classList.remove('visible');
+        }
       });
     }
 

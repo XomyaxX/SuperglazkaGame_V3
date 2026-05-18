@@ -72,11 +72,54 @@
     <button class="back-btn" id="viewerBackBtn" title="Назад в меню">←</button>
     <div class="progress-dots" id="progressDots"></div>
     <button class="cinema-toggle-btn" id="cinemaToggleBtn" title="Скрыть/показать интерфейс">👁️</button>
+    <button class="audio-menu-btn" id="audioMenuBtn" title="Аудио">🎵</button>
     <button class="profile-btn" id="viewerProfileBtn" title="Профиль">
       <span>👤</span>
       <span class="profile-coins-val">0</span>
       <span>🪙</span>
     </button>
+  </div>
+
+  <!-- Audio dropdown -->
+  <div class="audio-dropdown" id="audioDropdown">
+    <div class="bs-audio-panel" id="bsAudioPanel">
+      <div class="bs-section-title">🎵 Аудио</div>
+      <div class="bs-track-row" id="bsTrackNarration">
+        <div class="bs-track-info">
+          <div class="bs-track-icon" id="bsIconNarration">🎙️</div>
+          <div class="bs-track-meta">
+            <div class="bs-track-name">Рассказчик</div>
+            <div class="bs-track-status" id="bsStatusNarration">Выкл</div>
+          </div>
+        </div>
+        <div class="bs-toggle" id="bsToggleNarration"></div>
+      </div>
+      <div class="bs-track-row" id="bsTrackDialogue">
+        <div class="bs-track-info">
+          <div class="bs-track-icon" id="bsIconDialogue">🗣️</div>
+          <div class="bs-track-meta">
+            <div class="bs-track-name">Диалоги</div>
+            <div class="bs-track-status" id="bsStatusDialogue">Выкл</div>
+          </div>
+        </div>
+        <div class="bs-toggle" id="bsToggleDialogue"></div>
+      </div>
+      <div class="bs-track-row" id="bsTrackVideo">
+        <div class="bs-track-info">
+          <div class="bs-track-icon" id="bsIconVideo">🎬</div>
+          <div class="bs-track-meta">
+            <div class="bs-track-name">Видео</div>
+            <div class="bs-track-status" id="bsStatusVideo">Выкл</div>
+          </div>
+        </div>
+        <div class="bs-toggle" id="bsToggleVideo"></div>
+      </div>
+      <div class="bs-volume-row">
+        <span class="vol-icon">🔉</span>
+        <input type="range" class="bs-volume-slider" id="bsVolumeSlider" min="0" max="100" value="80">
+        <span class="vol-icon">🔊</span>
+      </div>
+    </div>
   </div>
 
   <!-- Dynamic frame container -->
@@ -97,50 +140,9 @@
       <span class="bs-subtitle-icon" id="bsSubtitleIcon">🎙️</span>
       <span class="bs-subtitle-text" id="bsSubtitleText"></span>
     </div>
-    <div class="bs-controls" id="bsControls">
-      <button class="bs-audio-toggle" id="bsAudioToggle" title="Аудио меню">🔊</button>
-    </div>
+    <div class="bs-controls" id="bsControls"></div>
     <div class="bs-expanded" id="bsExpanded">
       <div class="bs-narrator-full" id="bsNarratorFull"></div>
-
-      <div class="bs-audio-panel" id="bsAudioPanel">
-        <div class="bs-section-title">🎵 Аудио</div>
-        <div class="bs-track-row" id="bsTrackNarration">
-          <div class="bs-track-info">
-            <div class="bs-track-icon" id="bsIconNarration">🎙️</div>
-            <div class="bs-track-meta">
-              <div class="bs-track-name">Рассказчик</div>
-              <div class="bs-track-status" id="bsStatusNarration">Выкл</div>
-            </div>
-          </div>
-          <div class="bs-toggle" id="bsToggleNarration"></div>
-        </div>
-        <div class="bs-track-row" id="bsTrackDialogue">
-          <div class="bs-track-info">
-            <div class="bs-track-icon" id="bsIconDialogue">🗣️</div>
-            <div class="bs-track-meta">
-              <div class="bs-track-name">Диалоги</div>
-              <div class="bs-track-status" id="bsStatusDialogue">Выкл</div>
-            </div>
-          </div>
-          <div class="bs-toggle" id="bsToggleDialogue"></div>
-        </div>
-        <div class="bs-track-row" id="bsTrackVideo">
-          <div class="bs-track-info">
-            <div class="bs-track-icon" id="bsIconVideo">🎬</div>
-            <div class="bs-track-meta">
-              <div class="bs-track-name">Видео</div>
-              <div class="bs-track-status" id="bsStatusVideo">Выкл</div>
-            </div>
-          </div>
-          <div class="bs-toggle" id="bsToggleVideo"></div>
-        </div>
-        <div class="bs-volume-row">
-          <span class="vol-icon">🔉</span>
-          <input type="range" class="bs-volume-slider" id="bsVolumeSlider" min="0" max="100" value="80">
-          <span class="vol-icon">🔊</span>
-        </div>
-      </div>
 
       <div class="bs-game-panel" id="bsGamePanel">
         <div class="bs-section-title">🎮 Мини-игры</div>

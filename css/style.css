@@ -1594,6 +1594,59 @@ body {
   transform: scale(1.1);
 }
 
+.audio-menu-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .3s, transform .3s;
+}
+.audio-menu-btn:hover {
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.1);
+}
+.audio-menu-btn.active {
+  background: var(--gradient-primary);
+  box-shadow: 0 0 20px rgba(124,58,237,0.4);
+}
+
+.audio-dropdown {
+  position: absolute;
+  top: 64px;
+  right: 16px;
+  z-index: 35;
+  width: 280px;
+  background: rgba(10, 6, 24, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.audio-dropdown.visible {
+  display: flex;
+  animation: dropdownAppear .25s var(--ease-spring) both;
+}
+
+@keyframes dropdownAppear {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .bs-backdrop {
   position: absolute;
   inset: 0;
