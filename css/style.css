@@ -1484,7 +1484,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
+  padding: 0 25%;
   background: linear-gradient(180deg, rgba(10,6,24,0.85) 0%, rgba(10,6,24,0.4) 60%, rgba(10,6,24,0) 100%);
   transition: opacity .4s var(--ease-smooth), transform .4s var(--ease-smooth);
   pointer-events: auto;
@@ -1572,6 +1572,12 @@ body {
   transform: scale(1.05);
 }
 
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .cinema-toggle-btn {
   width: 40px;
   height: 40px;
@@ -1623,7 +1629,7 @@ body {
 .audio-dropdown {
   position: absolute;
   top: 64px;
-  right: 16px;
+  right: calc(25% + 8px);
   z-index: 35;
   width: 280px;
   background: rgba(10, 6, 24, 0.95);
@@ -1673,7 +1679,7 @@ body {
   -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: 8px 16px max(16px, env(safe-area-inset-bottom));
+  padding: 8px 25% max(16px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -2126,7 +2132,7 @@ body {
 @media (max-width: 640px) {
   .frame-top-bar {
     height: 48px;
-    padding: 0 12px;
+    padding: 0 16px;
   }
   .frame-top-bar .back-btn {
     width: 36px;
@@ -2141,7 +2147,7 @@ body {
     width: 14px;
   }
   .bottom-sheet {
-    padding: 6px 12px 12px;
+    padding: 6px 16px 12px;
     border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
   .bottom-sheet.collapsed {
@@ -2167,6 +2173,9 @@ body {
   }
   .bs-audio-panel {
     padding: 12px;
+  }
+  .audio-dropdown {
+    right: 16px;
   }
 }
 
