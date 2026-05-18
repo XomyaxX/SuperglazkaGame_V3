@@ -849,6 +849,7 @@ const App = (function() {
 
   // ─── SHOW FRAME ───
   function showFrame(idx, direction) {
+    gameAdvancePending = false;
     const allFrames = document.querySelectorAll('.frame');
     AudioController.stop();
     stopTypeWriter();
@@ -928,7 +929,7 @@ const App = (function() {
 
   function nextFrame() {
     const frameData = frames[currentFrameIdx];
-    if (frameData && frameData.game) {
+    if (frameData && frameData.game && !gameAdvancePending) {
       gameAdvancePending = true;
       BottomSheet.showGameIsland(frameData.game);
       return;
