@@ -37,14 +37,16 @@ const AudioController = {
   savedSrc: null,
 
   _normalizeSrc(src) {
-    try { return new URL(src, location.href).href; } catch { return src; }
-  }
+    try { return new URL(src, location.href).href; } catch (e) { return src; }
+  },
 
   setFrameData(frameData) {
     this.frameData = frameData;
     this.stop();
     this.activeTracks.video = false;
     this.currentIdx = 0;
+    this.savedTime = 0;
+    this.savedSrc = null;
     this.buildQueue();
   },
 
@@ -164,11 +166,14 @@ const AudioController = {
     this.stopCurrent();
     this.state = 'idle';
     this.currentIdx = 0;
+    this.savedTime = 0;
+    this.savedSrc = null;
     this._notifyStateChange();
     this.updateUI();
   },
 
   toggleTrack(type) {
+    const turningOn = !this.activeTracks[type];
     this.activeTracks[type] = !this.activeTracks[type];
 
     if (type === 'video') {
@@ -203,11 +208,11 @@ const AudioController = {
           this.currentIdx = newIdx;
         } else {
           this.currentIdx = 0;
-          this.savedTime = 0;
-          this.savedSrc = null;
         }
       }
-      if (wasPlaying && !this.activeTracks.video) {
+      if (turningOn && !this.activeTracks.video) {
+        this.play();
+      } else if (wasPlaying && !this.activeTracks.video) {
         this.state = 'playing';
         this.playNext();
       } else if (wasVideo) {
