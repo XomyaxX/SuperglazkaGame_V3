@@ -349,7 +349,7 @@ const BottomSheet = {
       this.gameIsland.addEventListener('click', (e) => {
         e.stopPropagation();
         if (this._pendingGameType) {
-          App.startGame(this._pendingGameType);
+          App.launchGame(this._pendingGameType);
         }
       });
     }
@@ -983,6 +983,25 @@ const App = (function() {
     }
   }
 
+  function launchGame(gameType) {
+    AudioController.stop();
+    AudioController.activeTracks.video = false;
+    document.querySelectorAll('.frame.active video').forEach(v => {
+      v.pause();
+      v.currentTime = 0;
+      v.classList.remove('visible');
+    });
+    if (gameType === 'runner') {
+      if (typeof startRunnerGame === 'function') startRunnerGame();
+    } else if (gameType === 'gym') {
+      if (typeof startGymGame === 'function') startGymGame();
+    } else if (gameType === 'blink') {
+      if (typeof startBlinkGame === 'function') startBlinkGame();
+    } else if (gameType === 'tracker') {
+      if (typeof startTrackerGame === 'function') startTrackerGame();
+    }
+  }
+
   function showGameTransition(title, subtitle, onStart) {
     const overlay = document.getElementById('game-transition-overlay');
     if (!overlay) { if (onStart) onStart(); return; }
@@ -1194,7 +1213,7 @@ const App = (function() {
     init();
   }
 
-  return { startEpisode, backToMenu, nextFrame, prevFrame, advanceFromGame, startGame, onAudioEnd };
+  return { startEpisode, backToMenu, nextFrame, prevFrame, advanceFromGame, startGame, launchGame, onAudioEnd };
 })();
 
 /* ═══════════════════════════════════════════════════════════
