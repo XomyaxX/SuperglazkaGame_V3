@@ -32,56 +32,40 @@
   </button>
 
   <div class="menu-title">СУПЕРГЛАЗКА</div>
-  <div class="menu-sub">Интерактивный комикс</div>
+  <div class="menu-sub">Интерактивный комикс о здоровье глаз</div>
 
   <div class="chapters-grid">
     <!-- Episode 1 -->
     <div class="chapter-card" data-episode="1">
-      <svg class="chapter-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="45" stroke="url(#grad1)" stroke-width="2" fill="rgba(168,85,247,0.1)"/>
-        <ellipse cx="50" cy="50" rx="28" ry="20" stroke="url(#grad1)" stroke-width="2.5" fill="rgba(6,182,212,0.15)"/>
-        <circle cx="50" cy="50" r="10" fill="url(#grad1)"/>
-        <circle cx="53" cy="47" r="3" fill="white" opacity="0.8"/>
-        <defs>
-          <linearGradient id="grad1" x1="0" y1="0" x2="100" y2="100">
-            <stop offset="0%" stop-color="#a855f7"/>
-            <stop offset="100%" stop-color="#06b6d4"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="chapter-num">Эпизод 1</div>
-      <div class="chapter-name">Рождение героини</div>
+      <img class="chapter-cover" src="assets/episodes/episode-01/cover.png" alt="Эпизод 1" loading="lazy">
+      <div class="chapter-body">
+        <div class="chapter-num">Эпизод 1</div>
+        <div class="chapter-name">Рождение героини</div>
+        <div class="chapter-desc">Планета Видеаль в опасности. Древний ритуал призывает защитницу — девочку с суперсилой зрения.</div>
+        <button class="chapter-btn">▶ Начать</button>
+      </div>
     </div>
 
     <!-- Episode 2 -->
     <div class="chapter-card" data-episode="2">
-      <svg class="chapter-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="45" stroke="url(#grad2)" stroke-width="2" fill="rgba(6,182,212,0.1)"/>
-        <ellipse cx="50" cy="50" rx="28" ry="20" stroke="url(#grad2)" stroke-width="2.5" fill="rgba(168,85,247,0.15)"/>
-        <circle cx="50" cy="50" r="10" fill="url(#grad2)"/>
-        <circle cx="53" cy="47" r="3" fill="white" opacity="0.8"/>
-        <defs>
-          <linearGradient id="grad2" x1="0" y1="0" x2="100" y2="100">
-            <stop offset="0%" stop-color="#06b6d4"/>
-            <stop offset="100%" stop-color="#a855f7"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="chapter-num">Эпизод 2</div>
-      <div class="chapter-name">Кто я?</div>
+      <img class="chapter-cover" src="assets/episodes/episode-02/cover.png" alt="Эпизод 2" loading="lazy">
+      <div class="chapter-body">
+        <div class="chapter-num">Эпизод 2</div>
+        <div class="chapter-name">Кто я?</div>
+        <div class="chapter-desc">Суперглазка узнаёт о своей миссии. Тренировки, первые испытания и встреча с тьмой.</div>
+        <button class="chapter-btn">▶ Начать</button>
+      </div>
     </div>
 
     <!-- Episode 3 (locked) -->
     <div class="chapter-card locked" data-episode="3">
-      <svg class="chapter-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="50" cy="50" r="45" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="rgba(255,255,255,0.03)"/>
-        <ellipse cx="50" cy="50" rx="28" ry="20" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" fill="none"/>
-        <circle cx="50" cy="50" r="10" fill="rgba(255,255,255,0.2)"/>
-        <text x="50" y="78" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="10" font-family="Nunito" font-weight="800">🔒</text>
-      </svg>
-      <div class="chapter-num">Эпизод 3</div>
-      <div class="chapter-name">Скоро...</div>
-      <div class="chapter-badge">Заблокировано</div>
+      <img class="chapter-cover" src="assets/episodes/episode-03/cover.png" alt="Эпизод 3" loading="lazy" style="filter: grayscale(0.6);">
+      <div class="chapter-body">
+        <div class="chapter-num">Эпизод 3</div>
+        <div class="chapter-name">Великая битва</div>
+        <div class="chapter-desc">Финальное противостояние с Великой Тьмой. Всё будущее планеты Видеаль в твоих руках!</div>
+        <div class="chapter-lock">🔒 Скоро</div>
+      </div>
     </div>
   </div>
 </div>
