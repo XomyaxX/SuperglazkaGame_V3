@@ -920,6 +920,15 @@ const App = (function() {
     // Ensure UI is visible on frame change
     clearTimeout(uiHideTimeout);
     episodeViewer.classList.remove('ui-hidden');
+
+    updateNavArrows();
+  }
+
+  function updateNavArrows() {
+    const up = document.getElementById('navArrowUp');
+    const down = document.getElementById('navArrowDown');
+    if (up) up.classList.toggle('hidden', currentFrameIdx <= 0);
+    if (down) down.classList.toggle('hidden', currentFrameIdx >= frames.length - 1);
   }
 
   function animateTo(idx, direction) {
@@ -1156,6 +1165,11 @@ const App = (function() {
     initSwipe();
     BottomSheet.init();
     AudioController.onAudioStart((audio) => syncSubtitles(audio));
+
+    const navArrowUp = document.getElementById('navArrowUp');
+    const navArrowDown = document.getElementById('navArrowDown');
+    if (navArrowUp) navArrowUp.addEventListener('click', () => prevFrame());
+    if (navArrowDown) navArrowDown.addEventListener('click', () => nextFrame());
 
     const subOverlay = document.getElementById('subtitleOverlay');
     if (subOverlay) {
