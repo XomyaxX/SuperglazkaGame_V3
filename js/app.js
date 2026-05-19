@@ -21,6 +21,71 @@ function escapeHtml(text) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// THEME MANAGER — auto-detect + manual override
+// ═══════════════════════════════════════════════════════════
+const ThemeManager = {
+  STORAGE_KEY: 'superglazka_theme',
+
+  init() {
+    const saved = this._load();
+    if (saved) {
+      this._apply(saved);
+    } else {
+      this._applySystem();
+    }
+    this._listenSystem();
+  },
+
+  _load() {
+    try {
+      return localStorage.getItem(this.STORAGE_KEY);
+    } catch (e) {
+      return null;
+    }
+  },
+
+  _save(value) {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, value);
+    } catch (e) {}
+  },
+
+  _apply(theme) {
+    document.body.classList.remove('theme-dark', 'theme-light');
+    document.body.classList.add('theme-' + theme);
+    this._updateToggleUI(theme);
+  },
+
+  _applySystem() {
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this._apply(prefersDark ? 'dark' : 'light');
+  },
+
+  _listenSystem() {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq && mq.addEventListener) {
+      mq.addEventListener('change', (e) => {
+        if (!this._load()) {
+          this._apply(e.matches ? 'dark' : 'light');
+        }
+      });
+    }
+  },
+
+  toggle() {
+    const isDark = document.body.classList.contains('theme-dark');
+    const next = isDark ? 'light' : 'dark';
+    this._apply(next);
+    this._save(next);
+  },
+
+  _updateToggleUI(theme) {
+    const toggle = document.getElementById('settingsToggleDarkTheme');
+    if (toggle) toggle.classList.toggle('active', theme === 'dark');
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
 // APP SETTINGS — persistent user preferences
 // ═══════════════════════════════════════════════════════════
 const AppSettings = {
@@ -572,6 +637,10 @@ const BottomSheet = {
     bindFontGroup('subtitleFontSizeGroup', 'subtitleFontSize');
     bindFontGroup('uiFontSizeGroup', 'uiFontSize');
 
+    // Dark theme toggle
+    const themeToggle = document.getElementById('settingsToggleDarkTheme');
+    if (themeToggle) themeToggle.addEventListener('click', () => ThemeManager.toggle());
+
     if (this.navNextBtn) this.navNextBtn.addEventListener('click', () => App.nextFrame());
     if (this.prevBtn) this.prevBtn.addEventListener('click', () => App.prevFrame());
 
@@ -906,10 +975,18 @@ const App = (function() {
     const container = document.getElementById('progressDots');
     if (!container) return;
     container.innerHTML = '';
+    const isNarrow = window.innerWidth < 480;
     for (let i = 0; i < total; i++) {
       const dot = document.createElement('div');
       dot.className = 'progress-dot' + (i === current ? ' active' : i < current ? ' seen' : '');
       container.appendChild(dot);
+    }
+    if (total > 20) {
+      container.style.gap = isNarrow ? '2px' : '3px';
+    } else if (total > 12) {
+      container.style.gap = isNarrow ? '3px' : '4px';
+    } else {
+      container.style.gap = '';
     }
   }
 
@@ -1374,6 +1451,7 @@ const App = (function() {
 
   // ─── INIT ───
   function init() {
+    ThemeManager.init();
     DeviceDetector.detect();
     DeviceDetector.onResize();
     AppSettings.load();

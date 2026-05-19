@@ -797,3 +797,58 @@ body {
   font-size: 32px;
   cursor: pointer;
 }
+
+/* Light theme overrides */
+.theme-light .land-btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #c026d3);
+}
+
+.theme-light .land-btn-secondary {
+  border-color: rgba(0,0,0,0.15);
+  color: #1a0b2e;
+}
+
+.theme-light .land-section-title,
+.theme-light .land-feature-title,
+.theme-light .land-episode-title,
+.theme-light .land-char-name {
+  color: #1a0b2e;
+}
+
+.theme-light .land-feature-desc,
+.theme-light .land-episode-desc,
+.theme-light .land-char-desc {
+  color: rgba(26, 11, 46, 0.6);
+}
+
+.theme-light .land-nav-mobile {
+  background: rgba(245, 240, 255, 0.95);
+}
+
+.theme-light .land-nav-mobile a {
+  color: #1a0b2e;
+}
+
+/* CTA responsive override */
+.land-btn-primary {
+  font-size: clamp(14px, 2vw, 20px) !important;
+  padding: clamp(12px, 2vw, 20px) clamp(24px, 4vw, 48px) !important;
+}
+
+/* Additional landing breakpoints */
+@media (max-width: 1024px) {
+  .land-features-grid { grid-template-columns: repeat(2, 1fr); }
+  .land-episodes-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .land-features-grid { grid-template-columns: 1fr; }
+  .land-episodes-grid { grid-template-columns: 1fr; }
+  .land-char-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .land-char-grid { grid-template-columns: 1fr; }
+  .land-cta-title { font-size: 28px; }
+  .land-cta-sub { font-size: 14px; }
+}
