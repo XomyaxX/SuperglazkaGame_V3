@@ -73,7 +73,7 @@
     <div class="progress-dots" id="progressDots"></div>
     <div class="top-bar-right">
       <button class="cinema-toggle-btn" id="cinemaToggleBtn" title="Скрыть/показать интерфейс">👁️</button>
-      <button class="audio-menu-btn" id="audioMenuBtn" title="Аудио">🎵</button>
+      <button class="audio-menu-btn" id="settingsMenuBtn" title="Настройки">⚙️</button>
       <button class="profile-btn" id="viewerProfileBtn" title="Профиль">
         <span>👤</span>
         <span class="profile-coins-val">0</span>
@@ -82,44 +82,112 @@
     </div>
   </div>
 
-  <!-- Audio dropdown -->
-  <div class="audio-dropdown" id="audioDropdown">
-    <div class="bs-audio-panel" id="bsAudioPanel">
-      <div class="bs-section-title">🎵 Аудио</div>
-      <div class="bs-track-row" id="bsTrackNarration">
-        <div class="bs-track-info">
-          <div class="bs-track-icon" id="bsIconNarration">🎙️</div>
-          <div class="bs-track-meta">
-            <div class="bs-track-name">Рассказчик</div>
-            <div class="bs-track-status" id="bsStatusNarration">Выкл</div>
+  <!-- Settings dropdown -->
+  <div class="audio-dropdown" id="settingsDropdown">
+    <div class="settings-panel">
+      <!-- Audio -->
+      <div class="settings-section">
+        <div class="settings-section-title">🎵 Аудио</div>
+        <div class="settings-row" id="settingsRowNarration">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🎙️</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Рассказчик</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleNarration"></div>
+        </div>
+        <div class="settings-row" id="settingsRowDialogue">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🗣️</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Диалоги</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleDialogue"></div>
+        </div>
+        <div class="settings-row" id="settingsRowVideo">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🎬</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Видео</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleVideo"></div>
+        </div>
+        <div class="bs-volume-row">
+          <span class="vol-icon">🔉</span>
+          <input type="range" class="bs-volume-slider" id="bsVolumeSlider" min="0" max="100" value="80">
+          <span class="vol-icon">🔊</span>
+        </div>
+      </div>
+
+      <!-- Subtitles -->
+      <div class="settings-section">
+        <div class="settings-section-title">💬 Субтитры</div>
+        <div class="settings-row" id="settingsRowSubtitles">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">📝</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Показывать субтитры</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleSubtitles"></div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🔤</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Размер шрифта субтитров</div>
+            </div>
+          </div>
+          <div class="font-size-group" id="subtitleFontSizeGroup">
+            <button class="font-size-btn" data-size="small">А-</button>
+            <button class="font-size-btn active" data-size="medium">А</button>
+            <button class="font-size-btn" data-size="large">А+</button>
           </div>
         </div>
-        <div class="bs-toggle" id="bsToggleNarration"></div>
       </div>
-      <div class="bs-track-row" id="bsTrackDialogue">
-        <div class="bs-track-info">
-          <div class="bs-track-icon" id="bsIconDialogue">🗣️</div>
-          <div class="bs-track-meta">
-            <div class="bs-track-name">Диалоги</div>
-            <div class="bs-track-status" id="bsStatusDialogue">Выкл</div>
+
+      <!-- Accessibility -->
+      <div class="settings-section">
+        <div class="settings-section-title">♿ Доступность</div>
+        <div class="settings-row" id="settingsRowHighContrast">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🌓</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Высокая контрастность</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleHighContrast"></div>
+        </div>
+        <div class="settings-row" id="settingsRowReduceMotion">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">✋</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Уменьшить анимации</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleReduceMotion"></div>
+        </div>
+      </div>
+
+      <!-- Interface -->
+      <div class="settings-section">
+        <div class="settings-section-title">🎨 Интерфейс</div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">📐</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Размер текста</div>
+            </div>
+          </div>
+          <div class="font-size-group" id="uiFontSizeGroup">
+            <button class="font-size-btn" data-size="small">А-</button>
+            <button class="font-size-btn active" data-size="medium">А</button>
+            <button class="font-size-btn" data-size="large">А+</button>
           </div>
         </div>
-        <div class="bs-toggle" id="bsToggleDialogue"></div>
-      </div>
-      <div class="bs-track-row" id="bsTrackVideo">
-        <div class="bs-track-info">
-          <div class="bs-track-icon" id="bsIconVideo">🎬</div>
-          <div class="bs-track-meta">
-            <div class="bs-track-name">Видео</div>
-            <div class="bs-track-status" id="bsStatusVideo">Выкл</div>
-          </div>
-        </div>
-        <div class="bs-toggle" id="bsToggleVideo"></div>
-      </div>
-      <div class="bs-volume-row">
-        <span class="vol-icon">🔉</span>
-        <input type="range" class="bs-volume-slider" id="bsVolumeSlider" min="0" max="100" value="80">
-        <span class="vol-icon">🔊</span>
       </div>
     </div>
   </div>
@@ -334,7 +402,7 @@
 </div>
 
 <div class="overlay" id="blink-win-overlay">
-  <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
+  <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
   <div class="win-title">Молодец!</div>
   <div class="win-sub">Глаза в порядке!<br>+100 🪙</div>
   <button class="win-btn" onclick="closeBlinkContinue()">Продолжить ➜</button>

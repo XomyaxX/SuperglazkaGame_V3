@@ -21,6 +21,109 @@ function escapeHtml(text) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// APP SETTINGS — persistent user preferences
+// ═══════════════════════════════════════════════════════════
+const AppSettings = {
+  defaults: {
+    volume: 80,
+    narration: true,
+    dialogue: true,
+    video: false,
+    subtitles: true,
+    subtitleFontSize: 'medium',
+    highContrast: false,
+    reduceMotion: false,
+    uiFontSize: 'medium'
+  },
+  _data: {},
+
+  load() {
+    try {
+      const raw = localStorage.getItem('superglazka_settings');
+      const saved = raw ? JSON.parse(raw) : {};
+      this._data = Object.assign({}, this.defaults, saved);
+    } catch (e) {
+      this._data = Object.assign({}, this.defaults);
+    }
+    return this._data;
+  },
+
+  save() {
+    try {
+      localStorage.setItem('superglazka_settings', JSON.stringify(this._data));
+    } catch (e) {}
+  },
+
+  get(key) {
+    return this._data[key];
+  },
+
+  set(key, value) {
+    this._data[key] = value;
+    this.save();
+    this.apply();
+  },
+
+  apply() {
+    const d = this._data;
+
+    AudioController.activeTracks.narration = d.narration;
+    AudioController.activeTracks.dialogue = d.dialogue;
+    AudioController.activeTracks.video = d.video;
+    AudioController.volume = d.volume / 100;
+    if (AudioController.currentAudio) {
+      AudioController.currentAudio.volume = AudioController.volume;
+    }
+    const video = document.querySelector('.frame.active video');
+    if (video) video.volume = AudioController.volume * AudioController.videoVolumeMultiplier;
+
+    document.body.classList.toggle('subtitles-off', !d.subtitles);
+    document.body.classList.remove('subtitle-small', 'subtitle-medium', 'subtitle-large');
+    document.body.classList.add('subtitle-' + d.subtitleFontSize);
+
+    document.body.classList.toggle('high-contrast', d.highContrast);
+    document.body.classList.toggle('reduce-motion', d.reduceMotion);
+
+    document.body.classList.remove('ui-small', 'ui-medium', 'ui-large');
+    document.body.classList.add('ui-' + d.uiFontSize);
+
+    this.updateUI();
+    AudioController.updateUI();
+  },
+
+  updateUI() {
+    const d = this._data;
+
+    const toggles = {
+      settingsToggleNarration: d.narration,
+      settingsToggleDialogue: d.dialogue,
+      settingsToggleVideo: d.video,
+      settingsToggleSubtitles: d.subtitles,
+      settingsToggleHighContrast: d.highContrast,
+      settingsToggleReduceMotion: d.reduceMotion
+    };
+    Object.entries(toggles).forEach(([id, active]) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', active);
+    });
+
+    const slider = document.getElementById('bsVolumeSlider');
+    if (slider) slider.value = d.volume;
+
+    const setFontActive = (groupId, size) => {
+      const group = document.getElementById(groupId);
+      if (group) {
+        group.querySelectorAll('.font-size-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.size === size);
+        });
+      }
+    };
+    setFontActive('subtitleFontSizeGroup', d.subtitleFontSize);
+    setFontActive('uiFontSizeGroup', d.uiFontSize);
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
 // AUDIO CONTROLLER — unified audio mixer
 // ═══════════════════════════════════════════════════════════
 const AudioController = {
@@ -30,6 +133,7 @@ const AudioController = {
   state: 'idle',
   activeTracks: { narration: true, dialogue: true, video: false },
   volume: 0.8,
+  videoVolumeMultiplier: 0.5,
   timeoutId: null,
   frameData: null,
   stateChangeCallback: null,
@@ -192,6 +296,7 @@ const AudioController = {
         this.state = 'video';
         if (video) {
           video.muted = false;
+          video.volume = this.volume * this.videoVolumeMultiplier;
           video.play().catch(() => {});
         }
       } else {
@@ -241,6 +346,7 @@ const AudioController = {
     this.state = 'video';
     this.activeTracks.video = true;
     videoEl.muted = false;
+    videoEl.volume = this.volume * this.videoVolumeMultiplier;
     this._notifyStateChange();
     this.updateUI();
   },
@@ -265,34 +371,13 @@ const AudioController = {
     this.volume = v / 100;
     if (this.currentAudio) this.currentAudio.volume = this.volume;
     const video = document.querySelector('.frame.active video');
-    if (video) video.volume = this.volume;
+    if (video) video.volume = this.volume * this.videoVolumeMultiplier;
   },
 
   updateUI() {
-    const narrStatus = document.getElementById('bsStatusNarration');
-    const dialStatus = document.getElementById('bsStatusDialogue');
-    const vidStatus = document.getElementById('bsStatusVideo');
-    if (narrStatus) narrStatus.textContent = this.activeTracks.narration ? 'Вкл' : 'Выкл';
-    if (dialStatus) dialStatus.textContent = this.activeTracks.dialogue ? 'Вкл' : 'Выкл';
-    if (vidStatus) vidStatus.textContent = this.activeTracks.video ? 'Вкл' : 'Выкл';
-
-    const narrToggle = document.getElementById('bsToggleNarration');
-    const dialToggle = document.getElementById('bsToggleDialogue');
-    const vidToggle = document.getElementById('bsToggleVideo');
-    if (narrToggle) narrToggle.classList.toggle('active', this.activeTracks.narration);
-    if (dialToggle) dialToggle.classList.toggle('active', this.activeTracks.dialogue);
-    if (vidToggle) vidToggle.classList.toggle('active', this.activeTracks.video);
-
-    const narrIcon = document.getElementById('bsIconNarration');
-    const dialIcon = document.getElementById('bsIconDialogue');
-    const vidIcon = document.getElementById('bsIconVideo');
-    if (narrIcon) narrIcon.classList.toggle('playing', this.state === 'playing' && this.currentIdx === 0);
-    if (dialIcon) dialIcon.classList.toggle('playing', this.state === 'playing' && this.currentIdx > 0);
-    if (vidIcon) vidIcon.classList.toggle('playing', this.state === 'video');
-
-    const audioMenuBtn = document.getElementById('audioMenuBtn');
-    if (audioMenuBtn) {
-      audioMenuBtn.classList.toggle('active', this.state === 'playing' || this.state === 'video');
+    const settingsMenuBtn = document.getElementById('settingsMenuBtn');
+    if (settingsMenuBtn) {
+      settingsMenuBtn.classList.toggle('active', this.state === 'playing' || this.state === 'video');
     }
   }
 };
@@ -365,13 +450,59 @@ const BottomSheet = {
       }
     });
 
+    // Audio toggles
     ['Narration', 'Dialogue', 'Video'].forEach(type => {
-      const toggle = document.getElementById('bsToggle' + type);
-      if (toggle) toggle.addEventListener('click', () => AudioController.toggleTrack(type.toLowerCase()));
+      const toggle = document.getElementById('settingsToggle' + type);
+      if (toggle) toggle.addEventListener('click', () => {
+        const key = type.toLowerCase();
+        AppSettings.set(key, !AppSettings.get(key));
+        AudioController.activeTracks[key] = AppSettings.get(key);
+        if (key === 'video') {
+          AudioController.toggleTrack('video');
+        } else {
+          AudioController.toggleTrack(key);
+        }
+      });
     });
 
+    // Subtitles toggle
+    const subToggle = document.getElementById('settingsToggleSubtitles');
+    if (subToggle) subToggle.addEventListener('click', () => {
+      AppSettings.set('subtitles', !AppSettings.get('subtitles'));
+    });
+
+    // High contrast toggle
+    const hcToggle = document.getElementById('settingsToggleHighContrast');
+    if (hcToggle) hcToggle.addEventListener('click', () => {
+      AppSettings.set('highContrast', !AppSettings.get('highContrast'));
+    });
+
+    // Reduce motion toggle
+    const rmToggle = document.getElementById('settingsToggleReduceMotion');
+    if (rmToggle) rmToggle.addEventListener('click', () => {
+      AppSettings.set('reduceMotion', !AppSettings.get('reduceMotion'));
+    });
+
+    // Volume slider
     const volSlider = document.getElementById('bsVolumeSlider');
-    if (volSlider) volSlider.addEventListener('input', (e) => AudioController.setVolume(e.target.value));
+    if (volSlider) volSlider.addEventListener('input', (e) => {
+      AppSettings.set('volume', parseInt(e.target.value, 10));
+    });
+
+    // Font size groups
+    const bindFontGroup = (groupId, settingKey) => {
+      const group = document.getElementById(groupId);
+      if (group) {
+        group.addEventListener('click', (e) => {
+          const btn = e.target.closest('.font-size-btn');
+          if (btn) {
+            AppSettings.set(settingKey, btn.dataset.size);
+          }
+        });
+      }
+    };
+    bindFontGroup('subtitleFontSizeGroup', 'subtitleFontSize');
+    bindFontGroup('uiFontSizeGroup', 'uiFontSize');
 
     if (this.navNextBtn) this.navNextBtn.addEventListener('click', () => App.nextFrame());
     if (this.prevBtn) this.prevBtn.addEventListener('click', () => App.prevFrame());
@@ -1093,6 +1224,7 @@ const App = (function() {
         if (video) {
           video.classList.add('visible');
           video.muted = false;
+          video.volume = AudioController.volume * AudioController.videoVolumeMultiplier;
           video.play().catch(() => {});
           AudioController.playVideo(video);
         }
@@ -1162,6 +1294,8 @@ const App = (function() {
 
   // ─── INIT ───
   function init() {
+    AppSettings.load();
+    AppSettings.apply();
     initSwipe();
     BottomSheet.init();
     AudioController.onAudioStart((audio) => syncSubtitles(audio));
@@ -1184,16 +1318,16 @@ const App = (function() {
       });
     }
 
-    const audioMenuBtn = document.getElementById('audioMenuBtn');
-    const audioDropdown = document.getElementById('audioDropdown');
-    if (audioMenuBtn && audioDropdown) {
-      audioMenuBtn.addEventListener('click', (e) => {
+    const settingsMenuBtn = document.getElementById('settingsMenuBtn');
+    const settingsDropdown = document.getElementById('settingsDropdown');
+    if (settingsMenuBtn && settingsDropdown) {
+      settingsMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        audioDropdown.classList.toggle('visible');
+        settingsDropdown.classList.toggle('visible');
       });
       document.addEventListener('click', (e) => {
-        if (!audioDropdown.contains(e.target) && e.target !== audioMenuBtn) {
-          audioDropdown.classList.remove('visible');
+        if (!settingsDropdown.contains(e.target) && e.target !== settingsMenuBtn) {
+          settingsDropdown.classList.remove('visible');
         }
       });
     }
