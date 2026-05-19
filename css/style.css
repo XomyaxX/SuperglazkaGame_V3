@@ -2503,7 +2503,7 @@ body.reduce-motion .bottom-sheet {
   transition: max-height .4s ease;
 }
 .bs-narrator-wrapper.collapsed {
-  max-height: 120px;
+  max-height: 32px;
   overflow: hidden;
 }
 .bs-narrator-wrapper.collapsed .bs-narrator-full {
