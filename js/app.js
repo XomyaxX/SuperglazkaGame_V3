@@ -424,6 +424,8 @@ const BottomSheet = {
     this.subtitleText = document.getElementById('bsSubtitleText');
     this.subtitleIcon = document.getElementById('bsSubtitleIcon');
     this.narratorFull = document.getElementById('bsNarratorFull');
+    this.narratorWrapper = document.getElementById('bsNarratorWrapper');
+    this.narratorToggle = document.getElementById('bsNarratorToggle');
     this.gameDock = document.getElementById('bsGameDock');
     this.gamePanelInner = document.getElementById('bsGamePanelInner');
     this.navNextBtn = document.getElementById('bsNavNextBtn');
@@ -435,6 +437,17 @@ const BottomSheet = {
         e.stopPropagation();
         if (this._pendingGameType) {
           App.launchGame(this._pendingGameType);
+        }
+      });
+    }
+
+    if (this.narratorToggle) {
+      this.narratorToggle.addEventListener('click', () => {
+        if (this.narratorWrapper) {
+          const isCollapsed = this.narratorWrapper.classList.contains('collapsed');
+          this.narratorWrapper.classList.toggle('collapsed', !isCollapsed);
+          this.narratorWrapper.classList.toggle('expanded', isCollapsed);
+          this.narratorToggle.textContent = isCollapsed ? 'Свернуть ▲' : 'Показать полностью ▼';
         }
       });
     }
@@ -581,6 +594,18 @@ const BottomSheet = {
 
   setNarratorFull(text) {
     if (this.narratorFull) this.narratorFull.textContent = text || '';
+    if (this.narratorWrapper) {
+      this.narratorWrapper.classList.remove('expanded');
+      this.narratorWrapper.classList.add('collapsed');
+    }
+    if (this.narratorToggle) {
+      this.narratorToggle.textContent = 'Показать полностью ▼';
+      requestAnimationFrame(() => {
+        if (!this.narratorFull || !this.narratorWrapper) return;
+        const overflow = this.narratorFull.scrollHeight > this.narratorWrapper.clientHeight + 4;
+        this.narratorToggle.style.display = overflow ? 'inline-block' : 'none';
+      });
+    }
   },
 
   showNextButton(text) {
