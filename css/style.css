@@ -50,7 +50,7 @@
 
 /* UI panels — light bg, dark text */
 .theme-light .frame-top-bar {
-  background: linear-gradient(180deg, rgba(243,232,255,0.9) 0%, rgba(243,232,255,0.5) 60%, rgba(243,232,255,0) 100%);
+  background: linear-gradient(180deg, rgba(26,11,46,0.85) 0%, rgba(26,11,46,0.4) 60%, rgba(26,11,46,0) 100%);
 }
 .theme-light .bottom-sheet {
   background: rgba(255, 255, 255, 0.92);
@@ -111,9 +111,11 @@
   background: linear-gradient(to bottom, transparent, rgba(243,232,255,0.95));
 }
 .theme-light .bs-narrator-toggle {
-  border-color: rgba(0,0,0,0.12);
-  background: rgba(0,0,0,0.03);
-  color: rgba(61, 26, 92, 0.7);
+  background: linear-gradient(135deg, #e056c8, #ff5a5a);
+  box-shadow: 0 4px 16px rgba(224,86,200,0.3);
+}
+.theme-light .bs-narrator-toggle:hover {
+  box-shadow: 0 6px 24px rgba(224,86,200,0.5);
 }
 
 /* Top bar buttons on light bg */
@@ -121,9 +123,9 @@
 .theme-light .cinema-toggle-btn,
 .theme-light .audio-menu-btn,
 .theme-light .frame-top-bar .profile-btn {
-  background: rgba(0,0,0,0.05);
-  border-color: rgba(0,0,0,0.08);
-  color: #3d1a5c;
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.1);
+  color: #fff;
 }
 
 /* Progress dots — keep light for dark video bg */
@@ -2498,19 +2500,27 @@ body.reduce-motion .bottom-sheet {
    ═══════════════════════════════════════════════════════════ */
 .bs-narrator-wrapper {
   position: relative;
-  transition: max-height .35s ease;
+  transition: max-height .4s ease;
 }
 .bs-narrator-wrapper.collapsed {
   max-height: 120px;
   overflow: hidden;
+}
+.bs-narrator-wrapper.collapsed .bs-narrator-full {
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.bs-narrator-wrapper.collapsed .bs-narrator-full::-webkit-scrollbar {
+  display: none;
 }
 .bs-narrator-wrapper.collapsed .bs-narrator-fade {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 40px;
-  background: linear-gradient(to bottom, transparent, rgba(26,11,46,0.95));
+  height: 50px;
+  background: linear-gradient(to bottom, transparent, rgba(26,11,46,0.9));
   pointer-events: none;
 }
 .bs-narrator-wrapper.expanded {
@@ -2519,29 +2529,56 @@ body.reduce-motion .bottom-sheet {
 .bs-narrator-wrapper.expanded .bs-narrator-fade {
   display: none;
 }
+.bs-narrator-wrapper.expanded .bs-narrator-full {
+  max-height: 40vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  -ms-overflow-style: auto;
+}
+.bs-narrator-wrapper.expanded .bs-narrator-full::-webkit-scrollbar {
+  width: 4px;
+}
+.bs-narrator-wrapper.expanded .bs-narrator-full::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
+.bs-narrator-wrapper.expanded .bs-narrator-full::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bs-narrator-full {
+  line-height: 1.65;
+  font-size: 15px;
+  color: rgba(255,255,255,0.9);
+}
+.theme-light .bs-narrator-full {
+  color: #3d1a5c;
+}
 
 .bs-narrator-toggle {
-  margin-top: 8px;
-  padding: 6px 14px;
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 20px;
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.7);
+  margin-top: 10px;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 24px;
+  background: var(--gradient-primary);
+  color: #fff;
   font-family: 'Nunito', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: all .2s;
-  align-self: flex-start;
+  transition: all .25s var(--ease-spring);
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(192,132,252,0.3);
 }
 .bs-narrator-toggle:hover {
-  background: rgba(255,255,255,0.12);
-  border-color: rgba(255,255,255,0.25);
-  color: #fff;
+  transform: scale(1.05);
+  box-shadow: 0 6px 24px rgba(192,132,252,0.5);
 }
-
-.bs-narrator-wrapper.expanded .bs-narrator-full {
-  max-height: none;
+.bs-narrator-toggle:active {
+  transform: scale(0.97);
 }
 
 /* ─── UI HIDE MODE ─── */
