@@ -2535,3 +2535,27 @@ body.reduce-motion .bottom-sheet {
 .bottom-sheet * {
   pointer-events: auto;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DEVICE DETECTION CLASSES
+   ═══════════════════════════════════════════════════════════ */
+body.device-desktop .swipe-hint {
+  display: none;
+}
+
+body.device-touch .bs-toggle,
+body.device-touch .font-size-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+body.device-mobile .bottom-sheet {
+  border-radius: 20px 20px 0 0;
+}
+
+body.device-desktop .chapter-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+body.device-touch .chapter-card:hover {
+  transform: none;
+}

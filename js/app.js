@@ -124,6 +124,61 @@ const AppSettings = {
 };
 
 // ═══════════════════════════════════════════════════════════
+// DEVICE DETECTOR — reliable device type detection
+// ═══════════════════════════════════════════════════════════
+const DeviceDetector = {
+  type: 'unknown',
+
+  detect() {
+    const ua = navigator.userAgent || '';
+
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isCoarsePointer = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const hasHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const isPortrait = height > width;
+
+    const isMobileUA = /Mobile|Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    const isTabletUA = /iPad|Tablet|Kindle|Silk|PlayBook/i.test(ua);
+    const isAndroidTablet = /Android/i.test(ua) && !/Mobile/i.test(ua);
+
+    let type = 'desktop';
+
+    if (isTabletUA || isAndroidTablet) {
+      type = 'tablet';
+    } else if (isMobileUA || (isCoarsePointer && !hasHover && width < 768)) {
+      type = 'mobile';
+    } else if (isCoarsePointer && !hasHover && width >= 768 && width <= 1024) {
+      type = 'tablet';
+    } else if (!hasHover && isTouch && width < 1024) {
+      type = 'mobile';
+    }
+
+    this.type = type;
+    document.body.classList.add('device-' + type);
+    document.body.classList.toggle('device-touch', isTouch);
+    document.body.classList.toggle('device-no-hover', !hasHover);
+    document.body.classList.toggle('device-portrait', isPortrait);
+    document.body.classList.toggle('device-landscape', !isPortrait);
+    window.DEVICE_TYPE = type;
+    window.IS_TOUCH = isTouch;
+    window.IS_MOBILE = type === 'mobile';
+    window.IS_TABLET = type === 'tablet';
+    window.IS_DESKTOP = type === 'desktop';
+  },
+
+  onResize() {
+    window.addEventListener('resize', () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      document.body.classList.toggle('device-portrait', height > width);
+      document.body.classList.toggle('device-landscape', height <= width);
+    });
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
 // AUDIO CONTROLLER — unified audio mixer
 // ═══════════════════════════════════════════════════════════
 const AudioController = {
@@ -1319,6 +1374,8 @@ const App = (function() {
 
   // ─── INIT ───
   function init() {
+    DeviceDetector.detect();
+    DeviceDetector.onResize();
     AppSettings.load();
     AppSettings.apply();
     initSwipe();
