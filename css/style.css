@@ -43,94 +43,80 @@
   --shadow-neon-cyan: 0 0 30px rgba(192, 38, 211, 0.3);
 }
 
-.theme-light body {
-  color: var(--text-primary);
+/* Menu & landing backgrounds */
+.theme-light #main-menu {
+  background: linear-gradient(180deg, #f5f0ff 0%, #ffffff 100%);
 }
 
+/* UI panels — light bg, dark text */
 .theme-light .frame-top-bar {
   background: linear-gradient(180deg, rgba(245,240,255,0.9) 0%, rgba(245,240,255,0.5) 60%, rgba(245,240,255,0) 100%);
 }
-
 .theme-light .bottom-sheet {
   background: rgba(255, 255, 255, 0.92);
   border-top: 1px solid rgba(0,0,0,0.06);
   box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
 }
-
 .theme-light .audio-dropdown {
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(0,0,0,0.08);
   box-shadow: 0 20px 60px rgba(0,0,0,0.12);
 }
-
 .theme-light .settings-section,
 .theme-light .bs-audio-panel {
   background: rgba(0,0,0,0.03);
   border-color: rgba(0,0,0,0.08);
 }
-
 .theme-light .settings-section-title {
   color: rgba(26, 11, 46, 0.5);
   border-bottom-color: rgba(0,0,0,0.06);
 }
 
+/* Text inside UI panels — dark */
 .theme-light .settings-row-name,
 .theme-light .bs-track-name,
-.theme-light .sub-line {
+.theme-light .bs-narrator-full,
+.theme-light .bs-subtitle,
+.theme-light .bs-game-island-title,
+.theme-light .bs-nav-btn {
   color: #1a0b2e;
 }
+.theme-light .bs-game-island-sub {
+  color: rgba(26, 11, 46, 0.6);
+}
+.theme-light .bs-section-title {
+  color: rgba(26, 11, 46, 0.5);
+}
 
+/* Toggles & buttons in light UI */
 .theme-light .bs-toggle {
   background: rgba(0,0,0,0.12);
 }
-
 .theme-light .bs-toggle.active {
   background: linear-gradient(135deg, #9333ea, #c026d3);
 }
-
 .theme-light .font-size-btn {
   border-color: rgba(0,0,0,0.12);
   background: rgba(0,0,0,0.03);
   color: rgba(26, 11, 46, 0.7);
 }
-
 .theme-light .font-size-btn.active {
   background: linear-gradient(135deg, #9333ea, #c026d3);
   color: #fff;
 }
-
 .theme-light .bs-volume-slider {
   background: rgba(0,0,0,0.1);
 }
-
 .theme-light .bs-narrator-fade {
   background: linear-gradient(to bottom, transparent, rgba(245,240,255,0.95));
 }
-
 .theme-light .bs-narrator-toggle {
   border-color: rgba(0,0,0,0.12);
   background: rgba(0,0,0,0.03);
   color: rgba(26, 11, 46, 0.7);
 }
 
-.theme-light .progress-dot {
-  background: rgba(0,0,0,0.15);
-}
-
-.theme-light .progress-dot.seen {
-  background: rgba(0,0,0,0.45);
-}
-
-.theme-light .progress-dot.active {
-  box-shadow: 0 0 10px rgba(147, 51, 234, 0.4);
-}
-
-.theme-light .nav-arrow {
-  background: rgba(255,255,255,0.7);
-  border-color: rgba(0,0,0,0.08);
-  color: #1a0b2e;
-}
-
+/* Top bar buttons on light bg */
 .theme-light .back-btn,
 .theme-light .cinema-toggle-btn,
 .theme-light .audio-menu-btn,
@@ -140,39 +126,41 @@
   color: #1a0b2e;
 }
 
+/* Progress dots — keep light for dark video bg */
+.theme-light .progress-dot {
+  background: rgba(255,255,255,0.25);
+}
+.theme-light .progress-dot.seen {
+  background: rgba(255,255,255,0.6);
+}
+
+/* Chapter cards on light menu */
 .theme-light .chapter-card {
   background: rgba(255,255,255,0.6);
   border-color: rgba(0,0,0,0.06);
 }
-
 .theme-light .chapter-card:hover {
   border-color: rgba(147, 51, 234, 0.3);
   box-shadow: 0 8px 32px rgba(147, 51, 234, 0.15);
 }
-
 .theme-light .chapter-num,
-.theme-light .chapter-name {
+.theme-light .chapter-name,
+.theme-light .chapter-desc,
+.theme-light .menu-sub {
   color: #1a0b2e;
 }
-
 .theme-light .chapter-desc {
-  color: rgba(26, 11, 46, 0.6);
+  opacity: 0.6;
 }
-
 .theme-light .chapter-btn {
   background: linear-gradient(135deg, #9333ea, #c026d3);
 }
 
-.theme-light .menu-sub {
-  color: rgba(26, 11, 46, 0.45);
-}
-
-.theme-light .subtitle-overlay {
-  background: rgba(245, 240, 255, 0.85);
-}
-
-.theme-light #main-menu {
-  background: linear-gradient(180deg, #f5f0ff 0%, #ffffff 100%);
+/* Nav arrows on light menu */
+.theme-light .nav-arrow {
+  background: rgba(255,255,255,0.7);
+  border-color: rgba(0,0,0,0.08);
+  color: #1a0b2e;
 }
 
 /* ─── RESET & BASE ─── */

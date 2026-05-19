@@ -811,7 +811,9 @@ body {
 .theme-light .land-section-title,
 .theme-light .land-feature-title,
 .theme-light .land-episode-title,
-.theme-light .land-char-name {
+.theme-light .land-char-name,
+.theme-light .land-hero-title,
+.theme-light .land-hero-sub {
   color: #1a0b2e;
 }
 
@@ -822,10 +824,14 @@ body {
 }
 
 .theme-light .land-nav-mobile {
-  background: rgba(245, 240, 255, 0.95);
+  background: rgba(245, 240, 255, 0.98);
 }
 
 .theme-light .land-nav-mobile a {
+  color: #1a0b2e;
+}
+
+.theme-light .land-nav-mobile-close {
   color: #1a0b2e;
 }
 
