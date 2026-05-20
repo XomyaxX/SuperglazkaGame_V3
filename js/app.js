@@ -986,6 +986,8 @@ const App = (function() {
   let uiHideTimeout = null;
   let subtitleSyncCleanup = null;
 
+  const episodesCache = {};
+
   const mainMenu = document.getElementById('main-menu');
   const episodeViewer = document.getElementById('episode-viewer');
   const frameContainer = document.getElementById('frame-container');
@@ -1025,6 +1027,55 @@ const App = (function() {
     });
     if (line.trim()) lines.push(line.trim());
     return lines;
+  }
+
+  // ─── EPISODE API ───
+  async function fetchEpisode(episodeId) {
+    if (episodesCache[episodeId]) return episodesCache[episodeId];
+    try {
+      const res = await fetch('/api/episodes/' + episodeId);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const normalized = normalizeEpisode(data.episode || data);
+      episodesCache[episodeId] = normalized;
+      return normalized;
+    } catch (e) {
+      console.warn('Failed to fetch episode', episodeId, e);
+      return null;
+    }
+  }
+
+  function normalizeEpisode(apiData) {
+    if (!apiData || !apiData.frames) return null;
+    return {
+      id: apiData.id,
+      title: apiData.title || '',
+      cover_image: apiData.cover_image || null,
+      frames: apiData.frames.map(function(f, idx) {
+        var dialogues = [];
+        try { dialogues = JSON.parse(f.dialogue_json || '[]'); } catch(e) {}
+        var dialogueAudio = [];
+        try { dialogueAudio = JSON.parse(f.dialogue_audio_json || '[]'); } catch(e) {}
+        var choices = [];
+        try { choices = JSON.parse(f.choices_json || '[]'); } catch(e) {}
+        return {
+          id: f.id != null ? f.id : (idx + 1),
+          title: f.title || '',
+          narration: f.narration || '',
+          bgImage: f.background_image || null,
+          bgGradient: f.mood || null,
+          audioSrc: f.audio_src || null,
+          videoSrc: f.background_video || null,
+          dialogues: dialogues,
+          dialogueAudio: dialogueAudio,
+          transitionText: f.transition_text || null,
+          game: f.game_type || null,
+          videoPrompt: '',
+          availableGames: [],
+          choices: choices
+        };
+      })
+    };
   }
 
   // ─── RENDER FRAME ───
@@ -1119,7 +1170,7 @@ const App = (function() {
     const isNarrow = window.innerWidth < 480;
     let maxFrame = -1;
     if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
-      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      const epId = Object.keys(episodesCache).find(function(key) { return episodesCache[key] === currentEpisode; });
       if (epId) maxFrame = PlayerProfile.getProgress(epId).maxFrame;
     }
     for (let i = 0; i < total; i++) {
@@ -1325,7 +1376,7 @@ const App = (function() {
 
     // Autosave progress
     if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.markFrameSeen) {
-      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      const epId = Object.keys(episodesCache).find(function(key) { return episodesCache[key] === currentEpisode; });
       if (epId) PlayerProfile.markFrameSeen(epId, idx);
     }
 
@@ -1491,7 +1542,7 @@ const App = (function() {
     if (overlay) overlay.classList.add('visible');
     // Mark episode as completed
     if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.completeEpisode) {
-      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      const epId = Object.keys(episodesCache).find(function(key) { return episodesCache[key] === currentEpisode; });
       if (epId) PlayerProfile.completeEpisode(epId);
     }
     setTimeout(() => {
@@ -1501,15 +1552,18 @@ const App = (function() {
   }
 
   // ─── MENU ───
-  function startEpisode(episodeId, startFrame) {
+  async function startEpisode(episodeId, startFrame) {
     startFrame = typeof startFrame === 'number' ? startFrame : 0;
-    const epData = EPISODES[episodeId];
+    var epData = episodesCache[episodeId];
+    if (!epData) {
+      epData = await fetchEpisode(episodeId);
+    }
     if (!epData) return;
     currentEpisode = epData;
     frames = epData.frames;
     if (frameContainer) {
       frameContainer.textContent = '';
-      frames.forEach((f, i) => {
+      frames.forEach(function(f, i) {
         frameContainer.appendChild(createFrameElement(f, i, frames.length));
       });
     }
@@ -1533,7 +1587,7 @@ const App = (function() {
     renderContinueButton();
   }
 
-  function renderContinueButton() {
+  async function renderContinueButton() {
     var block = document.getElementById('continueBlock');
     var btn = document.getElementById('continueBtn');
     var info = document.getElementById('continueInfo');
@@ -1550,7 +1604,10 @@ const App = (function() {
       var epName = epNames[pos.episodeId] || 'Эпизод ' + pos.episodeId;
       if (info) info.textContent = 'Эпизод ' + pos.episodeId + ' — ' + epName;
       if (previewImg) {
-        var episode = EPISODES[pos.episodeId];
+        var episode = episodesCache[pos.episodeId];
+        if (!episode) {
+          episode = await fetchEpisode(pos.episodeId);
+        }
         if (episode && episode.frames[pos.frameIdx] && episode.frames[pos.frameIdx].bgImage) {
           previewImg.src = episode.frames[pos.frameIdx].bgImage;
           previewImg.style.display = 'block';
@@ -1626,7 +1683,7 @@ const App = (function() {
   }
 
   function getEpisodeProgress(epId) {
-    var ep = EPISODES[epId];
+    var ep = episodesCache[epId];
     var total = ep && ep.frames ? ep.frames.length : 10;
     var current = 0;
     if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
@@ -1672,10 +1729,13 @@ const App = (function() {
         mini.className = 'episode-mini' + (ep.locked ? ' locked' : '');
         mini.dataset.episode = ep.id;
 
+        var cached = episodesCache[ep.id];
         var coverImg = document.createElement('img');
         coverImg.className = 'episode-mini-cover';
         coverImg.alt = '';
-        coverImg.src = 'assets/episodes/episode-' + String(ep.id).padStart(2, '0') + '/cover.png';
+        coverImg.src = cached && cached.cover_image
+          ? cached.cover_image
+          : 'assets/episodes/episode-' + String(ep.id).padStart(2, '0') + '/cover.png';
         coverImg.onerror = function() { coverImg.style.display = 'none'; };
 
         var numEl = document.createElement('div');
@@ -1684,7 +1744,7 @@ const App = (function() {
 
         var titleEl = document.createElement('div');
         titleEl.className = 'episode-mini-title';
-        titleEl.textContent = ep.title;
+        titleEl.textContent = cached && cached.title ? cached.title : ep.title;
 
         var statusEl = document.createElement('div');
         statusEl.className = 'episode-mini-status';
@@ -2085,6 +2145,28 @@ const App = (function() {
     renderBooks();
     renderOverallProgress();
     startCountdown('2026-05-25T12:00:00');
+
+    // Preload published episodes into cache and re-render menu
+    fetch('/api/episodes')
+      .then(function(r) { return r.json(); })
+      .then(async function(list) {
+        if (list && list.episodes) {
+          await Promise.all(list.episodes.map(function(ep) {
+            return fetchEpisode(ep.id);
+          }));
+          renderBooks();
+          renderOverallProgress();
+          renderContinueButton();
+        }
+      })
+      .catch(function(e) { console.warn('Failed to preload episodes', e); });
+
+    // Handle ?episode=X in URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var directEpisode = urlParams.get('episode');
+    if (directEpisode) {
+      startEpisode(parseInt(directEpisode, 10), 0);
+    }
 
     var appNavToggle = document.getElementById('appNavToggle');
     var appNavMobile = document.getElementById('appNavMobile');

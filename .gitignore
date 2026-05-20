@@ -34,3 +34,7 @@ harness-log-*.json
 # Misc
 правки/
 incoming/
+
+# Database & uploads (server-side only)
+server/data/
+server/uploads/

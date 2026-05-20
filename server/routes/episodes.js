@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Episode not found' });
     }
     const frames = await all(
-      'SELECT id, "order", title, narration, dialogue_json, background_image, background_video, mood, game_type, choices_json FROM frames WHERE episode_id = ? ORDER BY "order" ASC',
+      'SELECT id, "order", title, narration, dialogue_json, background_image, background_video, audio_src, mood, game_type, choices_json, transition_text, dialogue_audio_json FROM frames WHERE episode_id = ? ORDER BY "order" ASC',
       [req.params.id]
     );
     episode.frames = frames.map(f => ({

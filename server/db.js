@@ -105,6 +105,26 @@ async function init() {
     console.warn('Migration check skipped:', migErr.message);
   }
 
+  // Migration: add missing columns to frames table
+  try {
+    const frameColumns = await all("PRAGMA table_info(frames)");
+    const colNames = frameColumns.map(c => c.name);
+    if (!colNames.includes('audio_src')) {
+      await run(`ALTER TABLE frames ADD COLUMN audio_src TEXT`);
+      console.log('Migration applied: added audio_src to frames');
+    }
+    if (!colNames.includes('transition_text')) {
+      await run(`ALTER TABLE frames ADD COLUMN transition_text TEXT`);
+      console.log('Migration applied: added transition_text to frames');
+    }
+    if (!colNames.includes('dialogue_audio_json')) {
+      await run(`ALTER TABLE frames ADD COLUMN dialogue_audio_json TEXT`);
+      console.log('Migration applied: added dialogue_audio_json to frames');
+    }
+  } catch (migErr) {
+    console.warn('Frames migration check skipped:', migErr.message);
+  }
+
   await run(`
     CREATE TABLE IF NOT EXISTS episodes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
