@@ -56,10 +56,30 @@ app.use((err, req, res, next) => {
 
 async function start() {
   await init();
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log('Superglazka server running on port ' + PORT);
     console.log('Frontend allowed: ' + FRONTEND_URL);
   });
+
+  // Graceful shutdown
+  const shutdown = (signal) => {
+    console.log(`Received ${signal}. Shutting down gracefully...`);
+    server.close(() => {
+      console.log('HTTP server closed');
+      require('./db').db.close(() => {
+        console.log('Database connection closed');
+        process.exit(0);
+      });
+    });
+    // Force exit after 10s
+    setTimeout(() => {
+      console.error('Forced shutdown after timeout');
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 start().catch(err => {

@@ -87,10 +87,23 @@ async function init() {
     CREATE TABLE IF NOT EXISTS subscriptions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,
-      confirmed INTEGER DEFAULT 1,
+      confirmed INTEGER DEFAULT 0,
+      confirm_token TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // Migration: add confirm_token to existing subscriptions table
+  try {
+    const subColumns = await all("PRAGMA table_info(subscriptions)");
+    const hasToken = subColumns.some(c => c.name === 'confirm_token');
+    if (!hasToken) {
+      await run(`ALTER TABLE subscriptions ADD COLUMN confirm_token TEXT`);
+      console.log('Migration applied: added confirm_token to subscriptions');
+    }
+  } catch (migErr) {
+    console.warn('Migration check skipped:', migErr.message);
+  }
 
   await run(`CREATE INDEX IF NOT EXISTS idx_progress_user ON progress(user_id)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_progress_guest ON progress(guest_token)`);

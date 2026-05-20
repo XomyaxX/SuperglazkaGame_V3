@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+server/node_modules/
+
+# Environment
+server/.env
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build outputs
+dist/
+build/
+
+# Test artifacts
+test_collapsed.png
+test_expanded.png
+harness-log-*.json
+
+# Office docs
+*.docx
+*.pdf
+
+# Misc
+правки/
+incoming/

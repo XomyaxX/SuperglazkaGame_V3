@@ -7,21 +7,21 @@
 <meta name="theme-color" content="#0a0618">
 <meta name="description" content="Политика конфиденциальности проекта Суперглазка. Какие данные собираются и как они используются.">
 <title>Политика конфиденциальности — Суперглазка</title>
-<link rel="canonical" href="https://superglazka.ru/privacy.html">
+<link rel="canonical" href="https://vidial-media.ru/privacy.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
 <link rel="apple-touch-icon" href="icons/icon-180x180.png">
 <link rel="manifest" href="manifest.json">
 <meta property="og:title" content="Политика конфиденциальности — Суперглазка">
 <meta property="og:description" content="Какие данные собираются и как они используются.">
-<meta property="og:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
-<meta property="og:url" content="https://superglazka.ru/privacy.html">
+<meta property="og:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://vidial-media.ru/privacy.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Политика конфиденциальности — Суперглазка">
 <meta name="twitter:description" content="Какие данные собираются и как они используются.">
-<meta name="twitter:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<meta name="twitter:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800,900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
@@ -137,55 +137,71 @@ if ('serviceWorker' in navigator) {
 
   <div class="privacy-content">
     <h1>Политика конфиденциальности</h1>
-    <p class="privacy-date">Последнее обновление: 18 мая 2026 г.</p>
+    <p class="privacy-date">Последнее обновление: 21 мая 2026 г.</p>
 
     <h2>1. Какие данные мы собираем</h2>
-    <p>Проект «Суперглазка» работает полностью в браузере и <strong>не передаёт данные на сервер</strong>. Мы используем только локальное хранилище браузера (localStorage) для:</p>
+    <p>При использовании проекта «Суперглазка» мы можем собирать следующие данные:</p>
     <ul>
-      <li><strong>Прогресса эпизодов</strong> — какие кадры просмотрены, какие эпизоды завершены</li>
-      <li><strong>Игрового профиля</strong> — количество монет, лучшие результаты в мини-играх</li>
-      <li><strong>Настроек</strong> — громкость звука, размер шрифта субтитров, выбранная тема (тёмная/светлая)</li>
-      <li><strong>Согласия на cookies</strong> — факт принятия политики конфиденциальности</li>
+      <li><strong>Email и пароль</strong> — при создании полноценного аккаунта (пароль хранится в виде хеша)</li>
+      <li><strong>Никнейм</strong> — отображаемое имя в игровом профиле</li>
+      <li><strong>Игровой прогресс</strong> — просмотренные кадры эпизодов, завершённые эпизоды</li>
+      <li><strong>Игровая валюта и достижения</strong> — количество монет, результаты мини-игр</li>
+      <li><strong>Email для рассылки</strong> — при подписке на уведомления о новых эпизодах (только с вашего согласия)</li>
+      <li><strong>Настройки интерфейса</strong> — тема оформления, громкость звука, размер субтитров (хранятся в localStorage браузера)</li>
+      <li><strong>Согласие на cookies и хранение данных</strong> — факт принятия политики конфиденциальности</li>
     </ul>
 
     <h2>2. Зачем мы собираем эти данные</h2>
-    <p>Данные необходимы исключительно для:</p>
+    <p>Данные необходимы для:</p>
     <ul>
-      <li>Сохранения прогресса между визитами</li>
+      <li>Сохранения прогресса и игровых достижений между устройствами (при входе в аккаунт)</li>
+      <li>Авторизации и защиты вашего профиля</li>
+      <li>Отправки уведомлений о новых эпизодах (только при явной подписке)</li>
       <li>Персонализации интерфейса (тема, размер шрифта)</li>
       <li>Формирования мотивации через игровые механики (монеты, достижения)</li>
     </ul>
 
     <h2>3. Кто имеет доступ к данным</h2>
-    <p>Все данные хранятся <strong>локально на устройстве пользователя</strong> в браузере. Мы, как создатели проекта, не имеем доступа к этим данным. Данные не передаются третьим лицам, не продаются и не используются для рекламы.</p>
+    <p>Данные хранятся на защищённом сервере. Доступ имеют только технические администраторы проекта в объёме, необходимом для поддержки работы сервиса. Мы не передаём персональные данные третьим лицам, не продаём их и не используем для таргетированной рекламы.</p>
+    <p>Для отправки email-рассылок используется сервис Resend (resend.com) — ваш email передаётся только для доставки писем.</p>
 
-    <h2>4. Как удалить данные</h2>
-    <p>Вы можете удалить все сохранённые данные одним из способов:</p>
+    <h2>4. Хранение и безопасность</h2>
     <ul>
-      <li>Очистить localStorage для сайта superglazka.ru в настройках браузера</li>
-      <li>Использовать режим "инкогнито" — данные не будут сохраняться между сессиями</li>
-      <li>Нажать кнопку "Сбросить прогресс" в профиле (если доступна)</li>
+      <li>Пароли хранятся в зашифрованном виде (bcrypt) — мы не можем их прочитать</li>
+      <li>Соединение с сайтом защищено SSL/TLS (HTTPS)</li>
+      <li>База данных регулярно резервируется</li>
+      <li>Авторизационные токены имеют ограниченный срок действия</li>
     </ul>
 
-    <h2>5. Cookies</h2>
-    <p>Мы не используем классические HTTP-cookies. Единственная форма хранения — <strong>localStorage</strong>. При первом посещении сайта показывается баннер с запросом согласия на использование localStorage.</p>
+    <h2>5. Как удалить данные</h2>
+    <p>Вы можете удалить или ограничить обработку данных следующими способами:</p>
+    <ul>
+      <li>Очистить localStorage для сайта в настройках браузера — удалит локальные настройки</li>
+      <li>Нажать кнопку «Выйти» в профиле — удалит локальный токен авторизации</li>
+      <li>Для полного удаления аккаунта и всех связанных данных напишите нам на email ниже</li>
+      <li>Для отмены email-рассылки перейдите по ссылке «Отписаться» в любом письме</li>
+    </ul>
 
-    <h2>6. Безопасность детей</h2>
+    <h2>6. Cookies и локальное хранилище</h2>
+    <p>Мы используем <strong>localStorage</strong> браузера для сохранения настроек и гостевого прогресса. При создании аккаунта игровой прогресс синхронизируется с сервером. Мы не используем сторонние трекеры и аналитические cookies.</p>
+
+    <h2>7. Безопасность детей</h2>
     <p>Проект создан для детей и соответствует требованиям:</p>
     <ul>
-      <li>Мы не запрашиваем персональные данные (имя, возраст, email) без согласия родителей</li>
+      <li>Мы не запрашиваем персональные данные (имя, возраст, адрес) без согласия родителей</li>
+      <li>Email запрашивается только для создания аккаунта или подписки на рассылку</li>
       <li>Нет внешних ссылок на социальные сети внутри приложения</li>
       <li>Нет рекламы и сторонних трекеров</li>
       <li>Нет сбора геолокации или данных устройства</li>
     </ul>
 
-    <h2>7. Изменения политики</h2>
+    <h2>8. Изменения политики</h2>
     <p>Мы можем обновлять эту политику время от времени. Все изменения будут опубликованы на этой странице с указанием даты обновления.</p>
 
     <div class="privacy-contact">
-      <h2>8. Контакты</h2>
-      <p>Если у вас есть вопросы о политике конфиденциальности, напишите нам:</p>
-      <p><a href="mailto:hello@superglazka.ru">hello@superglazka.ru</a></p>
+      <h2>9. Контакты</h2>
+      <p>Если у вас есть вопросы о политике конфиденциальности, запрос на удаление данных или другие обращения:</p>
+      <p><a href="mailto:hello@vidial-media.ru">hello@vidial-media.ru</a></p>
     </div>
   </div>
 
@@ -201,7 +217,7 @@ if (savedTheme) document.body.classList.add('theme-' + savedTheme);
 
   <div class="cookie-banner" id="cookieBanner">
     <div class="cookie-banner-text">
-      Мы используем localStorage для сохранения прогресса и настроек.
+      Мы используем localStorage и серверное хранилище для сохранения прогресса и настроек.
       <a href="privacy.html">Политика конфиденциальности</a>
     </div>
     <button class="cookie-banner-btn" id="cookieAccept">Принять</button>

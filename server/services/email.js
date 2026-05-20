@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@superglazka.ru';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@vidial-media.ru';
 
 function loadTemplate(name, replacements) {
   const templatePath = path.join(__dirname, '..', 'templates', name + '.html');
@@ -45,4 +45,21 @@ async function sendBulkNewEpisode(subscribers, episodeTitle, episodeNumber, epis
   return results;
 }
 
-module.exports = { sendNewEpisodeNotification, sendBulkNewEpisode };
+async function sendConfirmationEmail(to, confirmToken) {
+  const confirmUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/api/subscribe/confirm/' + confirmToken;
+  const html = loadTemplate('confirm-email', {
+    confirmUrl: confirmUrl,
+    year: String(new Date().getFullYear())
+  });
+
+  const result = await resend.emails.send({
+    from: 'Superglazka <' + FROM_EMAIL + '>',
+    to: [to],
+    subject: 'Подтвердите подписку на Суперглазку',
+    html: html
+  });
+
+  return result;
+}
+
+module.exports = { sendNewEpisodeNotification, sendBulkNewEpisode, sendConfirmationEmail };

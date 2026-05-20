@@ -30,7 +30,7 @@ npm -v
 
 # 3. Install PM2 globally
 echo "[3/9] Installing PM2..."
-npm install -g pm2
+nnpm install -g pm2
 
 # 4. Install Nginx
 echo "[4/9] Installing Nginx..."
