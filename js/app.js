@@ -372,18 +372,23 @@ const AudioController = {
       this.currentIdx++;
       this.playNext();
     };
-    audio.onerror = () => {
-      console.warn('Audio failed:', item.src);
+    const handleAudioError = () => {
+      if (typeof fallbackTypewriter === 'function' && item.type === 'narration') {
+        fallbackTypewriter();
+      }
       this.clearTimeout();
       this.currentIdx++;
       this.playNext();
     };
 
+    audio.onerror = () => {
+      console.warn('Audio failed:', item.src);
+      handleAudioError();
+    };
+
     audio.play().catch(err => {
       console.warn('Audio play failed:', item.src, err);
-      this.clearTimeout();
-      this.currentIdx++;
-      this.playNext();
+      handleAudioError();
     });
 
     this.timeoutId = setTimeout(() => {
@@ -1037,6 +1042,30 @@ const App = (function() {
       video.src = frameData.videoSrc;
       video.setAttribute('playsinline', '');
       video.setAttribute('preload', 'auto');
+
+      video.addEventListener('error', function() {
+        videoLayer.classList.add('video-error');
+        img.style.display = 'none';
+        info.style.display = 'none';
+        btn.style.display = 'none';
+        video.style.display = 'none';
+        const placeholder = document.createElement('div');
+        placeholder.className = 'video-placeholder';
+        const phIcon = document.createElement('div');
+        phIcon.className = 'ph-icon';
+        phIcon.textContent = '⚠️';
+        const phText = document.createElement('div');
+        phText.className = 'ph-text';
+        phText.textContent = 'Видео недоступно';
+        const phNote = document.createElement('div');
+        phNote.className = 'ph-note';
+        phNote.textContent = frameData.videoPrompt || '';
+        placeholder.appendChild(phIcon);
+        placeholder.appendChild(phText);
+        placeholder.appendChild(phNote);
+        videoLayer.appendChild(placeholder);
+      });
+
       videoLayer.appendChild(video);
     } else {
       const placeholder = document.createElement('div');

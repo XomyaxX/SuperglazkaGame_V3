@@ -740,6 +740,15 @@ body {
   line-height: 1.5;
 }
 
+.video-error {
+  background: linear-gradient(160deg, #1a0f2e, #2d1b69) !important;
+}
+
+.video-error .video-placeholder .ph-text {
+  color: #ef4444;
+  font-weight: 700;
+}
+
 /* ─── PLAY BUTTON (top right) ─── */
 .play-clip-btn {
   position: absolute;
