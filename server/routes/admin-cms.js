@@ -54,7 +54,13 @@ router.get('/episodes/:id', async (req, res) => {
     const episode = await get('SELECT * FROM episodes WHERE id = ?', [req.params.id]);
     if (!episode) return res.status(404).json({ error: 'Episode not found' });
     const frames = await all('SELECT * FROM frames WHERE episode_id = ? ORDER BY "order" ASC', [req.params.id]);
-    episode.frames = frames;
+    episode.frames = frames.map(f => ({
+      ...f,
+      dialogue: f.dialogue_json ? JSON.parse(f.dialogue_json) : [],
+      dialogueAudio: f.dialogue_audio_json ? JSON.parse(f.dialogue_audio_json) : [],
+      choices: f.choices_json ? JSON.parse(f.choices_json) : [],
+      availableGames: f.available_games_json ? JSON.parse(f.available_games_json) : []
+    }));
     res.json({ success: true, episode });
   } catch (err) {
     console.error(err);
@@ -96,17 +102,27 @@ router.put('/episodes/:id', async (req, res) => {
 router.delete('/episodes/:id', async (req, res) => {
   try {
     // Delete associated files
-    const frames = await all('SELECT background_image, background_video FROM frames WHERE episode_id = ?', [req.params.id]);
+    const frames = await all('SELECT background_image, background_video, audio_src, dialogue_audio_json FROM frames WHERE episode_id = ?', [req.params.id]);
     for (const f of frames) {
-      if (f.background_image) {
-        const p = path.join(UPLOAD_DIR, f.background_image);
-        if (fs.existsSync(p)) fs.unlinkSync(p);
+      for (const field of ['background_image', 'background_video', 'audio_src']) {
+        if (f[field]) {
+          const p = path.join(UPLOAD_DIR, f[field]);
+          if (fs.existsSync(p)) fs.unlinkSync(p);
+        }
       }
-      if (f.background_video) {
-        const p = path.join(UPLOAD_DIR, f.background_video);
-        if (fs.existsSync(p)) fs.unlinkSync(p);
+      if (f.dialogue_audio_json) {
+        try {
+          const audios = JSON.parse(f.dialogue_audio_json);
+          for (const a of audios) {
+            const p = path.join(UPLOAD_DIR, a);
+            if (fs.existsSync(p)) fs.unlinkSync(p);
+          }
+        } catch (e) {}
       }
     }
+    // Delete episode directory
+    const epDir = path.join(UPLOAD_DIR, 'episodes', req.params.id);
+    if (fs.existsSync(epDir)) fs.rmSync(epDir, { recursive: true });
     await run('DELETE FROM episodes WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
@@ -132,14 +148,18 @@ router.post('/episodes/:id/publish', async (req, res) => {
 // POST /api/admin/episodes/:id/frames
 router.post('/episodes/:id/frames', async (req, res) => {
   try {
-    const { order, title, narration, dialogue, background_image, background_video, mood, game_type, choices } = req.body;
+    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
     const result = await run(
-      'INSERT INTO frames (episode_id, "order", title, narration, dialogue_json, background_image, background_video, mood, game_type, choices_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO frames (episode_id, "order", title, narration, dialogue_json, dialogue_audio_json, background_image, background_video, audio_src, mood, game_type, choices_json, transition_text, video_prompt, available_games_json, bg_gradient) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         req.params.id, order ?? 0, title || '', narration || '',
         dialogue ? JSON.stringify(dialogue) : '[]',
-        background_image || '', background_video || '', mood || '', game_type || '',
-        choices ? JSON.stringify(choices) : '[]'
+        dialogue_audio ? JSON.stringify(dialogue_audio) : '[]',
+        background_image || '', background_video || '', audio_src || '', mood || '', game_type || '',
+        choices ? JSON.stringify(choices) : '[]',
+        transition_text || '', video_prompt || '',
+        available_games ? JSON.stringify(available_games) : '[]',
+        bg_gradient || ''
       ]
     );
     res.json({ success: true, id: result.lastID });
@@ -152,14 +172,19 @@ router.post('/episodes/:id/frames', async (req, res) => {
 // PUT /api/admin/frames/:id
 router.put('/frames/:id', async (req, res) => {
   try {
-    const { order, title, narration, dialogue, background_image, background_video, mood, game_type, choices } = req.body;
+    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
     await run(
-      'UPDATE frames SET "order" = ?, title = ?, narration = ?, dialogue_json = ?, background_image = ?, background_video = ?, mood = ?, game_type = ?, choices_json = ? WHERE id = ?',
+      'UPDATE frames SET "order" = ?, title = ?, narration = ?, dialogue_json = ?, dialogue_audio_json = ?, background_image = ?, background_video = ?, audio_src = ?, mood = ?, game_type = ?, choices_json = ?, transition_text = ?, video_prompt = ?, available_games_json = ?, bg_gradient = ? WHERE id = ?',
       [
         order ?? 0, title || '', narration || '',
         dialogue ? JSON.stringify(dialogue) : '[]',
-        background_image || '', background_video || '', mood || '', game_type || '',
-        choices ? JSON.stringify(choices) : '[]', req.params.id
+        dialogue_audio ? JSON.stringify(dialogue_audio) : '[]',
+        background_image || '', background_video || '', audio_src || '', mood || '', game_type || '',
+        choices ? JSON.stringify(choices) : '[]',
+        transition_text || '', video_prompt || '',
+        available_games ? JSON.stringify(available_games) : '[]',
+        bg_gradient || '',
+        req.params.id
       ]
     );
     res.json({ success: true });
@@ -172,15 +197,22 @@ router.put('/frames/:id', async (req, res) => {
 // DELETE /api/admin/frames/:id
 router.delete('/frames/:id', async (req, res) => {
   try {
-    const frame = await get('SELECT background_image, background_video FROM frames WHERE id = ?', [req.params.id]);
+    const frame = await get('SELECT background_image, background_video, audio_src, dialogue_audio_json FROM frames WHERE id = ?', [req.params.id]);
     if (frame) {
-      if (frame.background_image) {
-        const p = path.join(UPLOAD_DIR, frame.background_image);
-        if (fs.existsSync(p)) fs.unlinkSync(p);
+      for (const field of ['background_image', 'background_video', 'audio_src']) {
+        if (frame[field]) {
+          const p = path.join(UPLOAD_DIR, frame[field]);
+          if (fs.existsSync(p)) fs.unlinkSync(p);
+        }
       }
-      if (frame.background_video) {
-        const p = path.join(UPLOAD_DIR, frame.background_video);
-        if (fs.existsSync(p)) fs.unlinkSync(p);
+      if (frame.dialogue_audio_json) {
+        try {
+          const audios = JSON.parse(frame.dialogue_audio_json);
+          for (const a of audios) {
+            const p = path.join(UPLOAD_DIR, a);
+            if (fs.existsSync(p)) fs.unlinkSync(p);
+          }
+        } catch (e) {}
       }
     }
     await run('DELETE FROM frames WHERE id = ?', [req.params.id]);

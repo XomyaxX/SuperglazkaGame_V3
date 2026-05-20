@@ -1045,33 +1045,50 @@ const App = (function() {
     }
   }
 
+  function resolveMediaPath(path) {
+    if (!path) return null;
+    if (path.startsWith('http') || path.startsWith('/uploads/')) return path;
+    if (path.startsWith('/')) return '/uploads' + path;
+    return '/uploads/' + path;
+  }
+
   function normalizeEpisode(apiData) {
     if (!apiData || !apiData.frames) return null;
     return {
       id: apiData.id,
       title: apiData.title || '',
-      cover_image: apiData.cover_image || null,
+      cover_image: resolveMediaPath(apiData.cover_image),
       frames: apiData.frames.map(function(f, idx) {
-        var dialogues = [];
-        try { dialogues = JSON.parse(f.dialogue_json || '[]'); } catch(e) {}
-        var dialogueAudio = [];
-        try { dialogueAudio = JSON.parse(f.dialogue_audio_json || '[]'); } catch(e) {}
-        var choices = [];
-        try { choices = JSON.parse(f.choices_json || '[]'); } catch(e) {}
+        var dialogues = f.dialogue || [];
+        if (!dialogues.length && f.dialogue_json) {
+          try { dialogues = JSON.parse(f.dialogue_json); } catch(e) {}
+        }
+        var dialogueAudio = f.dialogueAudio || [];
+        if (!dialogueAudio.length && f.dialogue_audio_json) {
+          try { dialogueAudio = JSON.parse(f.dialogue_audio_json); } catch(e) {}
+        }
+        var choices = f.choices || [];
+        if (!choices.length && f.choices_json) {
+          try { choices = JSON.parse(f.choices_json); } catch(e) {}
+        }
+        var availableGames = f.availableGames || [];
+        if (!availableGames.length && f.available_games_json) {
+          try { availableGames = JSON.parse(f.available_games_json); } catch(e) {}
+        }
         return {
           id: f.id != null ? f.id : (idx + 1),
           title: f.title || '',
           narration: f.narration || '',
-          bgImage: f.background_image || null,
-          bgGradient: f.mood || null,
-          audioSrc: f.audio_src || null,
-          videoSrc: f.background_video || null,
+          bgImage: resolveMediaPath(f.background_image || f.bgImage),
+          bgGradient: f.bg_gradient || f.bgGradient || f.mood || null,
+          audioSrc: resolveMediaPath(f.audio_src || f.audioSrc),
+          videoSrc: resolveMediaPath(f.background_video || f.videoSrc),
           dialogues: dialogues,
-          dialogueAudio: dialogueAudio,
-          transitionText: f.transition_text || null,
-          game: f.game_type || null,
-          videoPrompt: '',
-          availableGames: [],
+          dialogueAudio: dialogueAudio.map(resolveMediaPath).filter(Boolean),
+          transitionText: f.transition_text || f.transitionText || null,
+          game: f.game_type || f.game || null,
+          videoPrompt: f.video_prompt || f.videoPrompt || '',
+          availableGames: availableGames,
           choices: choices
         };
       })

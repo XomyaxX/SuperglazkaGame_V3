@@ -121,6 +121,18 @@ async function init() {
       await run(`ALTER TABLE frames ADD COLUMN dialogue_audio_json TEXT`);
       console.log('Migration applied: added dialogue_audio_json to frames');
     }
+    if (!colNames.includes('video_prompt')) {
+      await run(`ALTER TABLE frames ADD COLUMN video_prompt TEXT`);
+      console.log('Migration applied: added video_prompt to frames');
+    }
+    if (!colNames.includes('available_games_json')) {
+      await run(`ALTER TABLE frames ADD COLUMN available_games_json TEXT`);
+      console.log('Migration applied: added available_games_json to frames');
+    }
+    if (!colNames.includes('bg_gradient')) {
+      await run(`ALTER TABLE frames ADD COLUMN bg_gradient TEXT`);
+      console.log('Migration applied: added bg_gradient to frames');
+    }
   } catch (migErr) {
     console.warn('Frames migration check skipped:', migErr.message);
   }

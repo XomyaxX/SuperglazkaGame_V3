@@ -12,15 +12,24 @@ import progressRoutes from './routes/progress';
 import coinsRoutes from './routes/coins';
 import subscribeRoutes from './routes/subscribe';
 import adminRoutes from './routes/admin';
+// @ts-ignore JS routes outside rootDir
+const episodeRoutes = require('../routes/episodes');
+// @ts-ignore JS routes outside rootDir
+const adminCmsRoutes = require('../routes/admin-cms');
 
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
 
 const app = express();
 
-// Ensure data directory exists
+// Ensure directories exist
 const dataDir = path.join(__dirname, '..', 'data');
+const uploadsDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+// Serve uploaded files
+app.use('/uploads', express.static(uploadsDir));
 
 // Security middleware
 app.use(helmet());
@@ -42,6 +51,8 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/coins', coinsRoutes);
 app.use('/api/subscribe', subscribeRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/episodes', episodeRoutes);
+app.use('/api/admin', adminCmsRoutes);
 
 // 404
 app.use((req, res) => {
