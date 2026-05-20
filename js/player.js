@@ -63,16 +63,26 @@ const PlayerProfile = (function() {
     p.coins += Math.max(0, amount);
     save(p);
     renderBadge();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
+      Auth.addCoins(amount).catch(function() {});
+    }
     return p.coins;
   }
 
   /** @param {number} amount - Coins to spend @returns {boolean} Whether purchase succeeded */
   function spendCoins(amount) {
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn() && !Auth.canSpendCoins()) {
+      alert('\uD83D\uDD12 \u0417\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044c \u0441 \u043f\u043e\u043b\u043d\u044b\u043c \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u043e\u043c, \u0447\u0442\u043e\u0431\u044b \u0442\u0440\u0430\u0442\u0438\u0442\u044c \u043c\u043e\u043d\u0435\u0442\u043a\u0438!');
+      return false;
+    }
     const p = load();
     if (p.coins < amount) return false;
     p.coins -= amount;
     save(p);
     renderBadge();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
+      Auth.spendCoins(amount).catch(function() {});
+    }
     return true;
   }
 
@@ -83,6 +93,9 @@ const PlayerProfile = (function() {
     p.episodes[epId].completed = true;
     save(p);
     renderBadge();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
+      Auth.saveProgress(epId, p.episodes[epId].maxFrame, true).catch(function() {});
+    }
   }
 
   /** @param {string|number} epId - Episode identifier @param {number} frameIdx - Zero-based frame index */
@@ -93,6 +106,9 @@ const PlayerProfile = (function() {
       p.episodes[epId].maxFrame = frameIdx;
     }
     save(p);
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
+      Auth.saveProgress(epId, frameIdx, p.episodes[epId].completed).catch(function() {});
+    }
   }
 
   /** @param {string|number} epId - Episode identifier @returns {Object} Episode progress */
@@ -136,12 +152,52 @@ const PlayerProfile = (function() {
     renderBadge();
   }
 
+  async function syncFromServer() {
+    if (typeof Auth === 'undefined' || !Auth.isLoggedIn || !Auth.isLoggedIn()) return;
+    try {
+      var serverProgress = await Auth.fetchProgress();
+      var p = load();
+      if (serverProgress.progress) {
+        Object.entries(serverProgress.progress).forEach(function(entry) {
+          var epId = entry[0];
+          var data = entry[1];
+          if (!p.episodes[epId]) p.episodes[epId] = { completed: false, framesSeen: 0, maxFrame: -1 };
+          if (data.maxFrame > p.episodes[epId].maxFrame) {
+            p.episodes[epId].maxFrame = data.maxFrame;
+          }
+          if (data.completed) p.episodes[epId].completed = true;
+        });
+        save(p);
+      }
+      var serverCoins = await Auth.fetchCoins();
+      if (serverCoins.amount > p.coins) {
+        p.coins = serverCoins.amount;
+        save(p);
+      }
+      renderBadge();
+    } catch (e) {
+      console.warn('Server sync failed:', e);
+    }
+  }
+
   /* ─── UI ─── */
   function renderBadge() {
-    const p = load();
-    document.querySelectorAll('.profile-coins-val').forEach(badge => {
-      badge.textContent = p.coins;
-    });
+    var p = load();
+    if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
+      Auth.fetchCoins().then(function(data) {
+        document.querySelectorAll('.profile-coins-val').forEach(function(badge) {
+          badge.textContent = data.amount;
+        });
+      }).catch(function() {
+        document.querySelectorAll('.profile-coins-val').forEach(function(badge) {
+          badge.textContent = p.coins;
+        });
+      });
+    } else {
+      document.querySelectorAll('.profile-coins-val').forEach(function(badge) {
+        badge.textContent = p.coins;
+      });
+    }
   }
 
   function openModal() {
@@ -201,6 +257,7 @@ const PlayerProfile = (function() {
 
   function init() {
     renderBadge();
+    syncFromServer();
 
     // Bind profile buttons (main menu + episode viewer)
     document.querySelectorAll('.profile-btn').forEach(btn => {

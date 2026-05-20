@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000; media-src 'self'; manifest-src 'self';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0618">
 <title>Суперглазка — Интерактивный комикс</title>
@@ -36,54 +36,73 @@ if ('serviceWorker' in navigator) {
 <body>
 
 <!-- ═══════════════════════════════════════════════════════════
-     MAIN MENU
+     MAIN MENU v2
      ═══════════════════════════════════════════════════════════ -->
 <div id="main-menu">
-  <button class="profile-btn" title="Профиль" aria-label="Профиль">
-    <span>👤</span>
-    <span class="profile-coins-val">0</span>
-    <span>🪙</span>
-  </button>
+  <header class="app-header">
+    <div class="app-logo">
+      <div class="logo-pretitle">Игросказка</div>
+      <div class="logo-title">СУПЕРГЛАЗКА</div>
+    </div>
+    <nav class="app-nav" aria-label="Основная навигация">
+      <a href="index.html">Главная</a>
+      <a href="blog.html">Блог</a>
+      <a href="parents.html">Родителям</a>
+      <a href="checklist.html">Чек-лист</a>
+      <button id="menuSettingsBtn" aria-label="Настройки">⚙️</button>
+      <button class="profile-btn" id="menuProfileBtn" title="Профиль" aria-label="Профиль">
+        <span>👤</span>
+        <span class="profile-coins-val">0</span>
+        <span>🪙</span>
+      </button>
+    </nav>
+    <button class="app-nav-mobile-toggle" id="appNavToggle" aria-label="Меню">☰</button>
+  </header>
 
-  <div class="menu-title">СУПЕРГЛАЗКА</div>
-  <div class="menu-sub">Интерактивный комикс о здоровье глаз</div>
-
-  <div class="continue-block" id="continueBlock" style="display:none;">
-    <div class="continue-label">Вы остановились здесь</div>
-    <button class="chapter-btn continue-btn" id="continueBtn">▶ Продолжить</button>
+  <!-- Mobile nav overlay -->
+  <div class="app-nav-mobile" id="appNavMobile">
+    <button class="app-nav-mobile-close" id="appNavClose" aria-label="Закрыть">✕</button>
+    <a href="index.html">Главная</a>
+    <a href="blog.html">Блог</a>
+    <a href="parents.html">Родителям</a>
+    <a href="checklist.html">Чек-лист</a>
+    <button id="menuSettingsBtnMobile" class="app-nav-mobile-btn">⚙️ Настройки</button>
+    <button class="profile-btn app-nav-mobile-btn" id="menuProfileBtnMobile" title="Профиль" aria-label="Профиль">
+      <span>👤</span>
+      <span>Профиль</span>
+    </button>
   </div>
 
-  <div class="chapters-grid">
-    <!-- Episode 1 -->
-    <div class="chapter-card" data-episode="1">
-      <img class="chapter-cover" src="assets/episodes/episode-01/cover.png" alt="Эпизод 1" loading="lazy">
-      <div class="chapter-body">
-        <div class="chapter-num">Эпизод 1</div>
-        <div class="chapter-name">Рождение героини</div>
-        <div class="chapter-desc">Планета Видеаль в опасности. Древний ритуал призывает защитницу — девочку с суперсилой зрения.</div>
-        <button class="chapter-btn">▶ Начать</button>
+  <div class="app-menu-container">
+    <!-- Top row -->
+    <div class="menu-top-row">
+      <div class="continue-card" id="continueBlock" style="display:none;">
+        <div class="card-title">Продолжить приключение</div>
+        <img class="continue-preview" id="continuePreview" alt="Последний кадр" style="display:none;">
+        <div class="card-info" id="continueInfo"></div>
+        <button class="chapter-btn continue-btn" id="continueBtn">▶ Продолжить</button>
+      </div>
+      <div class="countdown-card">
+        <div class="card-title">До новой главы</div>
+        <div class="countdown-display" id="countdownDisplay">
+          <div class="countdown-group"><div class="countdown-value" id="cdDays">00</div><div class="countdown-unit">дней</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-group"><div class="countdown-value" id="cdHours">00</div><div class="countdown-unit">часов</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-group"><div class="countdown-value" id="cdMinutes">00</div><div class="countdown-unit">минут</div></div>
+          <div class="countdown-sep">:</div>
+          <div class="countdown-group"><div class="countdown-value" id="cdSeconds">00</div><div class="countdown-unit">секунд</div></div>
+        </div>
+        <div class="countdown-label">25 мая 2026, 12:00</div>
       </div>
     </div>
 
-    <!-- Episode 2 -->
-    <div class="chapter-card" data-episode="2">
-      <img class="chapter-cover" src="assets/episodes/episode-02/cover.png" alt="Эпизод 2" loading="lazy">
-      <div class="chapter-body">
-        <div class="chapter-num">Эпизод 2</div>
-        <div class="chapter-name">Кто я?</div>
-        <div class="chapter-desc">Суперглазка узнаёт о своей миссии. Тренировки, первые испытания и встреча с тьмой.</div>
-        <button class="chapter-btn">▶ Начать</button>
-      </div>
-    </div>
-
-    <!-- Episode 3 (locked) -->
-    <div class="chapter-card locked" data-episode="3">
-      <img class="chapter-cover" src="assets/episodes/episode-03/cover.png" alt="Эпизод 3" loading="lazy" style="filter: grayscale(0.6);">
-      <div class="chapter-body">
-        <div class="chapter-num">Эпизод 3</div>
-        <div class="chapter-name">Великая битва</div>
-        <div class="chapter-desc">Финальное противостояние с Великой Тьмой. Всё будущее планеты Видеаль в твоих руках!</div>
-        <div class="chapter-lock">🔒</div>
+    <!-- Bottom row -->
+    <div class="menu-bottom-row">
+      <div class="books-panel">
+        <div class="overall-progress" id="overallProgress"></div>
+        <div class="books-tabs" id="booksTabs"></div>
+        <div class="books-content" id="booksContent"></div>
       </div>
     </div>
   </div>
@@ -143,6 +162,15 @@ if ('serviceWorker' in navigator) {
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleVideo"></div>
+        </div>
+        <div class="settings-row" id="settingsRowBgMusic">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🎵</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Фоновая музыка</div>
+            </div>
+          </div>
+          <div class="bs-toggle" id="settingsToggleBgMusic"></div>
         </div>
         <div class="bs-volume-row">
           <span class="vol-icon">🔉</span>
@@ -466,6 +494,51 @@ if ('serviceWorker' in navigator) {
     <div class="profile-episodes"></div>
     <div class="profile-section-title">🎮 Мини-игры</div>
     <div class="profile-games"></div>
+    <div class="profile-section-title">🔔 Уведомления</div>
+    <div class="profile-subscribe">
+      <input type="email" class="profile-sub-input" id="profileSubEmail" placeholder="Твой email">
+      <button class="profile-sub-btn" id="profileSubBtn">Подписаться на новые эпизоды</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     AUTH MODAL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="auth-modal" role="dialog" aria-modal="true" aria-label="Авторизация">
+  <div class="auth-card">
+    <button class="auth-close" id="authClose" aria-label="Закрыть">✕</button>
+    <div class="auth-logo">👁️ СУПЕРГЛАЗКА</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="guest">Быстрый старт</button>
+      <button class="auth-tab" data-tab="register">Полный аккаунт</button>
+    </div>
+
+    <!-- Guest form -->
+    <div class="auth-panel active" id="authPanelGuest">
+      <div class="auth-desc">Введи никнейм и начни играть. Прогресс сохранится, но монетки пока нельзя тратить.</div>
+      <input type="text" class="auth-input" id="authGuestNickname" placeholder="Твой никнейм" maxlength="20">
+      <button class="auth-btn" id="authGuestBtn">🚀 Играть!</button>
+    </div>
+
+    <!-- Register form -->
+    <div class="auth-panel" id="authPanelRegister">
+      <input type="text" class="auth-input" id="authRegNickname" placeholder="Никнейм" maxlength="20">
+      <input type="email" class="auth-input" id="authRegEmail" placeholder="Email">
+      <input type="tel" class="auth-input" id="authRegPhone" placeholder="Телефон (необязательно)">
+      <input type="password" class="auth-input" id="authRegPassword" placeholder="Пароль (минимум 6 символов)">
+      <button class="auth-btn" id="authRegBtn">🚀 Зарегистрироваться</button>
+      <div class="auth-switch">Уже есть аккаунт? <a href="#" id="authShowLogin">Войти</a></div>
+    </div>
+
+    <!-- Login form -->
+    <div class="auth-panel" id="authPanelLogin">
+      <input type="email" class="auth-input" id="authLoginEmail" placeholder="Email">
+      <input type="password" class="auth-input" id="authLoginPassword" placeholder="Пароль">
+      <button class="auth-btn" id="authLoginBtn">🔑 Войти</button>
+      <div class="auth-switch">Нет аккаунта? <a href="#" id="authShowRegister">Зарегистрироваться</a></div>
+    </div>
   </div>
 </div>
 
@@ -538,10 +611,13 @@ if ('serviceWorker' in navigator) {
      ═══════════════════════════════════════════════════════════ -->
 <script src="js/error-reporter.js"></script>
 <script src="js/player.js"></script>
+<script src="js/auth.js"></script>
 <script src="js/episodes/assets.js"></script>
 <script src="js/episodes/episode-01.js"></script>
 <script src="js/episodes/episode-02.js"></script>
 <script src="js/episodes/index.js"></script>
+<script src="js/mood-detector.js"></script>
+<script src="js/background-music.js"></script>
 <script src="js/app.js"></script>
 <script src="js/game_runner.js"></script>
 <script src="js/game_gymnastics.js"></script>

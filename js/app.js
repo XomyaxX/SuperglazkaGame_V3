@@ -111,7 +111,8 @@ const AppSettings = {
     subtitleFontSize: 'medium',
     highContrast: false,
     reduceMotion: false,
-    uiFontSize: 'medium'
+    uiFontSize: 'medium',
+    bgMusic: true
   },
   _data: {},
 
@@ -158,7 +159,12 @@ const AppSettings = {
       AudioController.currentAudio.volume = AudioController.volume;
     }
     const video = document.querySelector('.frame.active video');
-    if (video) video.volume = AudioController.volume * AudioController.videoVolumeMultiplier;
+    if (video) video.volume = 0;
+
+    if (typeof BackgroundMusic !== 'undefined') {
+      BackgroundMusic.setEnabled(d.bgMusic);
+      BackgroundMusic.setVolume(d.volume / 100);
+    }
 
     document.body.classList.toggle('subtitles-off', !d.subtitles);
     document.body.classList.remove('subtitle-small', 'subtitle-medium', 'subtitle-large');
@@ -183,6 +189,7 @@ const AppSettings = {
       settingsToggleNarration: d.narration,
       settingsToggleDialogue: d.dialogue,
       settingsToggleVideo: d.video,
+      settingsToggleBgMusic: d.bgMusic,
       settingsToggleSubtitles: d.subtitles,
       settingsToggleHighContrast: d.highContrast,
       settingsToggleReduceMotion: d.reduceMotion
@@ -303,6 +310,12 @@ const AudioController = {
     this.savedTime = 0;
     this.savedSrc = null;
     this.buildQueue();
+    if (typeof MoodDetector !== 'undefined') {
+      const mood = MoodDetector.detectMood(frameData);
+      if (typeof BackgroundMusic !== 'undefined') {
+        BackgroundMusic.crossfadeTo(mood);
+      }
+    }
   },
 
   /** @param {Function} fn - Callback invoked when audio state changes */
@@ -447,6 +460,9 @@ const AudioController = {
     this.savedSrc = null;
     this._notifyStateChange();
     this.updateUI();
+    if (typeof BackgroundMusic !== 'undefined') {
+      BackgroundMusic.stop();
+    }
   },
 
   /** @param {string} type - 'narration' | 'dialogue' | 'video' */
@@ -460,8 +476,8 @@ const AudioController = {
         this.pause();
         this.state = 'video';
         if (video) {
-          video.muted = false;
-          video.volume = this.volume * this.videoVolumeMultiplier;
+          video.muted = true;
+          video.volume = 0;
           video.play().catch(() => {});
         }
       } else {
@@ -645,6 +661,12 @@ const BottomSheet = {
           AudioController.toggleTrack(key);
         }
       });
+    });
+
+    // Background music toggle
+    const bgmToggle = document.getElementById('settingsToggleBgMusic');
+    if (bgmToggle) bgmToggle.addEventListener('click', () => {
+      AppSettings.set('bgMusic', !AppSettings.get('bgMusic'));
     });
 
     // Subtitles toggle
@@ -1512,22 +1534,257 @@ const App = (function() {
   }
 
   function renderContinueButton() {
-    const block = document.getElementById('continueBlock');
-    const btn = document.getElementById('continueBtn');
+    var block = document.getElementById('continueBlock');
+    var btn = document.getElementById('continueBtn');
+    var info = document.getElementById('continueInfo');
+    var previewImg = document.getElementById('continuePreview');
     if (!block || !btn) return;
     if (typeof PlayerProfile === 'undefined' || !PlayerProfile.getLastPosition) {
       block.style.display = 'none';
+      if (previewImg) previewImg.style.display = 'none';
       return;
     }
-    const pos = PlayerProfile.getLastPosition();
+    var pos = PlayerProfile.getLastPosition();
     if (pos && pos.frameIdx >= 0) {
-      const epNames = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Скоро...' };
-      btn.textContent = '▶ Продолжить «' + (epNames[pos.episodeId] || 'Эпизод ' + pos.episodeId) + '»';
+      var epNames = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Великая битва' };
+      var epName = epNames[pos.episodeId] || 'Эпизод ' + pos.episodeId;
+      if (info) info.textContent = 'Эпизод ' + pos.episodeId + ' — ' + epName;
+      if (previewImg) {
+        var episode = EPISODES[pos.episodeId];
+        if (episode && episode.frames[pos.frameIdx] && episode.frames[pos.frameIdx].bgImage) {
+          previewImg.src = episode.frames[pos.frameIdx].bgImage;
+          previewImg.style.display = 'block';
+        } else {
+          previewImg.style.display = 'none';
+        }
+      }
+      btn.textContent = '▶ Продолжить';
       btn.onclick = function() { startEpisode(pos.episodeId, pos.frameIdx); };
-      block.style.display = 'block';
+      block.style.display = 'flex';
     } else {
       block.style.display = 'none';
+      if (previewImg) previewImg.style.display = 'none';
     }
+  }
+
+  // ─── MAIN MENU v2 ───
+  const BOOKS = [
+    {
+      num: 1,
+      title: 'Книга 1: Рождение героини',
+      episodes: [
+        { id: 1, title: 'Рождение героини', locked: false },
+        { id: 2, title: 'Кто я?', locked: false },
+        { id: 3, title: 'Великая битва', locked: true },
+        { id: 4, title: 'Тайна хрусталика', locked: true },
+        { id: 5, title: 'Первое испытание', locked: true },
+        { id: 6, title: 'Тренировка зрения', locked: true },
+        { id: 7, title: 'Встреча с тьмой', locked: true },
+        { id: 8, title: 'Пикселек бунтует', locked: true },
+        { id: 9, title: 'Секретная база', locked: true },
+        { id: 10, title: 'Новый союзник', locked: true }
+      ]
+    },
+    {
+      num: 2,
+      title: 'Книга 2: Тёмные силы',
+      episodes: [
+        { id: 11, title: 'Возвращение тьмы', locked: true },
+        { id: 12, title: 'Ловушка для глаз', locked: true },
+        { id: 13, title: 'Подземный мир', locked: true },
+        { id: 14, title: 'Кристалл силы', locked: true },
+        { id: 15, title: 'Битва за мост', locked: true },
+        { id: 16, title: 'Пленники экрана', locked: true },
+        { id: 17, title: 'Побег из тьмы', locked: true },
+        { id: 18, title: 'Свет надежды', locked: true },
+        { id: 19, title: 'Финальная тренировка', locked: true },
+        { id: 20, title: 'Перед боем', locked: true }
+      ]
+    },
+    {
+      num: 3,
+      title: 'Книга 3: Финал',
+      episodes: [
+        { id: 21, title: 'Великая битва', locked: true },
+        { id: 22, title: 'Сила команды', locked: true },
+        { id: 23, title: 'Последний рубеж', locked: true },
+        { id: 24, title: 'Тьма vs Свет', locked: true },
+        { id: 25, title: 'Решающий момент', locked: true },
+        { id: 26, title: 'Жертва ради мира', locked: true },
+        { id: 27, title: 'Возрождение Видеали', locked: true },
+        { id: 28, title: 'Новая эра', locked: true },
+        { id: 29, title: 'Прощание с героем', locked: true },
+        { id: 30, title: 'Начало легенды', locked: true }
+      ]
+    }
+  ];
+
+  function getEpisodeStatus(epId) {
+    if (typeof PlayerProfile === 'undefined' || !PlayerProfile.getProgress) return { completed: false, seen: false };
+    var prog = PlayerProfile.getProgress(epId);
+    return { completed: prog.completed, seen: prog.maxFrame >= 0 };
+  }
+
+  function getEpisodeProgress(epId) {
+    var ep = EPISODES[epId];
+    var total = ep && ep.frames ? ep.frames.length : 10;
+    var current = 0;
+    if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
+      var p = PlayerProfile.getProgress(epId);
+      current = Math.max(0, p.maxFrame + 1);
+    }
+    return {
+      current: current,
+      total: total,
+      percent: total > 0 ? Math.min(100, Math.round(current / total * 100)) : 0
+    };
+  }
+
+  function renderBooks() {
+    const tabsContainer = document.getElementById('booksTabs');
+    const contentContainer = document.getElementById('booksContent');
+    if (!tabsContainer || !contentContainer) return;
+
+    tabsContainer.textContent = '';
+    contentContainer.textContent = '';
+
+    BOOKS.forEach(function(book, bookIdx) {
+      var tab = document.createElement('button');
+      tab.className = 'book-tab' + (bookIdx === 0 ? ' active' : '');
+      tab.textContent = 'Книга ' + book.num;
+      tab.addEventListener('click', function() {
+        tabsContainer.querySelectorAll('.book-tab').forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        contentContainer.querySelectorAll('.book-grid').forEach(function(g) { g.classList.add('hidden'); });
+        var target = document.getElementById('bookGrid' + book.num);
+        if (target) target.classList.remove('hidden');
+      });
+      tabsContainer.appendChild(tab);
+
+      var grid = document.createElement('div');
+      grid.className = 'book-grid' + (bookIdx === 0 ? '' : ' hidden');
+      grid.id = 'bookGrid' + book.num;
+
+      book.episodes.forEach(function(ep) {
+        var status = getEpisodeStatus(ep.id);
+        var progress = getEpisodeProgress(ep.id);
+        var mini = document.createElement('div');
+        mini.className = 'episode-mini' + (ep.locked ? ' locked' : '');
+        mini.dataset.episode = ep.id;
+
+        var coverImg = document.createElement('img');
+        coverImg.className = 'episode-mini-cover';
+        coverImg.alt = '';
+        coverImg.src = 'assets/episodes/episode-' + String(ep.id).padStart(2, '0') + '/cover.png';
+        coverImg.onerror = function() { coverImg.style.display = 'none'; };
+
+        var numEl = document.createElement('div');
+        numEl.className = 'episode-mini-num';
+        numEl.textContent = 'Эп. ' + ep.id;
+
+        var titleEl = document.createElement('div');
+        titleEl.className = 'episode-mini-title';
+        titleEl.textContent = ep.title;
+
+        var statusEl = document.createElement('div');
+        statusEl.className = 'episode-mini-status';
+        if (ep.locked) {
+          statusEl.textContent = '\uD83D\uDD12';
+        } else if (status.completed) {
+          statusEl.textContent = '\u2705';
+        } else if (status.seen) {
+          statusEl.textContent = '\u25B6';
+        } else {
+          statusEl.textContent = '\u26AA';
+        }
+
+        var progressTrack = document.createElement('div');
+        progressTrack.className = 'progress-track';
+        var progressFill = document.createElement('div');
+        progressFill.className = 'progress-fill';
+        progressFill.style.width = progress.percent + '%';
+        progressTrack.appendChild(progressFill);
+
+        mini.appendChild(coverImg);
+        mini.appendChild(numEl);
+        mini.appendChild(titleEl);
+        mini.appendChild(statusEl);
+        mini.appendChild(progressTrack);
+
+        if (!ep.locked) {
+          mini.addEventListener('click', function() {
+            startEpisode(ep.id);
+          });
+        }
+
+        grid.appendChild(mini);
+      });
+
+      contentContainer.appendChild(grid);
+    });
+  }
+
+  function renderOverallProgress() {
+    var container = document.getElementById('overallProgress');
+    if (!container) return;
+    var totalSeen = 0, totalFrames = 0;
+    BOOKS.forEach(function(book) {
+      book.episodes.forEach(function(ep) {
+        var prog = getEpisodeProgress(ep.id);
+        totalSeen += prog.current;
+        totalFrames += prog.total;
+      });
+    });
+    var pct = totalFrames > 0 ? Math.round(totalSeen / totalFrames * 100) : 0;
+    container.textContent = '';
+
+    var text = document.createElement('div');
+    text.className = 'overall-progress-text';
+    text.textContent = 'Общий прогресс: ' + totalSeen + ' из ' + totalFrames + ' кадров';
+
+    var barTrack = document.createElement('div');
+    barTrack.className = 'progress-track overall-track';
+    var barFill = document.createElement('div');
+    barFill.className = 'progress-fill';
+    barFill.style.width = pct + '%';
+    barTrack.appendChild(barFill);
+
+    container.appendChild(text);
+    container.appendChild(barTrack);
+  }
+
+  function startCountdown(targetISO) {
+    var els = {
+      days: document.getElementById('cdDays'),
+      hours: document.getElementById('cdHours'),
+      minutes: document.getElementById('cdMinutes'),
+      seconds: document.getElementById('cdSeconds')
+    };
+    if (!els.days || !els.hours || !els.minutes || !els.seconds) return;
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function tick() {
+      var diff = new Date(targetISO) - Date.now();
+      if (diff <= 0) {
+        els.days.textContent = '00';
+        els.hours.textContent = '00';
+        els.minutes.textContent = '00';
+        els.seconds.textContent = '00';
+        return;
+      }
+      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      var minutes = Math.floor((diff / (1000 * 60)) % 60);
+      var seconds = Math.floor((diff / 1000) % 60);
+      els.days.textContent = pad(days);
+      els.hours.textContent = pad(hours);
+      els.minutes.textContent = pad(minutes);
+      els.seconds.textContent = pad(seconds);
+    }
+
+    tick();
+    setInterval(tick, 1000);
   }
 
   // ─── EVENT BINDING ───
@@ -1544,8 +1801,8 @@ const App = (function() {
         if (previewInfo) previewInfo.classList.add('hidden');
         if (video) {
           video.classList.add('visible');
-          video.muted = false;
-          video.volume = AudioController.volume * AudioController.videoVolumeMultiplier;
+          video.muted = true;
+          video.volume = 0;
           video.play().catch(() => {});
           AudioController.playVideo(video);
         }
@@ -1613,9 +1870,132 @@ const App = (function() {
     frameContainer.addEventListener('mouseleave', () => { isDragging = false; });
   }
 
+  // ─── AUTH MODAL ───
+  function initAuthModal() {
+    var modal = document.getElementById('auth-modal');
+    if (!modal) return;
+
+    var tabs = modal.querySelectorAll('.auth-tab');
+    var panels = modal.querySelectorAll('.auth-panel');
+
+    function showPanel(id) {
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      var target = modal.querySelector('#authPanel' + id);
+      if (target) target.classList.add('active');
+      var tab = modal.querySelector('.auth-tab[data-tab="' + id.toLowerCase() + '"]');
+      if (tab) tab.classList.add('active');
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        showPanel(tab.dataset.tab.charAt(0).toUpperCase() + tab.dataset.tab.slice(1));
+      });
+    });
+
+    var authClose = document.getElementById('authClose');
+    if (authClose) {
+      authClose.addEventListener('click', function() { modal.classList.remove('visible'); });
+    }
+
+    var authGuestBtn = document.getElementById('authGuestBtn');
+    if (authGuestBtn) {
+      authGuestBtn.addEventListener('click', async function() {
+        var nick = document.getElementById('authGuestNickname').value.trim();
+        if (!nick) { alert('\u0412\u0432\u0435\u0434\u0438 \u043d\u0438\u043a\u043d\u0435\u0439\u043c!'); return; }
+        try {
+          await Auth.guestLogin(nick);
+          modal.classList.remove('visible');
+          window.location.reload();
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0432\u043e\u0439\u0442\u0438'));
+        }
+      });
+    }
+
+    var authRegBtn = document.getElementById('authRegBtn');
+    if (authRegBtn) {
+      authRegBtn.addEventListener('click', async function() {
+        var nick = document.getElementById('authRegNickname').value.trim();
+        var email = document.getElementById('authRegEmail').value.trim();
+        var phone = document.getElementById('authRegPhone').value.trim();
+        var password = document.getElementById('authRegPassword').value;
+        if (!nick || !email || !password) { alert('\u0417\u0430\u043f\u043e\u043b\u043d\u0438 \u0432\u0441\u0435 \u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u043f\u043e\u043b\u044f!'); return; }
+        try {
+          await Auth.register(email, phone, password, nick);
+          modal.classList.remove('visible');
+          window.location.reload();
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u0442\u044c\u0441\u044f'));
+        }
+      });
+    }
+
+    var authLoginBtn = document.getElementById('authLoginBtn');
+    if (authLoginBtn) {
+      authLoginBtn.addEventListener('click', async function() {
+        var email = document.getElementById('authLoginEmail').value.trim();
+        var password = document.getElementById('authLoginPassword').value;
+        if (!email || !password) { alert('\u0412\u0432\u0435\u0434\u0438 email \u0438 \u043f\u0430\u0440\u043e\u043b\u044c!'); return; }
+        try {
+          await Auth.login(email, password);
+          modal.classList.remove('visible');
+          window.location.reload();
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0439 email \u0438\u043b\u0438 \u043f\u0430\u0440\u043e\u043b\u044c'));
+        }
+      });
+    }
+
+    var authShowLogin = document.getElementById('authShowLogin');
+    if (authShowLogin) {
+      authShowLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('Login');
+      });
+    }
+
+    var authShowRegister = document.getElementById('authShowRegister');
+    if (authShowRegister) {
+      authShowRegister.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('Register');
+      });
+    }
+
+    // Profile subscription
+    var profileSubBtn = document.getElementById('profileSubBtn');
+    if (profileSubBtn) {
+      profileSubBtn.addEventListener('click', async function() {
+        var emailInput = document.getElementById('profileSubEmail');
+        var email = emailInput ? emailInput.value.trim() : '';
+        if (!email) { alert('\u0412\u0432\u0435\u0434\u0438 email!'); return; }
+        try {
+          await Auth.subscribeEmail(email);
+          alert('\u2705 \u041f\u043e\u0434\u043f\u0438\u0441\u043a\u0430 \u043e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0430!');
+          if (emailInput) emailInput.value = '';
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043f\u043e\u0434\u043f\u0438\u0441\u0430\u0442\u044c\u0441\u044f'));
+        }
+      });
+    }
+  }
+
+  function showAuthModal() {
+    var modal = document.getElementById('auth-modal');
+    if (modal) modal.classList.add('visible');
+  }
+
   // ─── INIT ───
   function init() {
+    var settingsDropdown = null;
+    var faqDropdown = null;
     ThemeManager.init();
+    Auth.init();
+    initAuthModal();
+    if (!Auth.isLoggedIn()) {
+      showAuthModal();
+    }
     DeviceDetector.detect();
     DeviceDetector.onResize();
     AppSettings.load();
@@ -1643,26 +2023,26 @@ const App = (function() {
       });
     }
 
-    const settingsMenuBtn = document.getElementById('settingsMenuBtn');
-    const settingsDropdown = document.getElementById('settingsDropdown');
-    if (settingsMenuBtn && settingsDropdown) {
-      settingsMenuBtn.addEventListener('click', (e) => {
+    var settingsMenuBtnEl = document.getElementById('settingsMenuBtn');
+    settingsDropdown = document.getElementById('settingsDropdown');
+    if (settingsMenuBtnEl && settingsDropdown) {
+      settingsMenuBtnEl.addEventListener('click', (e) => {
         e.stopPropagation();
         settingsDropdown.classList.toggle('visible');
         if (faqDropdown) faqDropdown.classList.remove('visible');
       });
       document.addEventListener('click', (e) => {
-        if (!settingsDropdown.contains(e.target) && e.target !== settingsMenuBtn) {
+        if (!settingsDropdown.contains(e.target) && e.target !== settingsMenuBtnEl) {
           settingsDropdown.classList.remove('visible');
         }
       });
     }
 
-    const faqBtn = document.getElementById('faqBtn');
-    const faqDropdown = document.getElementById('faqDropdown');
+    var faqBtnEl = document.getElementById('faqBtn');
+    faqDropdown = document.getElementById('faqDropdown');
     const faqClose = document.getElementById('faqClose');
-    if (faqBtn && faqDropdown) {
-      faqBtn.addEventListener('click', (e) => {
+    if (faqBtnEl && faqDropdown) {
+      faqBtnEl.addEventListener('click', (e) => {
         e.stopPropagation();
         faqDropdown.classList.toggle('visible');
         if (settingsDropdown) settingsDropdown.classList.remove('visible');
@@ -1674,19 +2054,48 @@ const App = (function() {
         });
       }
       document.addEventListener('click', (e) => {
-        if (!faqDropdown.contains(e.target) && e.target !== faqBtn) {
+        if (!faqDropdown.contains(e.target) && e.target !== faqBtnEl) {
           faqDropdown.classList.remove('visible');
         }
       });
     }
 
-    document.querySelectorAll('.chapter-card').forEach(card => {
-      card.addEventListener('click', () => {
-        if (card.classList.contains('locked')) return;
-        const episode = card.dataset.episode;
-        if (episode) startEpisode(episode);
+    // Main menu v2 bindings
+    renderBooks();
+    renderOverallProgress();
+    startCountdown('2026-05-25T12:00:00');
+
+    var appNavToggle = document.getElementById('appNavToggle');
+    var appNavMobile = document.getElementById('appNavMobile');
+    var appNavClose = document.getElementById('appNavClose');
+    if (appNavToggle && appNavMobile) {
+      appNavToggle.addEventListener('click', function() { appNavMobile.classList.add('open'); });
+    }
+    if (appNavClose && appNavMobile) {
+      appNavClose.addEventListener('click', function() { appNavMobile.classList.remove('open'); });
+    }
+
+    var menuSettingsBtn = document.getElementById('menuSettingsBtn');
+    if (menuSettingsBtn && settingsDropdown) {
+      menuSettingsBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        settingsDropdown.classList.toggle('visible');
+        if (faqDropdown) faqDropdown.classList.remove('visible');
       });
-    });
+    }
+    var menuSettingsBtnMobile = document.getElementById('menuSettingsBtnMobile');
+    if (menuSettingsBtnMobile && settingsDropdown && appNavMobile) {
+      menuSettingsBtnMobile.addEventListener('click', function(e) {
+        e.stopPropagation();
+        appNavMobile.classList.remove('open');
+        settingsDropdown.classList.toggle('visible');
+        if (faqDropdown) faqDropdown.classList.remove('visible');
+      });
+    }
+    var menuProfileBtnMobile = document.getElementById('menuProfileBtnMobile');
+    if (menuProfileBtnMobile && appNavMobile) {
+      menuProfileBtnMobile.addEventListener('click', function() { appNavMobile.classList.remove('open'); });
+    }
 
     document.querySelectorAll('#viewerBackBtn, .back-btn').forEach(btn => {
       btn.addEventListener('click', () => backToMenu());
