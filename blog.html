@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0618">
+<meta name="description" content="Советы по здоровью глаз для детей от проекта Суперглазка: правило 20-20-20, признаки усталости, выбор очков.">
+<title>Блог — Советы по здоровью глаз — Суперглазка</title>
+<link rel="canonical" href="https://superglazka.ru/blog.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="Блог — Советы по здоровью глаз — Суперглазка">
+<meta property="og:description" content="Полезные статьи о гигиене зрения для детей.">
+<meta property="og:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://superglazka.ru/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Блог — Советы по здоровью глаз — Суперглазка">
+<meta name="twitter:description" content="Полезные статьи о гигиене зрения для детей.">
+<meta name="twitter:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(r => console.log('SW registered:', r.scope))
+    .catch(e => console.log('SW failed:', e));
+}
+</script>
+<style>
+.blog-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0618 0%, #1a0b2e 40%, #0f0718 100%);
+  padding-bottom: 80px;
+}
+.theme-light .blog-page {
+  background: linear-gradient(180deg, #f3e8ff 0%, #ffe4f0 40%, #f8eeff 100%);
+}
+.blog-header {
+  padding: 24px max(24px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.blog-header .land-logo {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-light .blog-header .land-logo { color: #3d1a5c; }
+.blog-back {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.blog-back:hover { color: #c084fc; }
+.theme-light .blog-back { color: rgba(0,0,0,0.6); }
+.theme-light .blog-back:hover { color: #e056c8; }
+.blog-hero {
+  text-align: center;
+  padding: 40px 24px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.blog-hero h1 {
+  font-family: 'Comfortaa', cursive;
+  font-size: clamp(28px, 5vw, 42px);
+  color: #fff;
+  margin-bottom: 12px;
+}
+.theme-light .blog-hero h1 { color: #3d1a5c; }
+.blog-hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+.theme-light .blog-hero p { color: rgba(0,0,0,0.6); }
+.blog-list {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.blog-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  transition: all .3s var(--ease-spring);
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(192,132,252,0.3);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+.theme-light .blog-card {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.06);
+}
+.blog-card h2 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 22px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.theme-light .blog-card h2 { color: #3d1a5c; }
+.blog-card .blog-meta {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 16px;
+}
+.theme-light .blog-card .blog-meta { color: rgba(0,0,0,0.4); }
+.blog-card p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.theme-light .blog-card p { color: rgba(0,0,0,0.75); }
+.blog-card ul {
+  padding-left: 20px;
+  margin: 12px 0;
+}
+.blog-card li {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
+  margin-bottom: 8px;
+}
+.theme-light .blog-card li { color: rgba(0,0,0,0.75); }
+.blog-card strong { color: #c084fc; }
+.theme-light .blog-card strong { color: #e056c8; }
+.blog-card .blog-tip {
+  background: rgba(192,132,252,0.1);
+  border-left: 3px solid #c084fc;
+  padding: 12px 16px;
+  border-radius: 0 12px 12px 0;
+  margin-top: 16px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.8);
+}
+.theme-light .blog-card .blog-tip {
+  background: rgba(224,86,200,0.08);
+  border-color: #e056c8;
+  color: rgba(0,0,0,0.75);
+}
+@media (max-width: 768px) {
+  .blog-header { padding: 16px 20px; }
+  .blog-list { padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="blog-page">
+  <header class="blog-header">
+    <a href="index.html" class="land-logo">👁️ СУПЕРГЛАЗКА</a>
+    <a href="index.html" class="blog-back">← На главную</a>
+  </header>
+
+  <div class="blog-hero">
+    <h1>Блог Суперглазки</h1>
+    <p>Полезные советы о здоровье глаз для детей и родителей</p>
+  </div>
+
+  <div class="blog-list">
+    <article class="blog-card reveal">
+      <h2>🎯 Правило 20-20-20 для детских глаз</h2>
+      <div class="blog-meta">3 минуты чтения · Совет дня</div>
+      <p><strong>Что это такое?</strong> Каждые <strong>20 минут</strong> экранного времени ребёнок должен смотреть на предмет в <strong>20 футах</strong> (≈6 метров) в течение <strong>20 секунд</strong>. Это простое правило помогает расслабить глазные мышцы и предотвратить цифровое зрительное утомление.</p>
+      <p><strong>Как приучить ребёнка?</strong></p>
+      <ul>
+        <li>Поставьте таймер на 20 минут — пусть ребёнок сам его запускает</li>
+        <li>Придумайте «супергеройскую миссию»: "Найди самый далёкий предмет в комнате и назови его цвет"</li>
+        <li>Используйте приложения с напоминаниями (например, Stretchly или аналоги)</li>
+      </ul>
+      <div class="blog-tip">💡 Совет: после каждого эпизода «Суперглазки» делайте 20-секундную паузу — это уже встроено в правило!</div>
+    </article>
+
+    <article class="blog-card reveal">
+      <h2>👀 5 признаков усталости глаз у ребёнка</h2>
+      <div class="blog-meta">3 минуты чтения · Здоровье</div>
+      <p>Дети часто не говорят о проблемах со зрением напрямую. Вот на что стоит обратить внимание:</p>
+      <ul>
+        <li><strong>Частое моргание и трение глаз.</strong> Если ребёнок постоянно щурится или трёт глаза — это первый сигнал усталости.</li>
+        <li><strong>Головная боль в области лба и висков.</strong> Особенно после просмотра мультфильмов или игр.</li>
+        <li><strong>Нежелание читать или рисовать.</strong> Ребёнок избегает activities, требующих зрительной концентрации.</li>
+        <li><strong>Наклон головы или прищуривание.</strong> Попытка сфокусироваться на размытом изображении.</li>
+        <li><strong>Красные глаза.</strong> Покраснение склер — признак сухости и перенапряжения.</li>
+      </ul>
+      <div class="blog-tip">⚠️ Важно: если симптомы повторяются более 3 дней подряд — запишитесь к офтальмологу.</div>
+    </article>
+
+    <article class="blog-card reveal">
+      <h2>👓 Как выбрать первые очки ребёнку</h2>
+      <div class="blog-meta">2 минуты чтения · Практика</div>
+      <p>Первые очки — важное событие. Вот как сделать его комфортным:</p>
+      <ul>
+        <li><strong>Оправа.</strong> Выбирайте лёгкую, гибкую оправу из титана или пластика с силиконовыми носоупорами. Форма — по лицу, но не слишком широкая.</li>
+        <li><strong>Линзы.</strong> Поликарбонат — ударопрочный материал, идеален для активных детей. Антибликовое покрытие обязательно.</li>
+        <li><strong>Приучение.</strong> Начинайте с 15 минут в день, постепенно увеличивая время. Хвалите ребёнка за ношение очков.</li>
+        <li><strong>Запасная пара.</strong> Дети ломают очки — имейте резервную пару или закажите спортивный ремень.</li>
+      </ul>
+      <div class="blog-tip">💡 Совет: позвольте ребёнку выбрать цвет оправы самостоятельно — так он будет охотнее их носить!</div>
+    </article>
+  </div>
+
+  <footer class="land-footer" style="margin-top:60px;">
+    <p>Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
+  </footer>
+</div>
+
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-banner-text">
+    Мы используем localStorage для сохранения прогресса и настроек.
+    <a href="privacy.html">Политика конфиденциальности</a>
+  </div>
+  <button class="cookie-banner-btn" id="cookieAccept">Принять</button>
+</div>
+<script>
+  (function() {
+    if (!localStorage.getItem('cookie_consent')) {
+      document.getElementById('cookieBanner').classList.add('visible');
+    }
+    document.getElementById('cookieAccept').addEventListener('click', function() {
+      localStorage.setItem('cookie_consent', 'true');
+      document.getElementById('cookieBanner').classList.remove('visible');
+    });
+  })();
+</script>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+const savedTheme = localStorage.getItem('superglazka_theme');
+if (savedTheme) document.body.classList.add('theme-' + savedTheme);
+</script>
+
+</body>
+</html>

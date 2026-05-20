@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0618">
+<meta name="description" content="Политика конфиденциальности проекта Суперглазка. Какие данные собираются и как они используются.">
+<title>Политика конфиденциальности — Суперглазка</title>
+<link rel="canonical" href="https://superglazka.ru/privacy.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="Политика конфиденциальности — Суперглазка">
+<meta property="og:description" content="Какие данные собираются и как они используются.">
+<meta property="og:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://superglazka.ru/privacy.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Политика конфиденциальности — Суперглазка">
+<meta name="twitter:description" content="Какие данные собираются и как они используются.">
+<meta name="twitter:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800,900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(r => console.log('SW registered:', r.scope))
+    .catch(e => console.log('SW failed:', e));
+}
+</script>
+<style>
+.privacy-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0618 0%, #1a0b2e 40%, #0f0718 100%);
+  padding-bottom: 80px;
+}
+.theme-light .privacy-page {
+  background: linear-gradient(180deg, #f3e8ff 0%, #ffe4f0 40%, #f8eeff 100%);
+}
+.privacy-header {
+  padding: 24px max(24px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.privacy-header .land-logo {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-light .privacy-header .land-logo { color: #3d1a5c; }
+.privacy-back {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.privacy-back:hover { color: #c084fc; }
+.theme-light .privacy-back { color: rgba(0,0,0,0.6); }
+.theme-light .privacy-back:hover { color: #e056c8; }
+.privacy-content {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 24px 40px;
+}
+.privacy-content h1 {
+  font-family: 'Comfortaa', cursive;
+  font-size: clamp(24px, 4vw, 36px);
+  color: #fff;
+  margin-bottom: 8px;
+}
+.theme-light .privacy-content h1 { color: #3d1a5c; }
+.privacy-content .privacy-date {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 28px;
+}
+.theme-light .privacy-content .privacy-date { color: rgba(0,0,0,0.4); }
+.privacy-content h2 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 18px;
+  color: #fff;
+  margin: 28px 0 12px;
+}
+.theme-light .privacy-content h2 { color: #3d1a5c; }
+.privacy-content p, .privacy-content li {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.theme-light .privacy-content p,
+.theme-light .privacy-content li { color: rgba(0,0,0,0.75); }
+.privacy-content ul { padding-left: 20px; }
+.privacy-content a { color: #c084fc; }
+.theme-light .privacy-content a { color: #e056c8; }
+.privacy-content .privacy-contact {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
+}
+.theme-light .privacy-content .privacy-contact {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.06);
+}
+@media (max-width: 768px) {
+  .privacy-header { padding: 16px 20px; }
+  .privacy-content { padding: 16px 20px 40px; }
+}
+</style>
+</head>
+<body>
+
+<div class="privacy-page">
+  <header class="privacy-header">
+    <a href="index.html" class="land-logo">👁️ СУПЕРГЛАЗКА</a>
+    <a href="index.html" class="privacy-back">← На главную</a>
+  </header>
+
+  <div class="privacy-content">
+    <h1>Политика конфиденциальности</h1>
+    <p class="privacy-date">Последнее обновление: 18 мая 2026 г.</p>
+
+    <h2>1. Какие данные мы собираем</h2>
+    <p>Проект «Суперглазка» работает полностью в браузере и <strong>не передаёт данные на сервер</strong>. Мы используем только локальное хранилище браузера (localStorage) для:</p>
+    <ul>
+      <li><strong>Прогресса эпизодов</strong> — какие кадры просмотрены, какие эпизоды завершены</li>
+      <li><strong>Игрового профиля</strong> — количество монет, лучшие результаты в мини-играх</li>
+      <li><strong>Настроек</strong> — громкость звука, размер шрифта субтитров, выбранная тема (тёмная/светлая)</li>
+      <li><strong>Согласия на cookies</strong> — факт принятия политики конфиденциальности</li>
+    </ul>
+
+    <h2>2. Зачем мы собираем эти данные</h2>
+    <p>Данные необходимы исключительно для:</p>
+    <ul>
+      <li>Сохранения прогресса между визитами</li>
+      <li>Персонализации интерфейса (тема, размер шрифта)</li>
+      <li>Формирования мотивации через игровые механики (монеты, достижения)</li>
+    </ul>
+
+    <h2>3. Кто имеет доступ к данным</h2>
+    <p>Все данные хранятся <strong>локально на устройстве пользователя</strong> в браузере. Мы, как создатели проекта, не имеем доступа к этим данным. Данные не передаются третьим лицам, не продаются и не используются для рекламы.</p>
+
+    <h2>4. Как удалить данные</h2>
+    <p>Вы можете удалить все сохранённые данные одним из способов:</p>
+    <ul>
+      <li>Очистить localStorage для сайта superglazka.ru в настройках браузера</li>
+      <li>Использовать режим "инкогнито" — данные не будут сохраняться между сессиями</li>
+      <li>Нажать кнопку "Сбросить прогресс" в профиле (если доступна)</li>
+    </ul>
+
+    <h2>5. Cookies</h2>
+    <p>Мы не используем классические HTTP-cookies. Единственная форма хранения — <strong>localStorage</strong>. При первом посещении сайта показывается баннер с запросом согласия на использование localStorage.</p>
+
+    <h2>6. Безопасность детей</h2>
+    <p>Проект создан для детей и соответствует требованиям:</p>
+    <ul>
+      <li>Мы не запрашиваем персональные данные (имя, возраст, email) без согласия родителей</li>
+      <li>Нет внешних ссылок на социальные сети внутри приложения</li>
+      <li>Нет рекламы и сторонних трекеров</li>
+      <li>Нет сбора геолокации или данных устройства</li>
+    </ul>
+
+    <h2>7. Изменения политики</h2>
+    <p>Мы можем обновлять эту политику время от времени. Все изменения будут опубликованы на этой странице с указанием даты обновления.</p>
+
+    <div class="privacy-contact">
+      <h2>8. Контакты</h2>
+      <p>Если у вас есть вопросы о политике конфиденциальности, напишите нам:</p>
+      <p><a href="mailto:hello@superglazka.ru">hello@superglazka.ru</a></p>
+    </div>
+  </div>
+
+  <footer class="land-footer" style="margin-top:40px;">
+    <p>Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
+  </footer>
+</div>
+
+<script>
+const savedTheme = localStorage.getItem('superglazka_theme');
+if (savedTheme) document.body.classList.add('theme-' + savedTheme);
+</script>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-banner-text">
+      Мы используем localStorage для сохранения прогресса и настроек.
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+    <button class="cookie-banner-btn" id="cookieAccept">Принять</button>
+  </div>
+  <script>
+    (function() {
+      if (!localStorage.getItem('cookie_consent')) {
+        document.getElementById('cookieBanner').classList.add('visible');
+      }
+      document.getElementById('cookieAccept').addEventListener('click', function() {
+        localStorage.setItem('cookie_consent', 'true');
+        document.getElementById('cookieBanner').classList.remove('visible');
+      });
+    })();
+  </script>
+</body>
+</html>

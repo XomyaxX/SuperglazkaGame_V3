@@ -1,19 +1,22 @@
-/* ═══════════════════════════════════════════════════════════
-   PLAYER PROFILE — Coins, Stats & Progress
-   ═══════════════════════════════════════════════════════════ */
+/**
+ * Player Profile — manages coins, episode progress and game stats.
+ * All data is persisted in localStorage under `superglazka_profile`.
+ * @namespace PlayerProfile
+ */
 const PlayerProfile = (function() {
   'use strict';
 
   const STORAGE_KEY = 'superglazka_profile';
 
+  /** @returns {Object} Default empty profile */
   function getDefaultProfile() {
     return {
       nickname: 'Игрок',
       coins: 0,
       episodes: {
-        1: { completed: false, framesSeen: 0 },
-        2: { completed: false, framesSeen: 0 },
-        3: { completed: false, framesSeen: 0 }
+        1: { completed: false, framesSeen: 0, maxFrame: -1 },
+        2: { completed: false, framesSeen: 0, maxFrame: -1 },
+        3: { completed: false, framesSeen: 0, maxFrame: -1 }
       },
       games: {
         blink: { played: 0, bestScore: 0 },
@@ -24,19 +27,28 @@ const PlayerProfile = (function() {
     };
   }
 
+  /** @returns {Object} Parsed profile from localStorage or default */
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return getDefaultProfile();
       const parsed = JSON.parse(raw);
       // Merge with defaults in case new fields were added
-      return { ...getDefaultProfile(), ...parsed };
+      const merged = { ...getDefaultProfile(), ...parsed };
+      // Migrate old episode data: add maxFrame if missing
+      for (const id of Object.keys(merged.episodes)) {
+        if (typeof merged.episodes[id].maxFrame === 'undefined') {
+          merged.episodes[id].maxFrame = -1;
+        }
+      }
+      return merged;
     } catch (e) {
       console.warn('Profile load failed, using default');
       return getDefaultProfile();
     }
   }
 
+  /** @param {Object} profile - Profile object to persist */
   function save(profile) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
@@ -45,6 +57,7 @@ const PlayerProfile = (function() {
     }
   }
 
+  /** @param {number} amount - Coins to add @returns {number} New coin balance */
   function addCoins(amount) {
     const p = load();
     p.coins += Math.max(0, amount);
@@ -53,6 +66,7 @@ const PlayerProfile = (function() {
     return p.coins;
   }
 
+  /** @param {number} amount - Coins to spend @returns {boolean} Whether purchase succeeded */
   function spendCoins(amount) {
     const p = load();
     if (p.coins < amount) return false;
@@ -62,12 +76,42 @@ const PlayerProfile = (function() {
     return true;
   }
 
+  /** @param {string|number} epId - Episode identifier */
   function completeEpisode(epId) {
     const p = load();
-    if (!p.episodes[epId]) p.episodes[epId] = { completed: false, framesSeen: 0 };
+    if (!p.episodes[epId]) p.episodes[epId] = { completed: false, framesSeen: 0, maxFrame: -1 };
     p.episodes[epId].completed = true;
     save(p);
     renderBadge();
+  }
+
+  /** @param {string|number} epId - Episode identifier @param {number} frameIdx - Zero-based frame index */
+  function markFrameSeen(epId, frameIdx) {
+    const p = load();
+    if (!p.episodes[epId]) p.episodes[epId] = { completed: false, framesSeen: 0, maxFrame: -1 };
+    if (frameIdx > p.episodes[epId].maxFrame) {
+      p.episodes[epId].maxFrame = frameIdx;
+    }
+    save(p);
+  }
+
+  /** @param {string|number} epId - Episode identifier @returns {Object} Episode progress */
+  function getProgress(epId) {
+    const p = load();
+    return p.episodes[epId] || { completed: false, framesSeen: 0, maxFrame: -1 };
+  }
+
+  /** @returns {{episodeId:string, frameIdx:number}|null} Last viewed position */
+  function getLastPosition() {
+    const p = load();
+    let lastEp = null, lastFrame = -1;
+    for (const [id, data] of Object.entries(p.episodes)) {
+      if (data.maxFrame > lastFrame) {
+        lastFrame = data.maxFrame;
+        lastEp = id;
+      }
+    }
+    return lastEp ? { episodeId: lastEp, frameIdx: lastFrame } : null;
   }
 
   function completeGame(name, score) {
@@ -114,20 +158,37 @@ const PlayerProfile = (function() {
     // Episode list
     const epList = modal.querySelector('.profile-episodes');
     if (epList) {
-      epList.innerHTML = Object.entries(p.episodes).map(([id, data]) => {
-        const status = data.completed ? '✅' : '🔒';
-        const names = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Скоро...' };
-        return `<div class="profile-row"><span>Эпизод ${id}: ${names[id] || ''}</span><span>${status}</span></div>`;
-      }).join('');
+      epList.textContent = '';
+      const names = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Великая битва' };
+      Object.entries(p.episodes).forEach(([id, data]) => {
+        const row = document.createElement('div');
+        row.className = 'profile-row';
+        const left = document.createElement('span');
+        left.textContent = 'Эпизод ' + id + ': ' + (names[id] || '');
+        const right = document.createElement('span');
+        right.textContent = data.completed ? '✅' : '🔒';
+        row.appendChild(left);
+        row.appendChild(right);
+        epList.appendChild(row);
+      });
     }
 
     // Games stats
     const gamesList = modal.querySelector('.profile-games');
     if (gamesList) {
       const names = { blink: 'Моргайка', tracker: 'Следи за шариком', runner: 'Погоня', gym: 'Ваня vs Ленивус' };
-      gamesList.innerHTML = Object.entries(p.games).map(([name, data]) => {
-        return `<div class="profile-row"><span>${names[name] || name}</span><span>Игр: ${data.played} | Рекорд: ${data.bestScore}</span></div>`;
-      }).join('');
+      gamesList.textContent = '';
+      Object.entries(p.games).forEach(([name, data]) => {
+        const row = document.createElement('div');
+        row.className = 'profile-row';
+        const left = document.createElement('span');
+        left.textContent = names[name] || name;
+        const right = document.createElement('span');
+        right.textContent = 'Игр: ' + data.played + ' | Рекорд: ' + data.bestScore;
+        row.appendChild(left);
+        row.appendChild(right);
+        gamesList.appendChild(row);
+      });
     }
 
     modal.classList.add('visible');
@@ -181,6 +242,9 @@ const PlayerProfile = (function() {
     setNickname,
     renderBadge,
     openModal,
-    closeModal
+    closeModal,
+    markFrameSeen,
+    getProgress,
+    getLastPosition
   };
 })();

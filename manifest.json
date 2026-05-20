@@ -1,0 +1,24 @@
+{
+  "name": "Суперглазка — Интерактивный комикс о здоровье глаз",
+  "short_name": "Суперглазка",
+  "description": "Образовательный комикс о здоровье глаз с мини-играми для детей. Спаси планету Видеаль!",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#1a0b2e",
+  "theme_color": "#0a0618",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

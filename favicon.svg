@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="60%" stop-color="#e879f9"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </radialGradient>
+    <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#c084fc" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Outer eye shape -->
+  <ellipse cx="256" cy="256" rx="220" ry="160" fill="url(#g)" filter="url(#s)"/>
+  <!-- Inner white highlight -->
+  <ellipse cx="256" cy="256" rx="170" ry="110" fill="#ffffff" opacity="0.92"/>
+  <!-- Pupil -->
+  <circle cx="256" cy="256" r="55" fill="#1a0b2e"/>
+  <!-- Star reflection in pupil -->
+  <polygon points="256,216 264,244 292,244 270,260 278,288 256,272 234,288 242,260 220,244 248,244" fill="#c084fc" opacity="0.9"/>
+  <!-- Big shine -->
+  <ellipse cx="196" cy="206" rx="35" ry="22" fill="#ffffff" opacity="0.85" transform="rotate(-25 196 206)"/>
+  <!-- Small shine -->
+  <circle cx="316" cy="296" r="14" fill="#ffffff" opacity="0.6"/>
+</svg>

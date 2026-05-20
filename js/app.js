@@ -13,6 +13,11 @@ const SPEAKER_NAMES = {
 const GAME_NAMES = { blink: 'Моргай-зарядка', tracker: 'Трекер-взгляд' };
 const GAME_ICONS = { blink: '⚡', tracker: '👀' };
 
+/**
+ * Escape special HTML characters in a plain-text string.
+ * @param {string} text
+ * @returns {string} Escaped HTML string
+ */
 function escapeHtml(text) {
   if (!text) return '';
   const div = document.createElement('div');
@@ -21,11 +26,15 @@ function escapeHtml(text) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// THEME MANAGER — auto-detect + manual override
-// ═══════════════════════════════════════════════════════════
+/**
+ * Theme Manager — handles automatic theme detection and manual overrides.
+ * Persists user choice in localStorage; falls back to `prefers-color-scheme`.
+ * @namespace ThemeManager
+ */
 const ThemeManager = {
   STORAGE_KEY: 'superglazka_theme',
 
+  /** Initialize theme from saved preference or system default. */
   init() {
     const saved = this._load();
     if (saved) {
@@ -72,6 +81,7 @@ const ThemeManager = {
     }
   },
 
+  /** Toggle between dark and light themes and persist the choice. */
   toggle() {
     const isDark = document.body.classList.contains('theme-dark');
     const next = isDark ? 'light' : 'dark';
@@ -86,8 +96,11 @@ const ThemeManager = {
 };
 
 // ═══════════════════════════════════════════════════════════
-// APP SETTINGS — persistent user preferences
-// ═══════════════════════════════════════════════════════════
+/**
+ * App Settings — persistent user preferences stored in localStorage.
+ * Manages volume, audio tracks, subtitles, accessibility and UI font size.
+ * @namespace AppSettings
+ */
 const AppSettings = {
   defaults: {
     volume: 80,
@@ -102,6 +115,7 @@ const AppSettings = {
   },
   _data: {},
 
+  /** Load settings from localStorage or use defaults. @returns {Object} Settings object */
   load() {
     try {
       const raw = localStorage.getItem('superglazka_settings');
@@ -113,22 +127,26 @@ const AppSettings = {
     return this._data;
   },
 
+  /** Persist current settings to localStorage. */
   save() {
     try {
       localStorage.setItem('superglazka_settings', JSON.stringify(this._data));
     } catch (e) {}
   },
 
+  /** @param {string} key - Setting name @returns {*} Setting value */
   get(key) {
     return this._data[key];
   },
 
+  /** @param {string} key - Setting name @param {*} value - New value */
   set(key, value) {
     this._data[key] = value;
     this.save();
     this.apply();
   },
 
+  /** Apply all current settings to the DOM and audio controller. */
   apply() {
     const d = this._data;
 
@@ -156,6 +174,8 @@ const AppSettings = {
     AudioController.updateUI();
   },
 
+  /** Sync settings toggles, sliders and font-size buttons with current values. */
+  /** Update settings button active state based on current audio state. */
   updateUI() {
     const d = this._data;
 
@@ -189,11 +209,15 @@ const AppSettings = {
 };
 
 // ═══════════════════════════════════════════════════════════
-// DEVICE DETECTOR — reliable device type detection
-// ═══════════════════════════════════════════════════════════
+/**
+ * Device Detector — identifies device type using UA strings, pointer/hover
+ * capabilities and viewport dimensions. Adds utility flags to `window`.
+ * @namespace DeviceDetector
+ */
 const DeviceDetector = {
   type: 'unknown',
 
+  /** Detect device type and add corresponding CSS classes to `<body>`. */
   detect() {
     const ua = navigator.userAgent || '';
 
@@ -233,6 +257,7 @@ const DeviceDetector = {
     window.IS_DESKTOP = type === 'desktop';
   },
 
+  /** Listen to window resize to update orientation classes. */
   onResize() {
     window.addEventListener('resize', () => {
       const width = window.innerWidth;
@@ -244,8 +269,12 @@ const DeviceDetector = {
 };
 
 // ═══════════════════════════════════════════════════════════
-// AUDIO CONTROLLER — unified audio mixer
-// ═══════════════════════════════════════════════════════════
+/**
+ * Audio Controller — queue-based unified audio mixer.
+ * Handles narration, dialogue and video audio with volume control,
+ * resume support and per-track toggling.
+ * @namespace AudioController
+ */
 const AudioController = {
   queue: [],
   currentIdx: 0,
@@ -265,6 +294,7 @@ const AudioController = {
     try { return new URL(src, location.href).href; } catch (e) { return src; }
   },
 
+  /** @param {Object} frameData - Current frame with audioSrc / dialogueAudio */
   setFrameData(frameData) {
     this.frameData = frameData;
     this.stop();
@@ -275,10 +305,12 @@ const AudioController = {
     this.buildQueue();
   },
 
+  /** @param {Function} fn - Callback invoked when audio state changes */
   onStateChange(fn) {
     this.stateChangeCallback = fn;
   },
 
+  /** @param {Function} fn - Callback invoked when new audio starts playing */
   onAudioStart(fn) {
     this.audioStartCallback = fn;
   },
@@ -287,6 +319,7 @@ const AudioController = {
     if (this.stateChangeCallback) this.stateChangeCallback(this.state);
   },
 
+  /** Rebuild the audio queue based on current frame data and active tracks. */
   buildQueue() {
     this.queue = [];
     if (this.activeTracks.narration && this.frameData?.audioSrc) {
@@ -299,6 +332,7 @@ const AudioController = {
     }
   },
 
+  /** Start or resume playback from the current queue position. */
   play() {
     if (this.state === 'video') return;
     if (this.queue.length === 0) {
@@ -310,6 +344,7 @@ const AudioController = {
     this.playNext();
   },
 
+  /** Play the next item in the queue; skip on error or timeout. */
   playNext() {
     this.stopCurrent();
     if (this.currentIdx >= this.queue.length) {
@@ -362,6 +397,7 @@ const AudioController = {
     this.updateUI();
   },
 
+  /** Stop and clear the currently playing audio element. */
   stopCurrent() {
     if (this.currentAudio) {
       this.currentAudio.pause();
@@ -377,6 +413,7 @@ const AudioController = {
     }
   },
 
+  /** Pause currently playing audio (not video). */
   pause() {
     if (this.currentAudio && this.state === 'playing') {
       this.currentAudio.pause();
@@ -385,6 +422,7 @@ const AudioController = {
     }
   },
 
+  /** Resume paused audio or restart idle queue. */
   resume() {
     if (this.currentAudio && this.state === 'paused') {
       this.currentAudio.play().catch(() => {});
@@ -395,6 +433,7 @@ const AudioController = {
     }
   },
 
+  /** Stop all audio, reset queue index and saved position. */
   stop() {
     this.stopCurrent();
     this.state = 'idle';
@@ -405,6 +444,7 @@ const AudioController = {
     this.updateUI();
   },
 
+  /** @param {string} type - 'narration' | 'dialogue' | 'video' */
   toggleTrack(type) {
     const turningOn = !this.activeTracks[type];
     this.activeTracks[type] = !this.activeTracks[type];
@@ -461,6 +501,7 @@ const AudioController = {
     this.updateUI();
   },
 
+  /** @param {HTMLVideoElement} videoEl - Video element to control */
   playVideo(videoEl) {
     this.stop();
     this.state = 'video';
@@ -471,6 +512,7 @@ const AudioController = {
     this.updateUI();
   },
 
+  /** Resume audio queue after the active video finishes. */
   onVideoEnded() {
     if (this.state === 'video') {
       this.activeTracks.video = false;
@@ -481,12 +523,14 @@ const AudioController = {
     }
   },
 
+  /** Notify the app when the entire audio queue finishes. */
   onQueueEnd() {
     if (typeof App !== 'undefined' && App.onAudioEnd) {
       App.onAudioEnd();
     }
   },
 
+  /** @param {number} v - Volume level 0–100 */
   setVolume(v) {
     this.volume = v / 100;
     if (this.currentAudio) this.currentAudio.volume = this.volume;
@@ -753,13 +797,16 @@ const BottomSheet = {
 
   renderGameDock(games) {
     if (!this.gameDock) return;
-    this.gameDock.innerHTML = '';
+    this.gameDock.textContent = '';
     if (!games || games.length === 0) return;
     games.forEach(g => {
       const chip = document.createElement('button');
       chip.className = 'game-chip';
       chip.title = GAME_NAMES[g] || g;
-      chip.innerHTML = `<span class="game-chip-icon">${GAME_ICONS[g] || '🎮'}</span>`;
+      const icon = document.createElement('span');
+      icon.className = 'game-chip-icon';
+      icon.textContent = GAME_ICONS[g] || '🎮';
+      chip.appendChild(icon);
       chip.addEventListener('click', () => App.startGame(g));
       this.gameDock.appendChild(chip);
     });
@@ -767,15 +814,24 @@ const BottomSheet = {
 
   renderGamePanel(games) {
     if (!this.gamePanelInner) return;
-    this.gamePanelInner.innerHTML = '';
+    this.gamePanelInner.textContent = '';
     if (!games || games.length === 0) {
-      this.gamePanelInner.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:13px;">Нет доступных игр на этом кадре</div>';
+      const empty = document.createElement('div');
+      empty.style.cssText = 'color:rgba(255,255,255,0.4);font-size:13px;';
+      empty.textContent = 'Нет доступных игр на этом кадре';
+      this.gamePanelInner.appendChild(empty);
       return;
     }
     games.forEach(g => {
       const chip = document.createElement('button');
       chip.className = 'bs-game-chip';
-      chip.innerHTML = `<span class="bs-game-chip-icon">${GAME_ICONS[g] || '🎮'}</span><span>${GAME_NAMES[g] || g}</span>`;
+      const icon = document.createElement('span');
+      icon.className = 'bs-game-chip-icon';
+      icon.textContent = GAME_ICONS[g] || '🎮';
+      const name = document.createElement('span');
+      name.textContent = GAME_NAMES[g] || g;
+      chip.appendChild(icon);
+      chip.appendChild(name);
       chip.addEventListener('click', () => App.startGame(g));
       this.gamePanelInner.appendChild(chip);
     });
@@ -945,40 +1001,82 @@ const App = (function() {
   }
 
   // ─── RENDER FRAME ───
-  function renderFrame(frameData, idx, total) {
-    const hasVideo = !!frameData.videoSrc;
-    const videoContent = hasVideo
-      ? `<img class="frame-preview" src="${escapeHtml(frameData.bgImage)}" alt="">
-         <div class="frame-preview-info">
-           <div class="frame-preview-num">Кадр ${idx + 1}</div>
-           <div class="frame-preview-title">${escapeHtml(frameData.title)}</div>
-         </div>
-         <button class="video-play-btn">▶</button>
-         <video src="${frameData.videoSrc}" playsinline preload="auto"></video>`
-      : `<div class="video-placeholder">
-          <div class="ph-icon">🎬</div>
-          <div class="ph-text">Видео: ${escapeHtml(frameData.title)}</div>
-          <div class="ph-note">${escapeHtml(frameData.videoPrompt)}</div>
-        </div>`;
+  function createFrameElement(frameData, idx, total) {
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    frame.dataset.index = String(idx);
 
-    return `
-      <div class="frame" data-index="${idx}">
-        <div class="video-layer">
-          ${videoContent}
-        </div>
-      </div>
-    `;
+    const videoLayer = document.createElement('div');
+    videoLayer.className = 'video-layer';
+
+    if (frameData.videoSrc) {
+      const img = document.createElement('img');
+      img.className = 'frame-preview';
+      img.src = frameData.bgImage || '';
+      img.alt = '';
+      videoLayer.appendChild(img);
+
+      const info = document.createElement('div');
+      info.className = 'frame-preview-info';
+      const num = document.createElement('div');
+      num.className = 'frame-preview-num';
+      num.textContent = 'Кадр ' + (idx + 1);
+      const title = document.createElement('div');
+      title.className = 'frame-preview-title';
+      title.textContent = frameData.title || '';
+      info.appendChild(num);
+      info.appendChild(title);
+      videoLayer.appendChild(info);
+
+      const btn = document.createElement('button');
+      btn.className = 'video-play-btn';
+      btn.textContent = '▶';
+      videoLayer.appendChild(btn);
+
+      const video = document.createElement('video');
+      video.src = frameData.videoSrc;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('preload', 'auto');
+      videoLayer.appendChild(video);
+    } else {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'video-placeholder';
+      const phIcon = document.createElement('div');
+      phIcon.className = 'ph-icon';
+      phIcon.textContent = '🎬';
+      const phText = document.createElement('div');
+      phText.className = 'ph-text';
+      phText.textContent = 'Видео: ' + (frameData.title || '');
+      const phNote = document.createElement('div');
+      phNote.className = 'ph-note';
+      phNote.textContent = frameData.videoPrompt || '';
+      placeholder.appendChild(phIcon);
+      placeholder.appendChild(phText);
+      placeholder.appendChild(phNote);
+      videoLayer.appendChild(placeholder);
+    }
+
+    frame.appendChild(videoLayer);
+    return frame;
   }
 
   // ─── PROGRESS DOTS ───
   function updateProgressDots(current, total) {
     const container = document.getElementById('progressDots');
     if (!container) return;
-    container.innerHTML = '';
+    container.textContent = '';
     const isNarrow = window.innerWidth < 480;
+    let maxFrame = -1;
+    if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
+      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      if (epId) maxFrame = PlayerProfile.getProgress(epId).maxFrame;
+    }
     for (let i = 0; i < total; i++) {
       const dot = document.createElement('div');
-      dot.className = 'progress-dot' + (i === current ? ' active' : i < current ? ' seen' : '');
+      const isSeen = i <= maxFrame;
+      const isActive = i === current;
+      dot.className = 'progress-dot' + (isActive ? ' active' : isSeen ? ' seen' : '');
+      if (isSeen && !isActive) dot.setAttribute('aria-label', 'Просмотрено');
       container.appendChild(dot);
     }
     if (total > 20) {
@@ -1174,6 +1272,12 @@ const App = (function() {
     currentFrameIdx = idx;
     const frameData = frames[idx];
 
+    // Autosave progress
+    if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.markFrameSeen) {
+      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      if (epId) PlayerProfile.markFrameSeen(epId, idx);
+    }
+
     updateProgressDots(idx, frames.length);
     SubtitleOverlay.clear();
     BottomSheet.setNarratorFull(frameData?.narration || '');
@@ -1334,6 +1438,11 @@ const App = (function() {
     if (text) text.textContent = 'Эпизод завершён! Скоро продолжение...';
     const overlay = document.getElementById('transition-overlay');
     if (overlay) overlay.classList.add('visible');
+    // Mark episode as completed
+    if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.completeEpisode) {
+      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      if (epId) PlayerProfile.completeEpisode(epId);
+    }
     setTimeout(() => {
       if (overlay) overlay.classList.remove('visible');
       backToMenu();
@@ -1341,29 +1450,55 @@ const App = (function() {
   }
 
   // ─── MENU ───
-  function startEpisode(episodeId) {
+  function startEpisode(episodeId, startFrame) {
+    startFrame = typeof startFrame === 'number' ? startFrame : 0;
     const epData = EPISODES[episodeId];
     if (!epData) return;
     currentEpisode = epData;
     frames = epData.frames;
-    if (frameContainer) frameContainer.innerHTML = frames.map((f, i) => renderFrame(f, i, frames.length)).join('');
+    if (frameContainer) {
+      frameContainer.textContent = '';
+      frames.forEach((f, i) => {
+        frameContainer.appendChild(createFrameElement(f, i, frames.length));
+      });
+    }
     if (mainMenu) mainMenu.classList.add('hidden');
     if (episodeViewer) episodeViewer.classList.add('active');
     BottomSheet.recalcSnapPoints();
     BottomSheet.collapse();
     if (typeof PlayerProfile !== 'undefined') PlayerProfile.renderBadge();
     bindFrameEvents();
-    showFrame(0, null);
+    showFrame(startFrame, null);
   }
 
   function backToMenu() {
     AudioController.stop();
     if (episodeViewer) episodeViewer.classList.remove('active');
     if (mainMenu) mainMenu.classList.remove('hidden');
-    if (frameContainer) frameContainer.innerHTML = '';
+    if (frameContainer) frameContainer.textContent = '';
     currentEpisode = null;
     frames = [];
     currentFrameIdx = 0;
+    renderContinueButton();
+  }
+
+  function renderContinueButton() {
+    const block = document.getElementById('continueBlock');
+    const btn = document.getElementById('continueBtn');
+    if (!block || !btn) return;
+    if (typeof PlayerProfile === 'undefined' || !PlayerProfile.getLastPosition) {
+      block.style.display = 'none';
+      return;
+    }
+    const pos = PlayerProfile.getLastPosition();
+    if (pos && pos.frameIdx >= 0) {
+      const epNames = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Скоро...' };
+      btn.textContent = '▶ Продолжить «' + (epNames[pos.episodeId] || 'Эпизод ' + pos.episodeId) + '»';
+      btn.onclick = function() { startEpisode(pos.episodeId, pos.frameIdx); };
+      block.style.display = 'block';
+    } else {
+      block.style.display = 'none';
+    }
   }
 
   // ─── EVENT BINDING ───
@@ -1458,6 +1593,7 @@ const App = (function() {
     AppSettings.apply();
     initSwipe();
     BottomSheet.init();
+    renderContinueButton();
     AudioController.onAudioStart((audio) => syncSubtitles(audio));
 
     const navArrowUp = document.getElementById('navArrowUp');
@@ -1484,10 +1620,33 @@ const App = (function() {
       settingsMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         settingsDropdown.classList.toggle('visible');
+        if (faqDropdown) faqDropdown.classList.remove('visible');
       });
       document.addEventListener('click', (e) => {
         if (!settingsDropdown.contains(e.target) && e.target !== settingsMenuBtn) {
           settingsDropdown.classList.remove('visible');
+        }
+      });
+    }
+
+    const faqBtn = document.getElementById('faqBtn');
+    const faqDropdown = document.getElementById('faqDropdown');
+    const faqClose = document.getElementById('faqClose');
+    if (faqBtn && faqDropdown) {
+      faqBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        faqDropdown.classList.toggle('visible');
+        if (settingsDropdown) settingsDropdown.classList.remove('visible');
+      });
+      if (faqClose) {
+        faqClose.addEventListener('click', (e) => {
+          e.stopPropagation();
+          faqDropdown.classList.remove('visible');
+        });
+      }
+      document.addEventListener('click', (e) => {
+        if (!faqDropdown.contains(e.target) && e.target !== faqBtn) {
+          faqDropdown.classList.remove('visible');
         }
       });
     }

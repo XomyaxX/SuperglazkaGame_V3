@@ -2,13 +2,36 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0618">
 <title>Суперглазка — Интерактивный комикс</title>
+<link rel="canonical" href="https://superglazka.ru/app.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="Суперглазка — Интерактивный комикс о здоровье глаз">
+<meta property="og:description" content="Спаси планету Видеаль вместе с супергероиней! Образовательный комикс с мини-играми для детей.">
+<meta property="og:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://superglazka.ru/app.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Суперглазка — Интерактивный комикс о здоровье глаз">
+<meta name="twitter:description" content="Спаси планету Видеаль вместе с супергероиней! Образовательный комикс с мини-играми для детей.">
+<meta name="twitter:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(r => console.log('SW registered:', r.scope))
+    .catch(e => console.log('SW failed:', e));
+}
+</script>
 </head>
 <body>
 
@@ -16,7 +39,7 @@
      MAIN MENU
      ═══════════════════════════════════════════════════════════ -->
 <div id="main-menu">
-  <button class="profile-btn" title="Профиль">
+  <button class="profile-btn" title="Профиль" aria-label="Профиль">
     <span>👤</span>
     <span class="profile-coins-val">0</span>
     <span>🪙</span>
@@ -24,6 +47,11 @@
 
   <div class="menu-title">СУПЕРГЛАЗКА</div>
   <div class="menu-sub">Интерактивный комикс о здоровье глаз</div>
+
+  <div class="continue-block" id="continueBlock" style="display:none;">
+    <div class="continue-label">Вы остановились здесь</div>
+    <button class="chapter-btn continue-btn" id="continueBtn">▶ Продолжить</button>
+  </div>
 
   <div class="chapters-grid">
     <!-- Episode 1 -->
@@ -55,7 +83,7 @@
         <div class="chapter-num">Эпизод 3</div>
         <div class="chapter-name">Великая битва</div>
         <div class="chapter-desc">Финальное противостояние с Великой Тьмой. Всё будущее планеты Видеаль в твоих руках!</div>
-        <div class="chapter-lock">🔒 Скоро</div>
+        <div class="chapter-lock">🔒</div>
       </div>
     </div>
   </div>
@@ -69,12 +97,13 @@
        TOP BAR
        ═══════════════════════════════════════════════════════════ -->
   <div class="frame-top-bar" id="frameTopBar">
-    <button class="back-btn" id="viewerBackBtn" title="Назад в меню">←</button>
+    <button class="back-btn" id="viewerBackBtn" title="Назад в меню" aria-label="Назад в меню">←</button>
     <div class="progress-dots" id="progressDots"></div>
     <div class="top-bar-right">
-      <button class="cinema-toggle-btn" id="cinemaToggleBtn" title="Скрыть/показать интерфейс">👁️</button>
-      <button class="audio-menu-btn" id="settingsMenuBtn" title="Настройки">⚙️</button>
-      <button class="profile-btn" id="viewerProfileBtn" title="Профиль">
+      <button class="cinema-toggle-btn" id="cinemaToggleBtn" title="Скрыть/показать интерфейс" aria-label="Скрыть или показать интерфейс">👁️</button>
+      <button class="audio-menu-btn" id="faqBtn" title="Помощь" aria-label="Помощь">❓</button>
+      <button class="audio-menu-btn" id="settingsMenuBtn" title="Настройки" aria-label="Настройки">⚙️</button>
+      <button class="profile-btn" id="viewerProfileBtn" title="Профиль" aria-label="Профиль">
         <span>👤</span>
         <span class="profile-coins-val">0</span>
         <span>🪙</span>
@@ -83,7 +112,7 @@
   </div>
 
   <!-- Settings dropdown -->
-  <div class="audio-dropdown" id="settingsDropdown">
+  <div class="audio-dropdown" id="settingsDropdown" role="dialog" aria-label="Настройки" aria-modal="true">
     <div class="settings-panel">
       <!-- Audio -->
       <div class="settings-section">
@@ -201,11 +230,48 @@
     </div>
   </div>
 
+  <!-- FAQ dropdown -->
+  <div class="audio-dropdown" id="faqDropdown" role="dialog" aria-label="Помощь" aria-modal="true">
+    <div class="settings-panel faq-panel">
+      <div class="faq-header">
+        <h3>❓ Помощь</h3>
+        <button class="faq-close" id="faqClose" aria-label="Закрыть">✕</button>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Как управлять?</summary>
+          <p><strong>На компьютере:</strong> используйте стрелки вверх/вниз или клавишу Пробел для перехода к следующему кадру. Клавиша Esc скрывает/показывает интерфейс.</p>
+          <p><strong>На телефоне:</strong> свайпайте вверх/вниз для переключения кадров. Тап по экрану ставит видео на паузу.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Что делать, если звук не работает?</summary>
+          <p>1. Проверьте, что в настройках (⚙️) включены нужные аудиотреки.<br>2. На iOS звук включается только после первого касания экрана пользователем — это ограничение Safari.<br>3. Проверьте громкость устройства и не включён ли беззвучный режим.<br>4. Перезагрузите страницу — иногда браузер блокирует автовоспроизведение.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Как заработать монеты?</summary>
+          <p>Монеты начисляются за прохождение кадров и мини-игр. Чем лучше результат в игре (больше звёзд), тем больше монет. Также можно получить бонусные монеты за повторное прохождение эпизода.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Почему эпизод заблокирован?</summary>
+          <p>Эпизоды открываются последовательно. Чтобы разблокировать следующий эпизод, нужно досмотреть предыдущий до конца. Прогресс сохраняется автоматически.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Как включить субтитры?</summary>
+          <p>Откройте настройки (⚙️) → раздел «Субтитры» → переключите тумблер. Там же можно выбрать размер шрифта: маленький, средний или большой.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Как поменять тему?</summary>
+          <p>В настройках (⚙️) → раздел «Интерфейс» → переключатель «Тёмная тема». Выбор сохраняется и работает на обеих страницах.</p>
+        </details>
+      </div>
+    </div>
+  </div>
+
   <!-- Dynamic frame container -->
   <div id="frame-container"></div>
 
   <!-- Floating subtitle overlay (above bottom sheet, below top bar) -->
-  <div class="subtitle-overlay" id="subtitleOverlay">
+  <div class="subtitle-overlay" id="subtitleOverlay" aria-live="polite" aria-atomic="true">
     <span class="sub-line" id="subLine"></span>
   </div>
 
@@ -214,18 +280,18 @@
        ═══════════════════════════════════════════════════════════ -->
   <div class="bs-backdrop" id="bsBackdrop"></div>
   <div class="bottom-sheet collapsed" id="bottomSheet">
-    <div class="bs-drag-handle" id="bsDragHandle"></div>
-    <div class="bs-subtitle" id="bsSubtitle">
+    <div class="bs-drag-handle" id="bsDragHandle" role="button" tabindex="0" aria-label="Перетащить панель"></div>
+    <div class="bs-subtitle" id="bsSubtitle" aria-live="polite" aria-atomic="true">
       <span class="bs-subtitle-icon" id="bsSubtitleIcon">🎙️</span>
       <span class="bs-subtitle-text" id="bsSubtitleText"></span>
     </div>
     <div class="bs-controls" id="bsControls"></div>
     <div class="bs-expanded" id="bsExpanded">
       <div class="bs-narrator-wrapper collapsed" id="bsNarratorWrapper">
-        <div class="bs-narrator-full" id="bsNarratorFull"></div>
+        <div class="bs-narrator-full" id="bsNarratorFull" aria-live="polite" aria-atomic="true"></div>
         <div class="bs-narrator-fade"></div>
       </div>
-      <button class="bs-narrator-toggle" id="bsNarratorToggle" style="display:none;">
+      <button class="bs-narrator-toggle" id="bsNarratorToggle" style="display:none;" aria-label="Развернуть или свернуть текст рассказчика" aria-expanded="false">
         <span class="bs-narrator-toggle-text">Показать полностью</span>
         <svg class="bs-narrator-toggle-icon" viewBox="0 0 24 24" width="14" height="14">
           <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
@@ -255,8 +321,8 @@
 
   <!-- Navigation arrows -->
   <div class="nav-arrows" id="navArrows">
-    <button class="nav-arrow nav-arrow-up" id="navArrowUp" title="Предыдущий кадр">▲</button>
-    <button class="nav-arrow nav-arrow-down" id="navArrowDown" title="Следующий кадр">▼</button>
+    <button class="nav-arrow nav-arrow-up" id="navArrowUp" title="Предыдущий кадр" aria-label="Предыдущий кадр">▲</button>
+    <button class="nav-arrow nav-arrow-down" id="navArrowDown" title="Следующий кадр" aria-label="Следующий кадр">▼</button>
   </div>
 </div>
 
@@ -471,6 +537,7 @@
      SCRIPTS
      ═══════════════════════════════════════════════════════════ -->
 <script src="js/player.js"></script>
+<script src="js/episodes/assets.js"></script>
 <script src="js/episodes/episode-01.js"></script>
 <script src="js/episodes/episode-02.js"></script>
 <script src="js/episodes/index.js"></script>
@@ -479,5 +546,23 @@
 <script src="js/game_gymnastics.js"></script>
 <script src="js/game_blink.js"></script>
 <script src="js/game_tracker.js"></script>
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-banner-text">
+      Мы используем localStorage для сохранения прогресса и настроек.
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+    <button class="cookie-banner-btn" id="cookieAccept">Принять</button>
+  </div>
+  <script>
+    (function() {
+      if (!localStorage.getItem('cookie_consent')) {
+        document.getElementById('cookieBanner').classList.add('visible');
+      }
+      document.getElementById('cookieAccept').addEventListener('click', function() {
+        localStorage.setItem('cookie_consent', 'true');
+        document.getElementById('cookieBanner').classList.remove('visible');
+      });
+    })();
+  </script>
 </body>
 </html>

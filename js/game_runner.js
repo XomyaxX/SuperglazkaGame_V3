@@ -842,19 +842,30 @@ document.addEventListener('DOMContentLoaded', () => {
       // Show success message
       const card = document.querySelector('#runner-registration-overlay .reg-card');
       if (card) {
-        card.innerHTML = `
-          <div class="reg-success">
-            <div class="reg-success-icon">🎉</div>
-            <div class="reg-success-title">Добро пожаловать, ${nickname}!</div>
-            <div class="reg-success-text">
-              Твой прогресс сохранён!<br>
-              Теперь ты часть команды Суперглазки!
-            </div>
-            <button class="tr-btn" onclick="finishRunnerRegistration()" style="margin-top: 24px; width: 100%;">
-              Продолжить приключение ➜
-            </button>
-          </div>
-        `;
+        card.textContent = '';
+        const success = document.createElement('div');
+        success.className = 'reg-success';
+        const icon = document.createElement('div');
+        icon.className = 'reg-success-icon';
+        icon.textContent = '🎉';
+        const title = document.createElement('div');
+        title.className = 'reg-success-title';
+        title.textContent = 'Добро пожаловать, ' + nickname + '!';
+        const text = document.createElement('div');
+        text.className = 'reg-success-text';
+        text.appendChild(document.createTextNode('Твой прогресс сохранён!'));
+        text.appendChild(document.createElement('br'));
+        text.appendChild(document.createTextNode('Теперь ты часть команды Суперглазки!'));
+        const btn = document.createElement('button');
+        btn.className = 'tr-btn';
+        btn.style.cssText = 'margin-top: 24px; width: 100%;';
+        btn.textContent = 'Продолжить приключение ➜';
+        btn.addEventListener('click', finishRunnerRegistration);
+        success.appendChild(icon);
+        success.appendChild(title);
+        success.appendChild(text);
+        success.appendChild(btn);
+        card.appendChild(success);
       }
     });
   }

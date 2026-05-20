@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0618">
+<meta name="description" content="Информация для родителей о проекте Суперглазка — польза, рекомендации по времени использования и обратная связь.">
+<title>Для родителей — Суперглазка</title>
+<link rel="canonical" href="https://superglazka.ru/parents.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="Для родителей — Суперглазка">
+<meta property="og:description" content="Всё, что важно знать о здоровье глаз вашего ребёнка.">
+<meta property="og:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://superglazka.ru/parents.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Для родителей — Суперглазка">
+<meta name="twitter:description" content="Всё, что важно знать о здоровье глаз вашего ребёнка.">
+<meta name="twitter:image" content="https://superglazka.ru/assets/shared/characters/superglazka.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(r => console.log('SW registered:', r.scope))
+    .catch(e => console.log('SW failed:', e));
+}
+</script>
+<style>
+/* Parents page specific styles */
+.land-parents-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0618 0%, #1a0b2e 40%, #0f0718 100%);
+  padding-bottom: 60px;
+}
+.theme-light .land-parents-page {
+  background: linear-gradient(180deg, #f3e8ff 0%, #ffe4f0 40%, #f8eeff 100%);
+}
+.land-parents-header {
+  padding: 24px max(24px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.land-parents-header .land-logo {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-light .land-parents-header .land-logo {
+  color: #3d1a5c;
+}
+.land-parents-back {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.land-parents-back:hover {
+  color: #c084fc;
+}
+.theme-light .land-parents-back {
+  color: rgba(0,0,0,0.6);
+}
+.theme-light .land-parents-back:hover {
+  color: #e056c8;
+}
+.land-parents-hero {
+  text-align: center;
+  padding: 40px 24px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.land-parents-hero h1 {
+  font-family: 'Comfortaa', cursive;
+  font-size: clamp(28px, 5vw, 42px);
+  color: #fff;
+  margin-bottom: 12px;
+}
+.theme-light .land-parents-hero h1 {
+  color: #3d1a5c;
+}
+.land-parents-hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+.theme-light .land-parents-hero p {
+  color: rgba(0,0,0,0.6);
+}
+.land-parents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.land-parents-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  transition: all .3s var(--ease-spring);
+}
+.land-parents-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(192,132,252,0.3);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+.theme-light .land-parents-card {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.06);
+}
+.land-parents-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+.land-parents-card h3 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #fff;
+}
+.theme-light .land-parents-card h3 {
+  color: #3d1a5c;
+}
+.land-parents-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.land-parents-card li {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
+  padding-left: 20px;
+  position: relative;
+  margin-bottom: 8px;
+}
+.theme-light .land-parents-card li {
+  color: #3d1a5c;
+  opacity: 0.85;
+}
+.land-parents-card li::before {
+  content: '•';
+  color: #c084fc;
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+.theme-light .land-parents-card li::before {
+  color: #e056c8;
+}
+.land-parents-card p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
+  margin-bottom: 12px;
+}
+.theme-light .land-parents-card p {
+  color: #3d1a5c;
+  opacity: 0.85;
+}
+.land-parents-link {
+  color: #c084fc;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color .2s;
+}
+.land-parents-link:hover {
+  color: #e879f9;
+  text-decoration: underline;
+}
+.theme-light .land-parents-link {
+  color: #e056c8;
+}
+.land-parents-contact {
+  max-width: 960px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+  text-align: center;
+}
+.land-parents-contact-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px;
+  backdrop-filter: blur(12px);
+}
+.theme-light .land-parents-contact-box {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.06);
+}
+.land-parents-contact-box h3 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.theme-light .land-parents-contact-box h3 {
+  color: #3d1a5c;
+}
+.land-parents-contact-box p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.theme-light .land-parents-contact-box p {
+  color: rgba(0,0,0,0.65);
+}
+.land-parents-email {
+  display: inline-block;
+  background: linear-gradient(135deg, #c084fc, #e879f9);
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 24px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all .25s var(--ease-spring);
+}
+.land-parents-email:hover {
+  transform: scale(1.04);
+  box-shadow: 0 8px 24px rgba(192,132,252,0.3);
+}
+@media (max-width: 768px) {
+  .land-parents-grid {
+    grid-template-columns: 1fr;
+  }
+  .land-parents-header {
+    padding: 16px 20px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="land-parents-page">
+
+  <!-- Header -->
+  <header class="land-parents-header">
+    <a href="index.html" class="land-logo">👁️ СУПЕРГЛАЗКА</a>
+    <div style="display:flex;gap:16px;align-items:center;">
+      <a href="blog.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Блог</a>
+      <a href="checklist.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Чек-лист</a>
+      <a href="index.html" class="land-parents-back">← На главную</a>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="land-parents-hero">
+    <h1>Для родителей</h1>
+    <p>Всё, что важно знать о здоровье глаз вашего ребёнка и о том, как «Суперглазка» помогает его сохранить</p>
+  </div>
+
+  <!-- Content grid -->
+  <div class="land-parents-grid">
+    <div class="land-parents-card reveal">
+      <div class="land-parents-icon">🎯</div>
+      <h3>Польза проекта</h3>
+      <ul>
+        <li><strong>Развитие внимания.</strong> Игровые упражнения тренируют произвольное внимание ребёнка — умение фокусироваться на заданном объекте.</li>
+        <li><strong>Гигиена зрения.</strong> Комикс знакомит детей с правилами здоровья глаз в увлекательной форме: правило 20-20-20, правильное освещение, перерывы.</li>
+        <li><strong>Профилактика утомления.</strong> Специальные упражнения (гимнастика для глаз, трекер, моргание) снимают напряжение после экранов.</li>
+        <li><strong>Укрепление мышц.</strong> Упражнения на аккомодацию (перевод взгляда с близкого на дальнее) укрепляют глазные мышцы.</li>
+      </ul>
+    </div>
+
+    <div class="land-parents-card reveal">
+      <div class="land-parents-icon">⏱️</div>
+      <h3>Рекомендации по времени</h3>
+      <ul>
+        <li><strong>Один эпизод — 10–15 минут.</strong> Это оптимальное время для сохранения концентрации у детей 6–10 лет.</li>
+        <li><strong>Перерыв 20 минут.</strong> После каждого эпизода обязательно отдыхайте глаза — посмотрите в окно на дальние предметы (правило 20-20-20).</li>
+        <li><strong>Не более 2 эпизодов в день.</strong> Качество важнее количества. Лучше регулярно, чем много за раз.</li>
+        <li><strong>Хорошее освещение.</strong> Проводите занятия в хорошо освещённом помещении, экран должен быть на расстоянии вытянутой руки.</li>
+      </ul>
+    </div>
+
+    <div class="land-parents-card reveal">
+      <div class="land-parents-icon">💬</div>
+      <h3>Как объяснить ребёнку</h3>
+      <ul>
+        <li>«Суперглазка учит твоим глазкам быть сильными, как у супергероя!»</li>
+        <li>«Упражнения помогают глазкам отдыхать после планшета и телефона.»</li>
+        <li>«Каждый раз, когда ты тренируешься, твои глазки становятся быстрее и умнее.»</li>
+        <li>«Это как спортзал, только для глаз — чем чаще занимаешься, тем лучше видишь.»</li>
+      </ul>
+    </div>
+
+    <div class="land-parents-card reveal">
+      <div class="land-parents-icon">📋</div>
+      <h3>Чек-лист для родителей</h3>
+      <ul>
+        <li>Ребёнок сидит за экраном не ближе 30 см.</li>
+        <li>После 20 минут экрана — 20 секунд отдыха, взгляд на 6 метров.</li>
+        <li>Комната хорошо освещена, нет бликов на экране.</li>
+        <li>Ребёнок моргает во время занятий (можно напоминать).</li>
+        <li>Вечером минимум экранов за 1 час до сна.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <div class="land-parents-contact">
+    <div class="land-parents-contact-box reveal">
+      <h3>📧 Обратная связь</h3>
+      <p>Есть вопросы, предложения или замечания? Мы всегда рады услышать ваше мнение — это помогает делать проект лучше.</p>
+      <a href="mailto:hello@superglazka.ru" class="land-parents-email">Написать на hello@superglazka.ru</a>
+      <p style="margin-top:16px; font-size:13px; opacity:0.7;">Или найдите нас в соцсетях: <a href="#" class="land-parents-link">Telegram</a> · <a href="#" class="land-parents-link">VK</a></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="land-footer" style="margin-top:60px;">
+    <p>Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
+  </footer>
+
+</div>
+
+<script>
+// Simple reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
+});
+
+// Theme support
+const savedTheme = localStorage.getItem('superglazka_theme');
+if (savedTheme) document.body.classList.add('theme-' + savedTheme);
+</script>
+
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-banner-text">
+      Мы используем localStorage для сохранения прогресса и настроек.
+      <a href="privacy.html">Политика конфиденциальности</a>
+    </div>
+    <button class="cookie-banner-btn" id="cookieAccept">Принять</button>
+  </div>
+  <script>
+    (function() {
+      if (!localStorage.getItem('cookie_consent')) {
+        document.getElementById('cookieBanner').classList.add('visible');
+      }
+      document.getElementById('cookieAccept').addEventListener('click', function() {
+        localStorage.setItem('cookie_consent', 'true');
+        document.getElementById('cookieBanner').classList.remove('visible');
+      });
+    })();
+  </script>
+</body>
+</html>

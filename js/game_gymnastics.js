@@ -179,21 +179,32 @@ const GymGame = (function(){
   function setupLaserPhase() {
     const container = getEl('phase-container');
     if (!container) return;
-    
-    container.innerHTML = `
-      <div class="phase-instruction">⚡ Зажми кнопку на ${CHARGE_TIME.LASER/1000} секунды, потом отпусти!</div>
-      <button class="phase-btn-new ${isCharging ? 'charging' : ''}" id="laser-btn">
-        <span>${isCharging ? '🔥 ЗАРЯЖАЮ...' : '⚡ СОЛНЕЧНЫЙ ЛУЧ'}</span>
-      </button>
-      <div style="text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;">
-        Попаданий: ${laserHits} / ${TARGETS.LASER}
-      </div>
-      <div style="text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);">
-        Осталось: ${TARGETS.LASER - laserHits}
-      </div>
-    `;
-    
-    const btn = getEl('laser-btn');
+
+    container.textContent = '';
+
+    const instruction = document.createElement('div');
+    instruction.className = 'phase-instruction';
+    instruction.textContent = '⚡ Зажми кнопку на ' + (CHARGE_TIME.LASER / 1000) + ' секунды, потом отпусти!';
+    container.appendChild(instruction);
+
+    const btn = document.createElement('button');
+    btn.className = 'phase-btn-new' + (isCharging ? ' charging' : '');
+    btn.id = 'laser-btn';
+    const btnSpan = document.createElement('span');
+    btnSpan.textContent = isCharging ? '🔥 ЗАРЯЖАЮ...' : '⚡ СОЛНЕЧНЫЙ ЛУЧ';
+    btn.appendChild(btnSpan);
+    container.appendChild(btn);
+
+    const hitsDiv = document.createElement('div');
+    hitsDiv.style.cssText = 'text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;';
+    hitsDiv.textContent = 'Попаданий: ' + laserHits + ' / ' + TARGETS.LASER;
+    container.appendChild(hitsDiv);
+
+    const leftDiv = document.createElement('div');
+    leftDiv.style.cssText = 'text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);';
+    leftDiv.textContent = 'Осталось: ' + (TARGETS.LASER - laserHits);
+    container.appendChild(leftDiv);
+
     if (!btn) return;
     
     const startCharge = (e) => {
@@ -208,7 +219,10 @@ const GymGame = (function(){
       const btnEl = getEl('laser-btn');
       if (btnEl) {
         btnEl.classList.add('charging');
-        btnEl.innerHTML = '<span>🔥 ЗАРЯЖАЮ...</span>';
+        btnEl.textContent = '';
+        const span = document.createElement('span');
+        span.textContent = '🔥 ЗАРЯЖАЮ...';
+        btnEl.appendChild(span);
       }
       
       const chargeLoop = () => {
@@ -293,79 +307,51 @@ const GymGame = (function(){
   function setupAimPhase() {
     const container = getEl('phase-container');
     if (!container) return;
-    
-    container.innerHTML = `
-      <div class="phase-instruction">🎯 Веди прицел к красному кружку и держи ${CHARGE_TIME.AIM/1000} сек!</div>
-      <div class="aim-area" id="aim-area" style="
-        width: 100%;
-        height: 160px;
-        background: rgba(0,0,0,0.3);
-        border: 2px dashed rgba(255,255,255,0.3);
-        border-radius: 16px;
-        position: relative;
-        touch-action: none;
-        overflow: hidden;
-      ">
-        <div id="aim-target" style="
-          position: absolute;
-          width: 70px;
-          height: 70px;
-          border: 4px solid #ef4444;
-          border-radius: 50%;
-          background: rgba(239, 68, 68, 0.2);
-          transform: translate(-50%, -50%);
-          transition: all 0.8s ease;
-          box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 24px;
-        ">🎯</div>
-        <div id="aim-cursor" style="
-          position: absolute;
-          width: 50px;
-          height: 50px;
-          border: 3px solid #fff;
-          border-radius: 50%;
-          transform: translate(-50%, -50%);
-          pointer-events: none;
-          box-shadow: 0 0 20px rgba(255,255,255,0.8), inset 0 0 15px rgba(255,255,255,0.3);
-          z-index: 10;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        ">👁️</div>
-        <div style="
-          position: absolute;
-          bottom: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 120px;
-          height: 8px;
-          background: rgba(255,255,255,0.2);
-          border-radius: 4px;
-          overflow: hidden;
-        ">
-          <div id="aim-progress" style="
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #22c55e, #4ade80);
-            transition: width 0.1s;
-          "></div>
-        </div>
-      </div>
-      <div style="text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;">
-        Попаданий: ${aimHits} / ${TARGETS.AIM}
-      </div>
-      <div style="text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);">
-        Осталось: ${TARGETS.AIM - aimHits}
-      </div>
-    `;
-    
-    const area = getEl('aim-area');
-    const cursor = getEl('aim-cursor');
-    const target = getEl('aim-target');
-    
+
+    container.textContent = '';
+
+    const instruction = document.createElement('div');
+    instruction.className = 'phase-instruction';
+    instruction.textContent = '🎯 Веди прицел к красному кружку и держи ' + (CHARGE_TIME.AIM / 1000) + ' сек!';
+    container.appendChild(instruction);
+
+    const area = document.createElement('div');
+    area.className = 'aim-area';
+    area.id = 'aim-area';
+    area.style.cssText = 'width: 100%; height: 160px; background: rgba(0,0,0,0.3); border: 2px dashed rgba(255,255,255,0.3); border-radius: 16px; position: relative; touch-action: none; overflow: hidden;';
+
+    const target = document.createElement('div');
+    target.id = 'aim-target';
+    target.style.cssText = 'position: absolute; width: 70px; height: 70px; border: 4px solid #ef4444; border-radius: 50%; background: rgba(239,68,68,0.2); transform: translate(-50%,-50%); transition: all 0.8s ease; box-shadow: 0 0 25px rgba(239,68,68,0.5); display: flex; align-items: center; justify-content: center; font-size: 24px;';
+    target.textContent = '🎯';
+    area.appendChild(target);
+
+    const cursor = document.createElement('div');
+    cursor.id = 'aim-cursor';
+    cursor.style.cssText = 'position: absolute; width: 50px; height: 50px; border: 3px solid #fff; border-radius: 50%; transform: translate(-50%,-50%); pointer-events: none; box-shadow: 0 0 20px rgba(255,255,255,0.8), inset 0 0 15px rgba(255,255,255,0.3); z-index: 10; display: flex; align-items: center; justify-content: center;';
+    cursor.textContent = '👁️';
+    area.appendChild(cursor);
+
+    const progressWrap = document.createElement('div');
+    progressWrap.style.cssText = 'position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); width: 120px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden;';
+    const progressBar = document.createElement('div');
+    progressBar.id = 'aim-progress';
+    progressBar.style.cssText = 'width: 0%; height: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); transition: width 0.1s;';
+    progressWrap.appendChild(progressBar);
+    area.appendChild(progressWrap);
+
+    container.appendChild(area);
+
+    const hitsDiv = document.createElement('div');
+    hitsDiv.style.cssText = 'text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;';
+    hitsDiv.textContent = 'Попаданий: ' + aimHits + ' / ' + TARGETS.AIM;
+    container.appendChild(hitsDiv);
+
+    const leftDiv = document.createElement('div');
+    leftDiv.style.cssText = 'text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);';
+    leftDiv.textContent = 'Осталось: ' + (TARGETS.AIM - aimHits);
+    container.appendChild(leftDiv);
+
     if (!area || !cursor || !target) return;
     
     // Set initial positions
@@ -497,59 +483,58 @@ const GymGame = (function(){
     
     const progressPercent = (tearCharge / CHARGE_TIME.TEAR) * 100;
     
-    container.innerHTML = `
-      <div class="phase-instruction">💧 Быстро тапай ${CHARGE_TIME.TEAR} раз чтобы создать водопад!</div>
-      <div style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 24px;
-        margin-bottom: 20px;
-      ">
-        <div style="
-          width: 50px;
-          height: 120px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 25px;
-          overflow: hidden;
-          border: 2px solid rgba(255,255,255,0.2);
-          position: relative;
-        ">
-          <div id="tear-fill" style="
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: ${progressPercent}%;
-            background: linear-gradient(180deg, #06b6d4, #3b82f6, #1d4ed8);
-            transition: height 0.15s ease;
-            box-shadow: 0 0 25px rgba(6, 182, 212, 0.6);
-          "></div>
-          <div style="
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            filter: grayscale(${100 - progressPercent}%);
-            transition: filter 0.3s;
-          ">💧</div>
-        </div>
-        <div style="font-size: 36px; letter-spacing: 4px;">${'🌊'.repeat(tearCycles)}${'⚪'.repeat(TARGETS.TEARS - tearCycles)}</div>
-      </div>
-      <button class="phase-btn-new" id="tear-btn" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);">
-        <span style="font-size: 20px;">💧</span>
-        <span>МОРГНУТЬ!</span>
-      </button>
-      <div style="text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;">
-        Водопадов: ${tearCycles} / ${TARGETS.TEARS}
-      </div>
-      <div style="text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);">
-        ${CHARGE_TIME.TEAR - tearCharge} тапов до водопада
-      </div>
-    `;
-    
-    const btn = getEl('tear-btn');
+    container.textContent = '';
+
+    const instruction = document.createElement('div');
+    instruction.className = 'phase-instruction';
+    instruction.textContent = '💧 Быстро тапай ' + CHARGE_TIME.TEAR + ' раз чтобы создать водопад!';
+    container.appendChild(instruction);
+
+    const row = document.createElement('div');
+    row.style.cssText = 'display: flex; align-items: center; justify-content: center; gap: 24px; margin-bottom: 20px;';
+
+    const tank = document.createElement('div');
+    tank.style.cssText = 'width: 50px; height: 120px; background: rgba(255,255,255,0.1); border-radius: 25px; overflow: hidden; border: 2px solid rgba(255,255,255,0.2); position: relative;';
+    const fill = document.createElement('div');
+    fill.id = 'tear-fill';
+    fill.style.cssText = 'position: absolute; bottom: 0; left: 0; right: 0; height: ' + progressPercent + '%; background: linear-gradient(180deg, #06b6d4, #3b82f6, #1d4ed8); transition: height 0.15s ease; box-shadow: 0 0 25px rgba(6,182,212,0.6);';
+    tank.appendChild(fill);
+    const dropIcon = document.createElement('div');
+    dropIcon.style.cssText = 'position: absolute; top: 8px; left: 50%; transform: translateX(-50%); font-size: 20px; filter: grayscale(' + (100 - progressPercent) + '%); transition: filter 0.3s;';
+    dropIcon.textContent = '💧';
+    tank.appendChild(dropIcon);
+    row.appendChild(tank);
+
+    const cycles = document.createElement('div');
+    cycles.style.cssText = 'font-size: 36px; letter-spacing: 4px;';
+    cycles.textContent = '🌊'.repeat(tearCycles) + '⚪'.repeat(TARGETS.TEARS - tearCycles);
+    row.appendChild(cycles);
+
+    container.appendChild(row);
+
+    const btn = document.createElement('button');
+    btn.className = 'phase-btn-new';
+    btn.id = 'tear-btn';
+    btn.style.cssText = 'background: linear-gradient(135deg, #06b6d4, #3b82f6);';
+    const btnIcon = document.createElement('span');
+    btnIcon.style.fontSize = '20px';
+    btnIcon.textContent = '💧';
+    const btnText = document.createElement('span');
+    btnText.textContent = 'МОРГНУТЬ!';
+    btn.appendChild(btnIcon);
+    btn.appendChild(btnText);
+    container.appendChild(btn);
+
+    const cyclesDiv = document.createElement('div');
+    cyclesDiv.style.cssText = 'text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;';
+    cyclesDiv.textContent = 'Водопадов: ' + tearCycles + ' / ' + TARGETS.TEARS;
+    container.appendChild(cyclesDiv);
+
+    const tapsDiv = document.createElement('div');
+    tapsDiv.style.cssText = 'text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);';
+    tapsDiv.textContent = (CHARGE_TIME.TEAR - tearCharge) + ' тапов до водопада';
+    container.appendChild(tapsDiv);
+
     if (!btn) return;
     
     const blink = (e) => {
@@ -804,19 +789,30 @@ const GymGame = (function(){
         // Show success message
         const card = document.querySelector('.reg-card');
         if (card) {
-          card.innerHTML = `
-            <div class="reg-success">
-              <div class="reg-success-icon">🎉</div>
-              <div class="reg-success-title">Добро пожаловать, ${nickname}!</div>
-              <div class="reg-success-text">
-                Твой прогресс сохранён!<br>
-                Теперь ты часть команды Суперглазки!
-              </div>
-              <button class="tr-btn" onclick="finishRegistration()" style="margin-top: 24px; width: 100%;">
-                Продолжить приключение ➜
-              </button>
-            </div>
-          `;
+          card.textContent = '';
+          const success = document.createElement('div');
+          success.className = 'reg-success';
+          const icon = document.createElement('div');
+          icon.className = 'reg-success-icon';
+          icon.textContent = '🎉';
+          const title = document.createElement('div');
+          title.className = 'reg-success-title';
+          title.textContent = 'Добро пожаловать, ' + nickname + '!';
+          const text = document.createElement('div');
+          text.className = 'reg-success-text';
+          text.appendChild(document.createTextNode('Твой прогресс сохранён!'));
+          text.appendChild(document.createElement('br'));
+          text.appendChild(document.createTextNode('Теперь ты часть команды Суперглазки!'));
+          const btn = document.createElement('button');
+          btn.className = 'tr-btn';
+          btn.style.cssText = 'margin-top: 24px; width: 100%;';
+          btn.textContent = 'Продолжить приключение ➜';
+          btn.addEventListener('click', finishRegistration);
+          success.appendChild(icon);
+          success.appendChild(title);
+          success.appendChild(text);
+          success.appendChild(btn);
+          card.appendChild(success);
         }
       });
     }
