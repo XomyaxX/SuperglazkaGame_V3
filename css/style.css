@@ -2510,6 +2510,8 @@ body.reduce-motion .bottom-sheet {
 }
 .bs-narrator-wrapper.collapsed .bs-narrator-full {
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -2575,6 +2577,15 @@ body.reduce-motion .bottom-sheet {
 }
 .bs-narrator-toggle:active {
   transform: scale(0.97);
+}
+.bs-narrator-toggle-icon {
+  transition: transform .3s var(--ease-spring);
+}
+.bs-narrator-toggle[aria-expanded="true"] .bs-narrator-toggle-icon {
+  transform: rotate(180deg);
+}
+.bs-narrator-toggle-text {
+  display: none;
 }
 
 /* ─── UI HIDE MODE ─── */

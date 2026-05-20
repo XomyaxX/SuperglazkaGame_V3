@@ -567,7 +567,7 @@ const BottomSheet = {
           const isCollapsed = this.narratorWrapper.classList.contains('collapsed');
           this.narratorWrapper.classList.toggle('collapsed', !isCollapsed);
           this.narratorWrapper.classList.toggle('expanded', isCollapsed);
-          this.narratorToggle.innerHTML = isCollapsed ? 'Свернуть <span style="display:inline-block;transition:transform .3s;transform:rotate(180deg);">▼</span>' : 'Показать полностью <span style="display:inline-block;transition:transform .3s;">▼</span>';
+          this.narratorToggle.setAttribute('aria-expanded', isCollapsed ? 'true' : 'false');
         }
       });
     }
@@ -723,7 +723,7 @@ const BottomSheet = {
       this.narratorWrapper.classList.add('collapsed');
     }
     if (this.narratorToggle) {
-      this.narratorToggle.innerHTML = 'Показать полностью <span style="display:inline-block;transition:transform .3s;">▼</span>';
+      this.narratorToggle.setAttribute('aria-expanded', 'false');
       requestAnimationFrame(() => {
         if (!this.narratorFull || !this.narratorWrapper) return;
         const overflow = this.narratorFull.scrollHeight > this.narratorWrapper.clientHeight + 4;
