@@ -205,8 +205,18 @@ const PlayerProfile = (function() {
     const modal = document.getElementById('profile-modal');
     if (!modal) return;
 
+    // Sync nickname from Auth if available
+    var displayName = p.nickname;
+    if (typeof Auth !== 'undefined' && Auth.user && Auth.user.nickname) {
+      displayName = Auth.user.nickname;
+      // Also update local profile so it persists
+      if (p.nickname !== Auth.user.nickname) {
+        setNickname(Auth.user.nickname);
+      }
+    }
+
     const nicknameInput = modal.querySelector('.profile-nickname');
-    if (nicknameInput) nicknameInput.value = p.nickname;
+    if (nicknameInput) nicknameInput.value = displayName;
 
     const coinsEl = modal.querySelector('.profile-coins-big');
     if (coinsEl) coinsEl.textContent = p.coins;
@@ -247,6 +257,54 @@ const PlayerProfile = (function() {
       });
     }
 
+    // Account block
+    const accountBlock = modal.querySelector('#profileAccount');
+    if (accountBlock) {
+      accountBlock.textContent = '';
+      if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
+        if (Auth.isGuest && Auth.isGuest()) {
+          const text = document.createElement('div');
+          text.className = 'profile-account-text';
+          text.textContent = 'Ты играешь как гость. Прогресс сохраняется, но монетки пока нельзя тратить.';
+          accountBlock.appendChild(text);
+
+          const regBtn = document.createElement('button');
+          regBtn.className = 'profile-account-btn';
+          regBtn.id = 'profileRegBtn';
+          regBtn.textContent = '🔐 Создать полный аккаунт';
+          accountBlock.appendChild(regBtn);
+
+          const loginBtn = document.createElement('button');
+          loginBtn.className = 'profile-account-btn';
+          loginBtn.id = 'profileLoginBtn';
+          loginBtn.textContent = '🔑 Уже есть аккаунт? Войти';
+          accountBlock.appendChild(loginBtn);
+        } else {
+          const emailText = document.createElement('div');
+          emailText.className = 'profile-account-email';
+          emailText.textContent = Auth.user && Auth.user.email ? Auth.user.email : '';
+          accountBlock.appendChild(emailText);
+
+          const logoutBtn = document.createElement('button');
+          logoutBtn.className = 'profile-account-btn';
+          logoutBtn.id = 'profileLogoutBtn';
+          logoutBtn.textContent = '🚪 Выйти';
+          accountBlock.appendChild(logoutBtn);
+        }
+      } else {
+        const text = document.createElement('div');
+        text.className = 'profile-account-text';
+        text.textContent = 'Войди или создай аккаунт, чтобы сохранить прогресс.';
+        accountBlock.appendChild(text);
+
+        const loginBtn = document.createElement('button');
+        loginBtn.className = 'profile-account-btn';
+        loginBtn.id = 'profileLoginBtn';
+        loginBtn.textContent = '🔑 Войти / Зарегистрироваться';
+        accountBlock.appendChild(loginBtn);
+      }
+    }
+
     modal.classList.add('visible');
   }
 
@@ -256,6 +314,13 @@ const PlayerProfile = (function() {
   }
 
   function init() {
+    // Sync nickname from Auth on startup
+    if (typeof Auth !== 'undefined' && Auth.user && Auth.user.nickname) {
+      const p = load();
+      if (p.nickname !== Auth.user.nickname) {
+        setNickname(Auth.user.nickname);
+      }
+    }
     renderBadge();
     syncFromServer();
 

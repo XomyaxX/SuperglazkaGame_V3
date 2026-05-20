@@ -1979,6 +1979,27 @@ const App = (function() {
         }
       });
     }
+
+    // Profile account buttons (delegation — created dynamically in player.js)
+    var profileModal = document.getElementById('profile-modal');
+    if (profileModal) {
+      profileModal.addEventListener('click', function(e) {
+        if (e.target.id === 'profileRegBtn') {
+          e.stopPropagation();
+          profileModal.classList.remove('visible');
+          showPanel('Register');
+          showAuthModal();
+        } else if (e.target.id === 'profileLoginBtn') {
+          e.stopPropagation();
+          profileModal.classList.remove('visible');
+          showPanel('Login');
+          showAuthModal();
+        } else if (e.target.id === 'profileLogoutBtn') {
+          e.stopPropagation();
+          Auth.logout();
+        }
+      });
+    }
   }
 
   function showAuthModal() {
