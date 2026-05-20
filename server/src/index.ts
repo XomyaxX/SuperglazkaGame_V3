@@ -1,33 +1,26 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const path = require('path');
-const fs = require('fs');
+import 'dotenv/config';
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import path from 'path';
+import fs from 'fs';
 
-const { init } = require('./db');
-const { generalLimiter } = require('./middleware/rateLimit');
-const authRoutes = require('./routes/auth');
-const progressRoutes = require('./routes/progress');
-const coinsRoutes = require('./routes/coins');
-const subscribeRoutes = require('./routes/subscribe');
-const adminRoutes = require('./routes/admin');
-const episodeRoutes = require('./routes/episodes');
-const adminCmsRoutes = require('./routes/admin-cms');
+import { init } from './db';
+import { generalLimiter } from './middleware/rateLimit';
+import authRoutes from './routes/auth';
+import progressRoutes from './routes/progress';
+import coinsRoutes from './routes/coins';
+import subscribeRoutes from './routes/subscribe';
+import adminRoutes from './routes/admin';
 
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
 
 const app = express();
 
-// Ensure directories exist
-const dataDir = path.join(__dirname, 'data');
-const uploadsDir = path.join(__dirname, 'uploads');
+// Ensure data directory exists
+const dataDir = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-
-// Serve uploaded files
-app.use('/uploads', express.static(uploadsDir));
 
 // Security middleware
 app.use(helmet());
@@ -49,8 +42,6 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/coins', coinsRoutes);
 app.use('/api/subscribe', subscribeRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/episodes', episodeRoutes);
-app.use('/api/admin', adminCmsRoutes);
 
 // 404
 app.use((req, res) => {
@@ -58,7 +49,7 @@ app.use((req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Internal server error' });
 });
@@ -71,16 +62,16 @@ async function start() {
   });
 
   // Graceful shutdown
-  const shutdown = (signal) => {
+  const shutdown = (signal: string) => {
     console.log(`Received ${signal}. Shutting down gracefully...`);
     server.close(() => {
       console.log('HTTP server closed');
-      require('./db').db.close(() => {
+      const { db } = require('./db');
+      db.close(() => {
         console.log('Database connection closed');
         process.exit(0);
       });
     });
-    // Force exit after 10s
     setTimeout(() => {
       console.error('Forced shutdown after timeout');
       process.exit(1);

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ-панель — Суперглазка CMS</title>
+<style>
+:root {
+  --bg: #0f0a1e;
+  --bg-secondary: #1a0b2e;
+  --bg-card: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.1);
+  --text: #fff;
+  --text-muted: rgba(255,255,255,0.7);
+  --primary: #c084fc;
+  --primary-hover: #e879f9;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --radius: 12px;
+  --font: 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 16px;
+}
+.sidebar h1 {
+  font-size: 18px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 16px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-secondary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.08); }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-danger { background: var(--danger); }
+
+.episode-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex: 1; }
+.episode-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.episode-item:hover, .episode-item.active {
+  border-color: var(--primary);
+  background: rgba(192, 132, 252, 0.08);
+}
+.episode-item h3 { font-size: 14px; margin-bottom: 4px; }
+.episode-item .meta { font-size: 12px; color: var(--text-muted); }
+.episode-item .badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 50px;
+  margin-top: 6px;
+}
+.badge-published { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+.badge-draft { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+
+/* Main */
+.main { flex: 1; padding: 24px; overflow-y: auto; }
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.main-header h2 { font-size: 20px; }
+
+/* Forms */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+input, textarea, select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  outline: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary);
+}
+textarea { min-height: 80px; resize: vertical; }
+
+/* Grid */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card h3 { font-size: 16px; margin-bottom: 12px; }
+
+/* Frame editor */
+.frames-list { display: flex; flex-direction: column; gap: 12px; }
+.frame-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.frame-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.frame-header h4 { font-size: 14px; }
+.frame-actions { display: flex; gap: 8px; }
+
+/* Drag & drop */
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--primary);
+  background: rgba(192, 132, 252, 0.04);
+}
+.dropzone input { display: none; }
+
+/* Dialogues */
+.dialogue-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+/* Preview */
+.preview-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.preview-modal.visible { display: flex; }
+.preview-content {
+  background: var(--bg);
+  border-radius: var(--radius);
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <h1>👁️ Суперглазка CMS</h1>
+  <button class="btn" id="newEpisodeBtn">+ Новый эпизод</button>
+  <div class="episode-list" id="episodeList">
+    <div class="empty-state">Загрузка...</div>
+  </div>
+  <button class="btn btn-secondary btn-sm" onclick="logoutAdmin()" style="margin-top:auto;">🚪 Выйти</button>
+</div>
+
+<div class="main" id="mainArea">
+  <div class="empty-state">
+    <h2>Выберите эпизод или создайте новый</h2>
+  </div>
+</div>
+
+<script>
+const API_BASE = '/api';
+let ADMIN_KEY = localStorage.getItem('admin_key') || '';
+
+function showAuthOverlay() {
+  let overlay = document.getElementById('authOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'authOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,6,24,0.95);display:flex;align-items:center;justify-content:center;z-index:99999;';
+    overlay.innerHTML = `
+      <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:400px;width:90%;text-align:center;">
+        <h2 style="margin-bottom:8px;">🔐 Админ-панель</h2>
+        <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">Введите Admin API Key для доступа к CMS</p>
+        <input type="password" id="adminKeyInput" placeholder="Admin API Key" style="width:100%;margin-bottom:16px;">
+        <button class="btn" id="adminKeyBtn" style="width:100%;">Войти</button>
+        <p id="authError" style="color:var(--danger);font-size:13px;margin-top:12px;display:none;"></p>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('adminKeyBtn').addEventListener('click', () => {
+      const val = document.getElementById('adminKeyInput').value.trim();
+      if (!val) return;
+      testKey(val);
+    });
+    document.getElementById('adminKeyInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('adminKeyBtn').click();
+    });
+  }
+  overlay.style.display = 'flex';
+}
+
+async function testKey(key) {
+  try {
+    const res = await fetch(API_BASE + '/admin/episodes', {
+      headers: { 'X-Admin-Key': key }
+    });
+    if (res.ok) {
+      ADMIN_KEY = key;
+      localStorage.setItem('admin_key', key);
+      document.getElementById('authOverlay').style.display = 'none';
+      loadEpisodes();
+    } else {
+      document.getElementById('authError').textContent = 'Неверный ключ. Проверьте ADMIN_API_KEY в .env файле сервера.';
+      document.getElementById('authError').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('authError').textContent = 'Ошибка соединения с сервером.';
+    document.getElementById('authError').style.display = 'block';
+  }
+}
+
+function logoutAdmin() {
+  ADMIN_KEY = '';
+  localStorage.removeItem('admin_key');
+  showAuthOverlay();
+}
+
+if (!ADMIN_KEY) {
+  showAuthOverlay();
+} else {
+  testKey(ADMIN_KEY).catch(() => showAuthOverlay());
+}
+
+async function api(path, options = {}) {
+  const res = await fetch(API_BASE + path, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Admin-Key': ADMIN_KEY,
+      ...options.headers
+    }
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'API Error');
+  }
+  return res.json();
+}
+
+// Upload file
+async function uploadFile(file) {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(API_BASE + '/admin/upload', {
+    method: 'POST',
+    headers: { 'X-Admin-Key': ADMIN_KEY },
+    body: form
+  });
+  if (!res.ok) throw new Error('Upload failed');
+  return res.json();
+}
+
+// State
+let episodes = [];
+let selectedEpisode = null;
+
+// Render episode list
+function renderEpisodeList() {
+  const list = document.getElementById('episodeList');
+  if (!episodes.length) {
+    list.innerHTML = '<div class="empty-state">Нет эпизодов</div>';
+    return;
+  }
+  list.innerHTML = episodes.map(ep => `
+    <div class="episode-item ${selectedEpisode?.id === ep.id ? 'active' : ''}" data-id="${ep.id}">
+      <h3>${escapeHtml(ep.title)}</h3>
+      <div class="meta">Кадров: ${ep.frame_count || 0}</div>
+      <span class="badge ${ep.is_published ? 'badge-published' : 'badge-draft'}">
+        ${ep.is_published ? 'Опубликован' : 'Черновик'}
+      </span>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.episode-item').forEach(el => {
+    el.addEventListener('click', () => selectEpisode(parseInt(el.dataset.id)));
+  });
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+async function loadEpisodes() {
+  try {
+    const data = await api('/admin/episodes');
+    episodes = data.episodes;
+    renderEpisodeList();
+  } catch (e) {
+    alert('Ошибка загрузки: ' + e.message);
+  }
+}
+
+async function selectEpisode(id) {
+  selectedEpisode = episodes.find(e => e.id === id);
+  renderEpisodeList();
+  if (!selectedEpisode) return;
+
+  try {
+    const data = await api('/admin/episodes/' + id);
+    selectedEpisode = data.episode;
+    renderEditor();
+  } catch (e) {
+    alert('Ошибка: ' + e.message);
+  }
+}
+
+function renderEditor() {
+  const ep = selectedEpisode;
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="main-header">
+      <h2>Редактор эпизода</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="togglePublish()">
+          ${ep.is_published ? 'Снять с публикации' : 'Опубликовать'}
+        </button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEpisode()">Удалить</button>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>📖 Информация</h3>
+        <div class="form-group">
+          <label>Название</label>
+          <input id="epTitle" value="${escapeHtml(ep.title || '')}">
+        </div>
+        <div class="form-group">
+          <label>Описание</label>
+          <textarea id="epDesc">${escapeHtml(ep.description || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Порядок</label>
+          <input type="number" id="epOrder" value="${ep.order || 0}">
+        </div>
+        <div class="form-group">
+          <label>Обложка</label>
+          <div class="dropzone" onclick="document.getElementById('coverInput').click()">
+            <input type="file" id="coverInput" accept="image/*" onchange="handleCoverUpload(this)">
+            ${ep.cover_image ? `<img src="/uploads/${ep.cover_image}" style="max-width:200px;border-radius:8px;">` : 'Перетащите или нажмите для загрузки обложки'}
+          </div>
+        </div>
+        <button class="btn" onclick="saveEpisode()">💾 Сохранить эпизод</button>
+      </div>
+
+      <div class="card">
+        <h3>🎬 Кадры</h3>
+        <div class="frames-list" id="framesList">
+          ${(ep.frames || []).map((f, i) => renderFrameCard(f, i)).join('')}
+        </div>
+        <button class="btn btn-secondary" onclick="addFrame()" style="margin-top:12px;">+ Добавить кадр</button>
+      </div>
+    </div>
+  `;
+
+  // Setup drag & drop for dropzones
+  setupDropzones();
+}
+
+function renderFrameCard(frame, index) {
+  return `
+    <div class="frame-card" data-frame-id="${frame.id}">
+      <div class="frame-header">
+        <h4>Кадр ${index + 1}</h4>
+        <div class="frame-actions">
+          <button class="btn btn-sm btn-secondary" onclick="editFrame(${frame.id})">Редактировать</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteFrame(${frame.id})">Удалить</button>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);">
+        ${frame.title ? `<strong>${escapeHtml(frame.title)}</strong><br>` : ''}
+        ${frame.narration ? escapeHtml(frame.narration.substring(0, 100)) + '...<br>' : ''}
+        ${frame.background_image ? '🖼️ ' : ''}${frame.background_video ? '🎬 ' : ''}${frame.game_type ? '🎮 ' + frame.game_type : ''}
+      </div>
+    </div>
+  `;
+}
+
+// Frame editor modal
+async function editFrame(frameId) {
+  const frame = selectedEpisode.frames.find(f => f.id === frameId);
+  if (!frame) return;
+
+  const main = document.getElementById('mainArea');
+  const dialogues = frame.dialogue_json ? JSON.parse(frame.dialogue_json) : [];
+  const choices = frame.choices_json ? JSON.parse(frame.choices_json) : [];
+
+  main.innerHTML = `
+    <div class="main-header">
+      <h2>Редактор кадра</h2>
+      <button class="btn btn-secondary" onclick="renderEditor()">← Назад</button>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card">
+          <h3>📝 Текст</h3>
+          <div class="form-group">
+            <label>Заголовок кадра</label>
+            <input id="frameTitle" value="${escapeHtml(frame.title || '')}">
+          </div>
+          <div class="form-group">
+            <label>Повествование</label>
+            <textarea id="frameNarration">${escapeHtml(frame.narration || '')}</textarea>
+          </div>
+          <div class="form-group">
+            <label>Диалоги</label>
+            <div id="dialoguesList">
+              ${dialogues.map((d, i) => `
+                <div class="dialogue-row">
+                  <input placeholder="Спикер" value="${escapeHtml(d.speaker || '')}" class="dlg-speaker">
+                  <input placeholder="Текст" value="${escapeHtml(d.text || '')}" class="dlg-text">
+                  <button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()">×</button>
+                </div>
+              `).join('')}
+            </div>
+            <button class="btn btn-sm btn-secondary" onclick="addDialogue()" style="margin-top:8px;">+ Диалог</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>⚙️ Настройки</h3>
+          <div class="form-group">
+            <label>Настроение (mood)</label>
+            <select id="frameMood">
+              <option value="">—</option>
+              ${['cosmic','joyful','tension','mystery','warm','epic','calm','playful'].map(m =>
+                `<option value="${m}" ${frame.mood === m ? 'selected' : ''}>${m}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Мини-игра</label>
+            <select id="frameGame">
+              <option value="">—</option>
+              ${['blink','tracker','runner','gym'].map(g =>
+                `<option value="${g}" ${frame.game_type === g ? 'selected' : ''}>${g}</option>`
+              ).join('')}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>🖼️ Медиа</h3>
+          <div class="form-group">
+            <label>Фоновое изображение</label>
+            <div class="dropzone" onclick="document.getElementById('imgInput').click()">
+              <input type="file" id="imgInput" accept="image/*" onchange="handleFrameUpload(this, 'image')">
+              ${frame.background_image ? `<img src="/uploads/${frame.background_image}" style="max-width:100%;border-radius:8px;">` : 'Загрузить изображение'}
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Фоновое видео</label>
+            <div class="dropzone" onclick="document.getElementById('vidInput').click()">
+              <input type="file" id="vidInput" accept="video/*" onchange="handleFrameUpload(this, 'video')">
+              ${frame.background_video ? '🎬 ' + frame.background_video : 'Загрузить видео'}
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Озвучка</label>
+            <div class="dropzone" onclick="document.getElementById('audioInput').click()">
+              <input type="file" id="audioInput" accept="audio/*" onchange="handleFrameUpload(this, 'audio')">
+              ${frame.audio ? '🔊 ' + frame.audio : 'Загрузить аудио'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:16px;">
+      <button class="btn" onclick="saveFrame(${frame.id})">💾 Сохранить кадр</button>
+    </div>
+  `;
+
+  setupDropzones();
+}
+
+function addDialogue() {
+  const list = document.getElementById('dialoguesList');
+  const row = document.createElement('div');
+  row.className = 'dialogue-row';
+  row.innerHTML = `
+    <input placeholder="Спикер" class="dlg-speaker">
+    <input placeholder="Текст" class="dlg-text">
+    <button class="btn btn-sm btn-danger" onclick="this.parentElement.remove()">×</button>
+  `;
+  list.appendChild(row);
+}
+
+async function handleCoverUpload(input) {
+  if (!input.files?.[0]) return;
+  try {
+    const result = await uploadFile(input.files[0]);
+    selectedEpisode.cover_image = result.path;
+    renderEditor();
+  } catch (e) { alert('Ошибка загрузки: ' + e.message); }
+}
+
+async function handleFrameUpload(input, type) {
+  if (!input.files?.[0]) return;
+  try {
+    const result = await uploadFile(input.files[0]);
+    // Store path temporarily on the button for saving
+    input.dataset.uploadedPath = result.path;
+    alert('Файл загружен: ' + result.filename);
+  } catch (e) { alert('Ошибка загрузки: ' + e.message); }
+}
+
+async function saveEpisode() {
+  const payload = {
+    title: document.getElementById('epTitle').value,
+    description: document.getElementById('epDesc').value,
+    order: parseInt(document.getElementById('epOrder').value) || 0,
+    cover_image: selectedEpisode.cover_image || ''
+  };
+  try {
+    if (selectedEpisode.id) {
+      await api('/admin/episodes/' + selectedEpisode.id, { method: 'PUT', body: JSON.stringify(payload) });
+    } else {
+      const res = await api('/admin/episodes', { method: 'POST', body: JSON.stringify(payload) });
+      selectedEpisode.id = res.id;
+    }
+    await loadEpisodes();
+    alert('Сохранено!');
+  } catch (e) { alert('Ошибка: ' + e.message); }
+}
+
+async function saveFrame(frameId) {
+  const dialogues = Array.from(document.querySelectorAll('.dlg-speaker')).map((el, i) => ({
+    speaker: el.value,
+    text: document.querySelectorAll('.dlg-text')[i]?.value || ''
+  })).filter(d => d.speaker || d.text);
+
+  const imgInput = document.getElementById('imgInput');
+  const vidInput = document.getElementById('vidInput');
+
+  const payload = {
+    title: document.getElementById('frameTitle').value,
+    narration: document.getElementById('frameNarration').value,
+    dialogue: dialogues,
+    background_image: imgInput?.dataset?.uploadedPath || selectedEpisode.frames.find(f => f.id === frameId)?.background_image || '',
+    background_video: vidInput?.dataset?.uploadedPath || selectedEpisode.frames.find(f => f.id === frameId)?.background_video || '',
+    mood: document.getElementById('frameMood').value,
+    game_type: document.getElementById('frameGame').value
+  };
+
+  try {
+    await api('/admin/frames/' + frameId, { method: 'PUT', body: JSON.stringify(payload) });
+    await selectEpisode(selectedEpisode.id);
+    alert('Кадр сохранён!');
+  } catch (e) { alert('Ошибка: ' + e.message); }
+}
+
+async function addFrame() {
+  try {
+    const res = await api('/admin/episodes/' + selectedEpisode.id + '/frames', {
+      method: 'POST',
+      body: JSON.stringify({ order: (selectedEpisode.frames?.length || 0) })
+    });
+    await selectEpisode(selectedEpisode.id);
+  } catch (e) { alert('Ошибка: ' + e.message); }
+}
+
+async function deleteFrame(id) {
+  if (!confirm('Удалить кадр?')) return;
+  try {
+    await api('/admin/frames/' + id, { method: 'DELETE' });
+    await selectEpisode(selectedEpisode.id);
+  } catch (e) { alert('Ошибка: ' + e.message); }
+}
+
+async function togglePublish() {
+  try {
+    await api('/admin/episodes/' + selectedEpisode.id + '/publish', {
+      method: 'POST',
+      body: JSON.stringify({ is_published: !selectedEpisode.is_published })
+    });
+    await selectEpisode(selectedEpisode.id);
+  } catch (e) { alert('Ошибка: ' + e.message); }
+}
+
+async function deleteEpisode() {
+  if (!confirm('Удалить эпизод и все кадры?')) return;
+  try {
+    await api('/admin/episodes/' + selectedEpisode.id, { method: 'DELETE' });
+    selectedEpisode = null;
+    await loadEpisodes();
+    document.getElementById('mainArea').innerHTML = '<div class="empty-state"><h2>Выберите эпизод или создайте новый</h2></div>';
+  } catch (e) { alert('Ошибка: ' + e.message); }
+}
+
+function setupDropzones() {
+  document.querySelectorAll('.dropzone').forEach(dz => {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('dragover');
+      const input = dz.querySelector('input[type=file]');
+      if (input && e.dataTransfer.files[0]) {
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+}
+
+// New episode
+let creatingEpisode = false;
+document.getElementById('newEpisodeBtn').addEventListener('click', async () => {
+  if (creatingEpisode) return;
+  creatingEpisode = true;
+  try {
+    const res = await api('/admin/episodes', {
+      method: 'POST',
+      body: JSON.stringify({ title: 'Новый эпизод', description: '', order: episodes.length })
+    });
+    await loadEpisodes();
+    await selectEpisode(res.id);
+  } catch (e) {
+    alert('Ошибка: ' + e.message);
+  } finally {
+    creatingEpisode = false;
+  }
+});
+
+// Init
+loadEpisodes();
+</script>
+
+</body>
+</html>

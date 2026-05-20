@@ -1,0 +1,71 @@
+:root {
+  /* Colors */
+  --color-bg: #0a0618;
+  --color-bg-secondary: #1a0b2e;
+  --color-bg-tertiary: #0f0718;
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.75);
+  --color-text-dim: rgba(255, 255, 255, 0.45);
+  --color-primary: #c084fc;
+  --color-primary-hover: #e879f9;
+  --color-accent: #f472b6;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-card-bg: rgba(255, 255, 255, 0.04);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #c084fc, #e879f9);
+  --gradient-hero: linear-gradient(180deg, #0a0618 0%, #1a0b2e 40%, #0f0718 100%);
+  --gradient-card: linear-gradient(135deg, #9333ea, #e879f9);
+
+  /* Typography */
+  --font-body: 'Nunito', sans-serif;
+  --font-display: 'Comfortaa', cursive;
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: clamp(24px, 4vw, 36px);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 50px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+
+  /* Z-index */
+  --z-dropdown: 100;
+  --z-modal: 200;
+  --z-overlay: 300;
+  --z-toast: 400;
+}
+
+.theme-light {
+  --color-bg: #f3e8ff;
+  --color-bg-secondary: #ffe4f0;
+  --color-bg-tertiary: #f8eeff;
+  --color-text: #3d1a5c;
+  --color-text-muted: rgba(0, 0, 0, 0.75);
+  --color-text-dim: rgba(0, 0, 0, 0.4);
+  --color-primary: #9333ea;
+  --color-primary-hover: #e056c8;
+  --color-accent: #e056c8;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-card-bg: rgba(255, 255, 255, 0.6);
+}
