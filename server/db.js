@@ -137,6 +137,18 @@ async function init() {
     console.warn('Frames migration check skipped:', migErr.message);
   }
 
+  // Migration: add book_num to episodes table
+  try {
+    const epColumns = await all("PRAGMA table_info(episodes)");
+    const epColNames = epColumns.map(c => c.name);
+    if (!epColNames.includes('book_num')) {
+      await run(`ALTER TABLE episodes ADD COLUMN book_num INTEGER DEFAULT 1`);
+      console.log('Migration applied: added book_num to episodes');
+    }
+  } catch (migErr) {
+    console.warn('Episodes migration check skipped:', migErr.message);
+  }
+
   await run(`
     CREATE TABLE IF NOT EXISTS episodes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

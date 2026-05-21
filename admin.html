@@ -549,9 +549,10 @@ select { cursor: pointer; }
 
   <!-- Sidebar: Episodes -->
   <div class="sidebar-col">
-    <h1>👁️ Суперглазка CMS</h1>
+    <h1><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;">Игросказка</div>👁️ Суперглазка CMS</h1>
     <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск эпизодов...">
     <button class="btn" id="newEpisodeBtn">+ Новый эпизод</button>
+    <button class="btn btn-secondary" id="importEpisodesBtn" style="font-size:12px;padding:8px 10px;">🔄 Импортировать эпизоды</button>
     <div class="episode-list" id="episodeList">
       <div class="empty-state">Загрузка...</div>
     </div>
@@ -789,6 +790,10 @@ function renderEditor() {
             <div class="form-group">
               <label>Порядок</label>
               <input type="number" id="epOrder" value="${ep.order ?? 0}" oninput="scheduleAutoSave()">
+            </div>
+            <div class="form-group">
+              <label>Книга (book_num)</label>
+              <input type="number" id="epBookNum" value="${ep.book_num ?? 1}" oninput="scheduleAutoSave()">
             </div>
           </div>
           <button class="btn" onclick="saveEpisodeNow()">💾 Сохранить эпизод</button>
@@ -1291,6 +1296,7 @@ async function saveEpisodeNow(silent = false) {
     title: document.getElementById('epTitle')?.value || '',
     description: document.getElementById('epDesc')?.value || '',
     order: parseInt(document.getElementById('epOrder')?.value) || 0,
+    book_num: parseInt(document.getElementById('epBookNum')?.value) || 1,
     cover_image: selectedEpisode.cover_image || ''
   };
   try {
@@ -1447,6 +1453,19 @@ async function deleteEpisode() {
     toast('Эпизод удалён');
   } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
 }
+
+// Import episodes from JS
+document.getElementById('importEpisodesBtn').addEventListener('click', async () => {
+  if (!confirm('Импортировать эпизоды из js/episodes/? Существующие эпизоды будут перезаписаны.')) return;
+  try {
+    toast('Импорт запущен...', 'warning');
+    const res = await api('/admin/import-episodes', { method: 'POST' });
+    toast('Импорт завершён!');
+    await loadEpisodes();
+  } catch (e) {
+    toast('Ошибка импорта: ' + e.message, 'error');
+  }
+});
 
 // New episode
 let creatingEpisode = false;

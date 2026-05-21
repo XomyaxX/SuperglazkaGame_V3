@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const episodes = await all(
-      'SELECT id, title, description, cover_image, "order" FROM episodes WHERE is_published = 1 ORDER BY "order" ASC'
+      'SELECT id, title, description, cover_image, "order", book_num FROM episodes WHERE is_published = 1 ORDER BY "order" ASC'
     );
     res.json({ success: true, episodes });
   } catch (err) {
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const episode = await get(
-      'SELECT id, title, description, cover_image, "order" FROM episodes WHERE id = ? AND is_published = 1',
+      'SELECT id, title, description, cover_image, "order", book_num FROM episodes WHERE id = ? AND is_published = 1',
       [req.params.id]
     );
     if (!episode) {

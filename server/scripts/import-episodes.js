@@ -102,8 +102,8 @@ async function importEpisode(episodeNum, episodeData) {
   const coverExists = fs.existsSync(resolveProjectPath(coverPath));
   
   const epResult = await run(
-    `INSERT INTO episodes (title, description, cover_image, "order", is_published) VALUES (?, ?, ?, ?, ?)`,
-    [episodeData.title, '', coverExists ? coverPath : null, episodeNum, 1]
+    `INSERT INTO episodes (title, description, cover_image, "order", is_published, book_num) VALUES (?, ?, ?, ?, ?, ?)`,
+    [episodeData.title, '', coverExists ? coverPath : null, episodeNum, 1, 1]
   );
   const episodeId = epResult.lastID;
   console.log(`  ✅ Created episode id=${episodeId}`);
