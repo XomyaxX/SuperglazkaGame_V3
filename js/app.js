@@ -173,7 +173,7 @@ const AppSettings = {
 
     if (prevNarration !== d.narration) {
       AudioController.buildQueue();
-      if (d.narration && AudioController.state !== 'video') {
+      if (d.narration) {
         AudioController.play();
       } else {
         AudioController.stopCurrent();
@@ -345,7 +345,6 @@ const AudioController = {
 
   /** Start or resume playback from the current queue position. */
   play() {
-    if (this.state === 'video') return;
     if (this.queue.length === 0) {
       this.state = 'idle';
       this.onQueueEnd();
@@ -466,7 +465,6 @@ const AudioController = {
     this.activeTracks[type] = !this.activeTracks[type];
 
     const wasPlaying = this.state === 'playing';
-    const wasVideo = this.state === 'video';
     if (this.currentAudio) {
       this.savedSrc = this._normalizeSrc(this.currentAudio.src);
       this.savedTime = this.currentAudio.currentTime;
@@ -486,33 +484,12 @@ const AudioController = {
     } else if (wasPlaying) {
       this.state = 'playing';
       this.playNext();
-    } else if (wasVideo) {
-      this.state = 'video';
-      this.updateUI();
     } else {
       this.state = 'idle';
       this.updateUI();
     }
     this._notifyStateChange();
     this.updateUI();
-  },
-
-  /** Called when a frame video starts playing (visual only, muted). */
-  playVideo() {
-    this.stop();
-    this.state = 'video';
-    this._notifyStateChange();
-    this.updateUI();
-  },
-
-  /** Resume audio queue after the active video finishes. */
-  onVideoEnded() {
-    if (this.state === 'video') {
-      this.state = 'idle';
-      this.buildQueue();
-      this.play();
-      this.updateUI();
-    }
   },
 
   /** Notify the app when the entire audio queue finishes. */
@@ -531,7 +508,7 @@ const AudioController = {
   updateUI() {
     const settingsMenuBtn = document.getElementById('settingsMenuBtn');
     if (settingsMenuBtn) {
-      settingsMenuBtn.classList.toggle('active', this.state === 'playing' || this.state === 'video');
+      settingsMenuBtn.classList.toggle('active', this.state === 'playing');
     }
   }
 };
@@ -1843,7 +1820,6 @@ const App = (function() {
           video.muted = true;
           video.volume = 0;
           video.play().catch(() => {});
-          AudioController.playVideo();
         }
         playBtn.style.display = 'none';
         return;
@@ -1867,7 +1843,6 @@ const App = (function() {
         if (preview) preview.classList.remove('hidden');
         if (previewInfo) previewInfo.classList.remove('hidden');
         if (playBtn) playBtn.style.display = 'flex';
-        AudioController.onVideoEnded();
       });
     });
   }
