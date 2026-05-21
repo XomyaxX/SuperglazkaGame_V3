@@ -171,17 +171,6 @@ const AppSettings = {
     document.body.classList.remove('ui-small', 'ui-medium', 'ui-large');
     document.body.classList.add('ui-' + d.uiFontSize);
 
-    if (prevNarration !== d.narration) {
-      AudioController.buildQueue();
-      if (d.narration) {
-        AudioController.play();
-      } else {
-        AudioController.stopCurrent();
-        AudioController.state = 'idle';
-        AudioController.updateUI();
-      }
-    }
-
     this.updateUI();
     AudioController.updateUI();
   },
@@ -464,32 +453,78 @@ const AudioController = {
     const turningOn = !this.activeTracks[type];
     this.activeTracks[type] = !this.activeTracks[type];
 
-    const wasPlaying = this.state === 'playing';
-    if (this.currentAudio) {
-      this.savedSrc = this._normalizeSrc(this.currentAudio.src);
-      this.savedTime = this.currentAudio.currentTime;
-    }
-    this.stopCurrent();
-    this.buildQueue();
-    if (this.savedSrc) {
-      const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
-      if (newIdx !== -1) {
-        this.currentIdx = newIdx;
+    if (type === 'video') {
+      const video = document.querySelector('.frame.active video');
+      if (this.activeTracks.video) {
+        this.pause();
+        this.state = 'video';
+        if (video) {
+          video.muted = true;
+          video.volume = 0;
+          video.play().catch(() => {});
+        }
       } else {
-        this.currentIdx = 0;
+        this.state = 'idle';
+        if (video) {
+          video.pause();
+          video.currentTime = 0;
+        }
+        this.play();
       }
-    }
-    if (turningOn) {
-      this.play();
-    } else if (wasPlaying) {
-      this.state = 'playing';
-      this.playNext();
     } else {
-      this.state = 'idle';
-      this.updateUI();
+      const wasPlaying = this.state === 'playing';
+      const wasVideo = this.state === 'video';
+      if (this.currentAudio) {
+        this.savedSrc = this._normalizeSrc(this.currentAudio.src);
+        this.savedTime = this.currentAudio.currentTime;
+      }
+      this.stopCurrent();
+      this.buildQueue();
+      if (this.savedSrc) {
+        const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
+        if (newIdx !== -1) {
+          this.currentIdx = newIdx;
+        } else {
+          this.currentIdx = 0;
+        }
+      }
+      if (turningOn && !this.activeTracks.video) {
+        this.play();
+      } else if (wasPlaying && !this.activeTracks.video) {
+        this.state = 'playing';
+        this.playNext();
+      } else if (wasVideo) {
+        this.state = 'video';
+        this.updateUI();
+      } else {
+        this.state = 'idle';
+        this.updateUI();
+      }
     }
     this._notifyStateChange();
     this.updateUI();
+  },
+
+  /** @param {HTMLVideoElement} videoEl - Video element to control */
+  playVideo(videoEl) {
+    this.stop();
+    this.state = 'video';
+    this.activeTracks.video = true;
+    videoEl.muted = false;
+    videoEl.volume = this.volume * this.videoVolumeMultiplier;
+    this._notifyStateChange();
+    this.updateUI();
+  },
+
+  /** Resume audio queue after the active video finishes. */
+  onVideoEnded() {
+    if (this.state === 'video') {
+      this.activeTracks.video = false;
+      this.state = 'idle';
+      this.buildQueue();
+      this.play();
+      this.updateUI();
+    }
   },
 
   /** Notify the app when the entire audio queue finishes. */
@@ -1820,6 +1855,7 @@ const App = (function() {
           video.muted = true;
           video.volume = 0;
           video.play().catch(() => {});
+          AudioController.playVideo(video);
         }
         playBtn.style.display = 'none';
         return;
@@ -2096,45 +2132,9 @@ const App = (function() {
     }
 
     // Main menu v2 bindings
+    renderBooks();
+    renderOverallProgress();
     startCountdown('2026-05-25T12:00:00');
-
-    // Load books from API, cache episodes, then render menu
-    loadBooks().then(function() {
-      renderBooks();
-      renderOverallProgress();
-      return fetch('/api/episodes');
-    }).then(function(r) { return r.json(); })
-      .then(async function(list) {
-        if (list && list.episodes) {
-          await Promise.all(list.episodes.map(function(ep) {
-            return fetchEpisode(ep.id);
-          }));
-          renderBooks();
-          renderOverallProgress();
-          renderContinueButton();
-        }
-      })
-      .catch(function(e) { console.warn('Failed to preload episodes', e); });
-
-    // Handle ?episode=X and ?game=X in URL
-    var urlParams = new URLSearchParams(window.location.search);
-    var directEpisode = urlParams.get('episode');
-    if (directEpisode) {
-      startEpisode(parseInt(directEpisode, 10), 0);
-    }
-    var directGame = urlParams.get('game');
-    if (directGame && ['runner', 'gym', 'blink', 'tracker'].indexOf(directGame) !== -1) {
-      launchGame(directGame);
-    }
-
-    // Embed mode: hide UI when loaded inside an iframe modal
-    if (urlParams.get('embed') === '1') {
-      document.body.classList.add('embed-mode');
-      var appHeader = document.querySelector('.app-header');
-      var appMenu = document.querySelector('.app-menu-container');
-      if (appHeader) appHeader.style.display = 'none';
-      if (appMenu) appMenu.style.display = 'none';
-    }
 
     var appNavToggle = document.getElementById('appNavToggle');
     var appNavMobile = document.getElementById('appNavMobile');
