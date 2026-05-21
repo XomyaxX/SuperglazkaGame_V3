@@ -105,8 +105,6 @@ const AppSettings = {
   defaults: {
     volume: 80,
     narration: true,
-    dialogue: true,
-    video: false,
     subtitles: true,
     subtitleFontSize: 'medium',
     highContrast: false,
@@ -150,16 +148,13 @@ const AppSettings = {
   /** Apply all current settings to the DOM and audio controller. */
   apply() {
     const d = this._data;
+    const prevNarration = AudioController.activeTracks.narration;
 
     AudioController.activeTracks.narration = d.narration;
-    AudioController.activeTracks.dialogue = d.dialogue;
-    AudioController.activeTracks.video = d.video;
     AudioController.volume = d.volume / 100;
     if (AudioController.currentAudio) {
       AudioController.currentAudio.volume = AudioController.volume;
     }
-    const video = document.querySelector('.frame.active video');
-    if (video) video.volume = 0;
 
     if (typeof BackgroundMusic !== 'undefined') {
       BackgroundMusic.setEnabled(d.bgMusic);
@@ -176,6 +171,17 @@ const AppSettings = {
     document.body.classList.remove('ui-small', 'ui-medium', 'ui-large');
     document.body.classList.add('ui-' + d.uiFontSize);
 
+    if (prevNarration !== d.narration) {
+      AudioController.buildQueue();
+      if (d.narration && AudioController.state !== 'video') {
+        AudioController.play();
+      } else {
+        AudioController.stopCurrent();
+        AudioController.state = 'idle';
+        AudioController.updateUI();
+      }
+    }
+
     this.updateUI();
     AudioController.updateUI();
   },
@@ -187,8 +193,6 @@ const AppSettings = {
 
     const toggles = {
       settingsToggleNarration: d.narration,
-      settingsToggleDialogue: d.dialogue,
-      settingsToggleVideo: d.video,
       settingsToggleBgMusic: d.bgMusic,
       settingsToggleSubtitles: d.subtitles,
       settingsToggleHighContrast: d.highContrast,
@@ -278,8 +282,8 @@ const DeviceDetector = {
 // ═══════════════════════════════════════════════════════════
 /**
  * Audio Controller — queue-based unified audio mixer.
- * Handles narration, dialogue and video audio with volume control,
- * resume support and per-track toggling.
+ * Handles narration audio with volume control,
+ * resume support and toggling.
  * @namespace AudioController
  */
 const AudioController = {
@@ -287,9 +291,9 @@ const AudioController = {
   currentIdx: 0,
   currentAudio: null,
   state: 'idle',
-  activeTracks: { narration: true, dialogue: true, video: false },
+  activeTracks: { narration: true },
   volume: 0.8,
-  videoVolumeMultiplier: 0.5,
+
   timeoutId: null,
   frameData: null,
   stateChangeCallback: null,
@@ -301,11 +305,10 @@ const AudioController = {
     try { return new URL(src, location.href).href; } catch (e) { return src; }
   },
 
-  /** @param {Object} frameData - Current frame with audioSrc / dialogueAudio */
+  /** @param {Object} frameData - Current frame with audioSrc */
   setFrameData(frameData) {
     this.frameData = frameData;
     this.stop();
-    this.activeTracks.video = false;
     this.currentIdx = 0;
     this.savedTime = 0;
     this.savedSrc = null;
@@ -337,11 +340,6 @@ const AudioController = {
     this.queue = [];
     if (this.activeTracks.narration && this.frameData?.audioSrc) {
       this.queue.push({ type: 'narration', src: this.frameData.audioSrc });
-    }
-    if (this.activeTracks.dialogue && this.frameData?.dialogueAudio?.length) {
-      this.frameData.dialogueAudio.forEach(src => {
-        this.queue.push({ type: 'dialogue', src });
-      });
     }
   },
 
@@ -460,75 +458,49 @@ const AudioController = {
     this.savedSrc = null;
     this._notifyStateChange();
     this.updateUI();
-    if (typeof BackgroundMusic !== 'undefined') {
-      BackgroundMusic.stop();
-    }
   },
 
-  /** @param {string} type - 'narration' | 'dialogue' | 'video' */
+  /** @param {string} type - 'narration' */
   toggleTrack(type) {
     const turningOn = !this.activeTracks[type];
     this.activeTracks[type] = !this.activeTracks[type];
 
-    if (type === 'video') {
-      const video = document.querySelector('.frame.active video');
-      if (this.activeTracks.video) {
-        this.pause();
-        this.state = 'video';
-        if (video) {
-          video.muted = true;
-          video.volume = 0;
-          video.play().catch(() => {});
-        }
+    const wasPlaying = this.state === 'playing';
+    const wasVideo = this.state === 'video';
+    if (this.currentAudio) {
+      this.savedSrc = this._normalizeSrc(this.currentAudio.src);
+      this.savedTime = this.currentAudio.currentTime;
+    }
+    this.stopCurrent();
+    this.buildQueue();
+    if (this.savedSrc) {
+      const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
+      if (newIdx !== -1) {
+        this.currentIdx = newIdx;
       } else {
-        this.state = 'idle';
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-        this.play();
+        this.currentIdx = 0;
       }
+    }
+    if (turningOn) {
+      this.play();
+    } else if (wasPlaying) {
+      this.state = 'playing';
+      this.playNext();
+    } else if (wasVideo) {
+      this.state = 'video';
+      this.updateUI();
     } else {
-      const wasPlaying = this.state === 'playing';
-      const wasVideo = this.state === 'video';
-      if (this.currentAudio) {
-        this.savedSrc = this._normalizeSrc(this.currentAudio.src);
-        this.savedTime = this.currentAudio.currentTime;
-      }
-      this.stopCurrent();
-      this.buildQueue();
-      if (this.savedSrc) {
-        const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
-        if (newIdx !== -1) {
-          this.currentIdx = newIdx;
-        } else {
-          this.currentIdx = 0;
-        }
-      }
-      if (turningOn && !this.activeTracks.video) {
-        this.play();
-      } else if (wasPlaying && !this.activeTracks.video) {
-        this.state = 'playing';
-        this.playNext();
-      } else if (wasVideo) {
-        this.state = 'video';
-        this.updateUI();
-      } else {
-        this.state = 'idle';
-        this.updateUI();
-      }
+      this.state = 'idle';
+      this.updateUI();
     }
     this._notifyStateChange();
     this.updateUI();
   },
 
-  /** @param {HTMLVideoElement} videoEl - Video element to control */
-  playVideo(videoEl) {
+  /** Called when a frame video starts playing (visual only, muted). */
+  playVideo() {
     this.stop();
     this.state = 'video';
-    this.activeTracks.video = true;
-    videoEl.muted = false;
-    videoEl.volume = this.volume * this.videoVolumeMultiplier;
     this._notifyStateChange();
     this.updateUI();
   },
@@ -536,7 +508,6 @@ const AudioController = {
   /** Resume audio queue after the active video finishes. */
   onVideoEnded() {
     if (this.state === 'video') {
-      this.activeTracks.video = false;
       this.state = 'idle';
       this.buildQueue();
       this.play();
@@ -555,8 +526,6 @@ const AudioController = {
   setVolume(v) {
     this.volume = v / 100;
     if (this.currentAudio) this.currentAudio.volume = this.volume;
-    const video = document.querySelector('.frame.active video');
-    if (video) video.volume = this.volume * this.videoVolumeMultiplier;
   },
 
   updateUI() {
@@ -648,19 +617,10 @@ const BottomSheet = {
       }
     });
 
-    // Audio toggles
-    ['Narration', 'Dialogue', 'Video'].forEach(type => {
-      const toggle = document.getElementById('settingsToggle' + type);
-      if (toggle) toggle.addEventListener('click', () => {
-        const key = type.toLowerCase();
-        AppSettings.set(key, !AppSettings.get(key));
-        AudioController.activeTracks[key] = AppSettings.get(key);
-        if (key === 'video') {
-          AudioController.toggleTrack('video');
-        } else {
-          AudioController.toggleTrack(key);
-        }
-      });
+    // Narration toggle
+    const narrationToggle = document.getElementById('settingsToggleNarration');
+    if (narrationToggle) narrationToggle.addEventListener('click', () => {
+      AppSettings.set('narration', !AppSettings.get('narration'));
     });
 
     // Background music toggle
@@ -986,6 +946,8 @@ const App = (function() {
   let uiHideTimeout = null;
   let subtitleSyncCleanup = null;
 
+  const episodesCache = {};
+
   const mainMenu = document.getElementById('main-menu');
   const episodeViewer = document.getElementById('episode-viewer');
   const frameContainer = document.getElementById('frame-container');
@@ -1025,6 +987,69 @@ const App = (function() {
     });
     if (line.trim()) lines.push(line.trim());
     return lines;
+  }
+
+  // ─── EPISODE API ───
+  async function fetchEpisode(episodeId) {
+    if (episodesCache[episodeId]) return episodesCache[episodeId];
+    try {
+      const res = await fetch('/api/episodes/' + episodeId);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const normalized = normalizeEpisode(data.episode || data);
+      episodesCache[episodeId] = normalized;
+      return normalized;
+    } catch (e) {
+      console.warn('Failed to fetch episode', episodeId, e);
+      return null;
+    }
+  }
+
+  function resolveMediaPath(path) {
+    if (!path) return null;
+    if (path.startsWith('http') || path.startsWith('/uploads/')) return path;
+    if (path.startsWith('/')) return '/uploads' + path;
+    return '/uploads/' + path;
+  }
+
+  function normalizeEpisode(apiData) {
+    if (!apiData || !apiData.frames) return null;
+    return {
+      id: apiData.id,
+      title: apiData.title || '',
+      cover_image: resolveMediaPath(apiData.cover_image),
+      frames: apiData.frames.map(function(f, idx) {
+        var dialogues = f.dialogue || [];
+        if (!dialogues.length && f.dialogue_json) {
+          try { dialogues = JSON.parse(f.dialogue_json); } catch(e) {}
+        }
+        var dialogueAudio = []; // dialogue audio removed from playback
+        var choices = f.choices || [];
+        if (!choices.length && f.choices_json) {
+          try { choices = JSON.parse(f.choices_json); } catch(e) {}
+        }
+        var availableGames = f.availableGames || [];
+        if (!availableGames.length && f.available_games_json) {
+          try { availableGames = JSON.parse(f.available_games_json); } catch(e) {}
+        }
+        return {
+          id: f.id != null ? f.id : (idx + 1),
+          title: f.title || '',
+          narration: f.narration || '',
+          bgImage: resolveMediaPath(f.background_image || f.bgImage),
+          bgGradient: f.bg_gradient || f.bgGradient || f.mood || null,
+          audioSrc: resolveMediaPath(f.audio_src || f.audioSrc),
+          videoSrc: resolveMediaPath(f.background_video || f.videoSrc),
+          dialogues: dialogues,
+          dialogueAudio: [],
+          transitionText: f.transition_text || f.transitionText || null,
+          game: f.game_type || f.game || null,
+          videoPrompt: f.video_prompt || f.videoPrompt || '',
+          availableGames: availableGames,
+          choices: choices
+        };
+      })
+    };
   }
 
   // ─── RENDER FRAME ───
@@ -1119,7 +1144,7 @@ const App = (function() {
     const isNarrow = window.innerWidth < 480;
     let maxFrame = -1;
     if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
-      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      const epId = Object.keys(episodesCache).find(function(key) { return episodesCache[key] === currentEpisode; });
       if (epId) maxFrame = PlayerProfile.getProgress(epId).maxFrame;
     }
     for (let i = 0; i < total; i++) {
@@ -1325,7 +1350,7 @@ const App = (function() {
 
     // Autosave progress
     if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.markFrameSeen) {
-      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      const epId = Object.keys(episodesCache).find(function(key) { return episodesCache[key] === currentEpisode; });
       if (epId) PlayerProfile.markFrameSeen(epId, idx);
     }
 
@@ -1411,7 +1436,6 @@ const App = (function() {
   // ─── GAME INTEGRATION ───
   function startGame(gameType) {
     AudioController.stop();
-    AudioController.activeTracks.video = false;
     document.querySelectorAll('.frame.active video').forEach(v => {
       v.pause();
       v.currentTime = 0;
@@ -1438,7 +1462,6 @@ const App = (function() {
 
   function launchGame(gameType) {
     AudioController.stop();
-    AudioController.activeTracks.video = false;
     document.querySelectorAll('.frame.active video').forEach(v => {
       v.pause();
       v.currentTime = 0;
@@ -1491,7 +1514,7 @@ const App = (function() {
     if (overlay) overlay.classList.add('visible');
     // Mark episode as completed
     if (currentEpisode && typeof PlayerProfile !== 'undefined' && PlayerProfile.completeEpisode) {
-      const epId = Object.keys(EPISODES).find(key => EPISODES[key] === currentEpisode);
+      const epId = Object.keys(episodesCache).find(function(key) { return episodesCache[key] === currentEpisode; });
       if (epId) PlayerProfile.completeEpisode(epId);
     }
     setTimeout(() => {
@@ -1501,15 +1524,18 @@ const App = (function() {
   }
 
   // ─── MENU ───
-  function startEpisode(episodeId, startFrame) {
+  async function startEpisode(episodeId, startFrame) {
     startFrame = typeof startFrame === 'number' ? startFrame : 0;
-    const epData = EPISODES[episodeId];
+    var epData = episodesCache[episodeId];
+    if (!epData) {
+      epData = await fetchEpisode(episodeId);
+    }
     if (!epData) return;
     currentEpisode = epData;
     frames = epData.frames;
     if (frameContainer) {
       frameContainer.textContent = '';
-      frames.forEach((f, i) => {
+      frames.forEach(function(f, i) {
         frameContainer.appendChild(createFrameElement(f, i, frames.length));
       });
     }
@@ -1524,6 +1550,7 @@ const App = (function() {
 
   function backToMenu() {
     AudioController.stop();
+    if (typeof BackgroundMusic !== 'undefined') BackgroundMusic.stop();
     if (episodeViewer) episodeViewer.classList.remove('active');
     if (mainMenu) mainMenu.classList.remove('hidden');
     if (frameContainer) frameContainer.textContent = '';
@@ -1533,7 +1560,7 @@ const App = (function() {
     renderContinueButton();
   }
 
-  function renderContinueButton() {
+  async function renderContinueButton() {
     var block = document.getElementById('continueBlock');
     var btn = document.getElementById('continueBtn');
     var info = document.getElementById('continueInfo');
@@ -1546,11 +1573,14 @@ const App = (function() {
     }
     var pos = PlayerProfile.getLastPosition();
     if (pos && pos.frameIdx >= 0) {
-      var epNames = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Великая битва' };
-      var epName = epNames[pos.episodeId] || 'Эпизод ' + pos.episodeId;
+      var cached = episodesCache[pos.episodeId];
+      var epName = cached && cached.title ? cached.title : 'Эпизод ' + pos.episodeId;
       if (info) info.textContent = 'Эпизод ' + pos.episodeId + ' — ' + epName;
       if (previewImg) {
-        var episode = EPISODES[pos.episodeId];
+        var episode = episodesCache[pos.episodeId];
+        if (!episode) {
+          episode = await fetchEpisode(pos.episodeId);
+        }
         if (episode && episode.frames[pos.frameIdx] && episode.frames[pos.frameIdx].bgImage) {
           previewImg.src = episode.frames[pos.frameIdx].bgImage;
           previewImg.style.display = 'block';
@@ -1626,7 +1656,7 @@ const App = (function() {
   }
 
   function getEpisodeProgress(epId) {
-    var ep = EPISODES[epId];
+    var ep = episodesCache[epId];
     var total = ep && ep.frames ? ep.frames.length : 10;
     var current = 0;
     if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
@@ -1648,7 +1678,12 @@ const App = (function() {
     tabsContainer.textContent = '';
     contentContainer.textContent = '';
 
-    BOOKS.forEach(function(book, bookIdx) {
+    if (!APP_BOOKS.length) {
+      contentContainer.innerHTML = '<div class="empty-state" style="padding:40px;text-align:center;color:rgba(255,255,255,0.5);">Загрузка эпизодов...</div>';
+      return;
+    }
+
+    APP_BOOKS.forEach(function(book, bookIdx) {
       var tab = document.createElement('button');
       tab.className = 'book-tab' + (bookIdx === 0 ? ' active' : '');
       tab.textContent = 'Книга ' + book.num;
@@ -1665,17 +1700,21 @@ const App = (function() {
       grid.className = 'book-grid' + (bookIdx === 0 ? '' : ' hidden');
       grid.id = 'bookGrid' + book.num;
 
-      book.episodes.forEach(function(ep) {
+      book.episodes.forEach(function(ep, epIdx) {
+        var locked = isEpisodeLocked(book.episodes, epIdx);
         var status = getEpisodeStatus(ep.id);
         var progress = getEpisodeProgress(ep.id);
         var mini = document.createElement('div');
-        mini.className = 'episode-mini' + (ep.locked ? ' locked' : '');
+        mini.className = 'episode-mini' + (locked ? ' locked' : '');
         mini.dataset.episode = ep.id;
 
+        var cached = episodesCache[ep.id];
         var coverImg = document.createElement('img');
         coverImg.className = 'episode-mini-cover';
         coverImg.alt = '';
-        coverImg.src = 'assets/episodes/episode-' + String(ep.id).padStart(2, '0') + '/cover.png';
+        coverImg.src = cached && cached.cover_image
+          ? cached.cover_image
+          : 'assets/episodes/episode-' + String(ep.id).padStart(2, '0') + '/cover.png';
         coverImg.onerror = function() { coverImg.style.display = 'none'; };
 
         var numEl = document.createElement('div');
@@ -1684,11 +1723,11 @@ const App = (function() {
 
         var titleEl = document.createElement('div');
         titleEl.className = 'episode-mini-title';
-        titleEl.textContent = ep.title;
+        titleEl.textContent = cached && cached.title ? cached.title : ep.title;
 
         var statusEl = document.createElement('div');
         statusEl.className = 'episode-mini-status';
-        if (ep.locked) {
+        if (locked) {
           statusEl.textContent = '\uD83D\uDD12';
         } else if (status.completed) {
           statusEl.textContent = '\u2705';
@@ -1711,7 +1750,7 @@ const App = (function() {
         mini.appendChild(statusEl);
         mini.appendChild(progressTrack);
 
-        if (!ep.locked) {
+        if (!locked) {
           mini.addEventListener('click', function() {
             startEpisode(ep.id);
           });
@@ -1728,7 +1767,7 @@ const App = (function() {
     var container = document.getElementById('overallProgress');
     if (!container) return;
     var totalSeen = 0, totalFrames = 0;
-    BOOKS.forEach(function(book) {
+    APP_BOOKS.forEach(function(book) {
       book.episodes.forEach(function(ep) {
         var prog = getEpisodeProgress(ep.id);
         totalSeen += prog.current;
@@ -1804,7 +1843,7 @@ const App = (function() {
           video.muted = true;
           video.volume = 0;
           video.play().catch(() => {});
-          AudioController.playVideo(video);
+          AudioController.playVideo();
         }
         playBtn.style.display = 'none';
         return;
@@ -1979,6 +2018,27 @@ const App = (function() {
         }
       });
     }
+
+    // Profile account buttons (delegation — created dynamically in player.js)
+    var profileModal = document.getElementById('profile-modal');
+    if (profileModal) {
+      profileModal.addEventListener('click', function(e) {
+        if (e.target.id === 'profileRegBtn') {
+          e.stopPropagation();
+          profileModal.classList.remove('visible');
+          showPanel('Register');
+          showAuthModal();
+        } else if (e.target.id === 'profileLoginBtn') {
+          e.stopPropagation();
+          profileModal.classList.remove('visible');
+          showPanel('Login');
+          showAuthModal();
+        } else if (e.target.id === 'profileLogoutBtn') {
+          e.stopPropagation();
+          Auth.logout();
+        }
+      });
+    }
   }
 
   function showAuthModal() {
@@ -2061,9 +2121,32 @@ const App = (function() {
     }
 
     // Main menu v2 bindings
-    renderBooks();
-    renderOverallProgress();
     startCountdown('2026-05-25T12:00:00');
+
+    // Load books from API, cache episodes, then render menu
+    loadBooks().then(function() {
+      renderBooks();
+      renderOverallProgress();
+      return fetch('/api/episodes');
+    }).then(function(r) { return r.json(); })
+      .then(async function(list) {
+        if (list && list.episodes) {
+          await Promise.all(list.episodes.map(function(ep) {
+            return fetchEpisode(ep.id);
+          }));
+          renderBooks();
+          renderOverallProgress();
+          renderContinueButton();
+        }
+      })
+      .catch(function(e) { console.warn('Failed to preload episodes', e); });
+
+    // Handle ?episode=X in URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var directEpisode = urlParams.get('episode');
+    if (directEpisode) {
+      startEpisode(parseInt(directEpisode, 10), 0);
+    }
 
     var appNavToggle = document.getElementById('appNavToggle');
     var appNavMobile = document.getElementById('appNavMobile');

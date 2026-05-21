@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ-панель — Суперглазка CMS</title>
+<style>
+:root {
+  --bg: #0f0a1e;
+  --bg-secondary: #1a0b2e;
+  --bg-tertiary: #241538;
+  --bg-card: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.1);
+  --border-hover: rgba(192,132,252,0.4);
+  --text: #fff;
+  --text-muted: rgba(255,255,255,0.6);
+  --primary: #c084fc;
+  --primary-hover: #e879f9;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #60a5fa;
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Layout */
+.app-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 380px;
+  height: 100vh;
+}
+@media (max-width: 1200px) {
+  .app-layout { grid-template-columns: 240px 1fr; }
+  .preview-col { display: none; }
+}
+@media (max-width: 768px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .sidebar-col { display: none; }
+}
+
+/* Sidebar */
+.sidebar-col {
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+}
+.sidebar-col h1 {
+  font-size: 16px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.search-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  width: 100%;
+  outline: none;
+}
+.search-box:focus { border-color: var(--primary); }
+
+.btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border: none;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: opacity 0.2s, transform 0.1s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn:hover { opacity: 0.9; }
+.btn:active { transform: scale(0.98); }
+.btn-secondary {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.08); }
+.btn-sm { padding: 6px 10px; font-size: 12px; }
+.btn-danger { background: var(--danger); }
+.btn-success { background: var(--success); color: #000; }
+
+.episode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  flex: 1;
+}
+.episode-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.episode-item:hover, .episode-item.active {
+  border-color: var(--primary);
+  background: rgba(192, 132, 252, 0.08);
+}
+.episode-item h3 { font-size: 13px; margin-bottom: 3px; font-weight: 600; }
+.episode-item .meta { font-size: 11px; color: var(--text-muted); }
+.episode-item .badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 50px;
+  margin-top: 4px;
+  font-weight: 600;
+}
+.badge-published { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+.badge-draft { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+
+/* Editor column */
+.editor-col {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.editor-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-secondary);
+}
+.editor-header h2 { font-size: 16px; font-weight: 600; }
+.editor-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+.tab {
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  transition: all 0.2s;
+  border: none;
+  background: none;
+  font-family: var(--font);
+}
+.tab:hover { color: var(--text); background: var(--bg-card); }
+.tab.active { color: var(--primary); background: rgba(192,132,252,0.1); font-weight: 600; }
+
+/* Form elements */
+.form-group { margin-bottom: 14px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+input, textarea, select {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
+select { cursor: pointer; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+@media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.card h3 { font-size: 14px; margin-bottom: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Dropzone */
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.dropzone:hover, .dropzone.dragover {
+  border-color: var(--primary);
+  background: rgba(192, 132, 252, 0.04);
+}
+.dropzone input { display: none; }
+.dropzone img, .dropzone video {
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+.dropzone .file-name {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.timeline-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  cursor: grab;
+  transition: all 0.2s;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.timeline-item:hover { border-color: var(--border-hover); }
+.timeline-item.dragging {
+  opacity: 0.5;
+  border-color: var(--primary);
+}
+.timeline-item.active {
+  border-color: var(--primary);
+  background: rgba(192, 132, 252, 0.08);
+}
+.timeline-item .drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  font-size: 16px;
+  padding-top: 2px;
+  user-select: none;
+}
+.timeline-item .frame-thumb {
+  width: 64px;
+  height: 40px;
+  border-radius: 6px;
+  background: var(--bg-tertiary);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.timeline-item .frame-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.timeline-item .frame-info {
+  flex: 1;
+  min-width: 0;
+}
+.timeline-item .frame-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.timeline-item .frame-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.timeline-item .frame-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.timeline-item:hover .frame-actions { opacity: 1; }
+
+/* Dialogue editor */
+.dialogue-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 80px 90px 32px;
+  gap: 6px;
+  margin-bottom: 6px;
+  align-items: center;
+}
+.dialogue-row input, .dialogue-row select {
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+/* Checkbox group */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.checkbox-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.checkbox-pill:hover { border-color: var(--primary); }
+.checkbox-pill input { width: auto; margin: 0; }
+.checkbox-pill.checked {
+  border-color: var(--primary);
+  background: rgba(192,132,252,0.1);
+}
+
+/* Preview column */
+.preview-col {
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.preview-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.preview-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+.preview-stage {
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+  margin-bottom: 16px;
+}
+.preview-stage img, .preview-stage video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.preview-narration {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text);
+  margin-bottom: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.preview-dialogue {
+  position: absolute;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  max-width: 220px;
+  backdrop-filter: blur(4px);
+}
+.preview-dialogue .speaker {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 260px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: toastIn 0.3s ease;
+}
+.toast.toast-out { animation: toastOut 0.3s ease forwards; }
+.toast-success { border-color: var(--success); }
+.toast-error { border-color: var(--danger); }
+.toast-warning { border-color: var(--warning); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(40px); }
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
+
+/* Auth overlay */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,6,24,0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+.auth-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+}
+
+/* Batch upload */
+.batch-dropzone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+.batch-dropzone.dragover {
+  border-color: var(--primary);
+  background: rgba(192, 132, 252, 0.04);
+}
+
+/* Autosave indicator */
+.autosave-status {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.autosave-status.saving { color: var(--warning); }
+.autosave-status.saved { color: var(--success); }
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+</style>
+</head>
+<body>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Auth overlay -->
+<div class="auth-overlay" id="authOverlay" style="display:none;">
+  <div class="auth-box">
+    <h2 style="margin-bottom:8px;">🔐 Админ-панель</h2>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:20px;">Введите Admin API Key для доступа к CMS</p>
+    <input type="password" id="adminKeyInput" placeholder="Admin API Key" style="width:100%;margin-bottom:16px;">
+    <button class="btn" id="adminKeyBtn" style="width:100%;">Войти</button>
+    <p id="authError" style="color:var(--danger);font-size:13px;margin-top:12px;display:none;"></p>
+  </div>
+</div>
+
+<!-- App Layout -->
+<div class="app-layout" id="appLayout" style="display:none;">
+
+  <!-- Sidebar: Episodes -->
+  <div class="sidebar-col">
+    <h1><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;">Игросказка</div>👁️ Суперглазка CMS</h1>
+    <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск эпизодов...">
+    <button class="btn" id="newEpisodeBtn">+ Новый эпизод</button>
+    <button class="btn btn-secondary" id="importEpisodesBtn" style="font-size:12px;padding:8px 10px;">🔄 Импортировать эпизоды</button>
+    <div class="episode-list" id="episodeList">
+      <div class="empty-state">Загрузка...</div>
+    </div>
+    <button class="btn btn-secondary btn-sm" onclick="logoutAdmin()" style="margin-top:auto;">🚪 Выйти</button>
+  </div>
+
+  <!-- Editor Column -->
+  <div class="editor-col">
+    <div class="editor-header">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <h2 id="editorTitle">Редактор</h2>
+        <div class="autosave-status" id="autosaveStatus">
+          <span class="dot"></span>
+          <span id="autosaveText">Готово</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;" id="editorActions"></div>
+    </div>
+    <div class="editor-body" id="editorBody">
+      <div class="empty-state">
+        <h2>Выберите эпизод или создайте новый</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Column -->
+  <div class="preview-col">
+    <div class="preview-header">👁️ Предпросмотр кадра</div>
+    <div class="preview-body" id="previewBody">
+      <div class="empty-state">Выберите кадр для предпросмотра</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const API_BASE = '/api';
+const UPLOADS_BASE = '/uploads/';
+let ADMIN_KEY = localStorage.getItem('admin_key') || '';
+
+/* ═══════════════════════════════════════════════
+   AUTH
+   ═══════════════════════════════════════════════ */
+function showAuth() {
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.getElementById('appLayout').style.display = 'none';
+}
+function hideAuth() {
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('appLayout').style.display = 'grid';
+}
+
+async function testKey(key) {
+  try {
+    const res = await fetch(API_BASE + '/admin/episodes', {
+      headers: { 'X-Admin-Key': key }
+    });
+    if (res.ok) {
+      ADMIN_KEY = key;
+      localStorage.setItem('admin_key', key);
+      hideAuth();
+      loadEpisodes();
+    } else {
+      document.getElementById('authError').textContent = 'Неверный ключ.';
+      document.getElementById('authError').style.display = 'block';
+    }
+  } catch (e) {
+    document.getElementById('authError').textContent = 'Ошибка соединения.';
+    document.getElementById('authError').style.display = 'block';
+  }
+}
+
+document.getElementById('adminKeyBtn').addEventListener('click', () => {
+  const val = document.getElementById('adminKeyInput').value.trim();
+  if (val) testKey(val);
+});
+document.getElementById('adminKeyInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('adminKeyBtn').click();
+});
+
+function logoutAdmin() {
+  ADMIN_KEY = '';
+  localStorage.removeItem('admin_key');
+  showAuth();
+}
+
+if (!ADMIN_KEY) showAuth();
+else testKey(ADMIN_KEY).catch(showAuth);
+
+/* ═══════════════════════════════════════════════
+   API
+   ═══════════════════════════════════════════════ */
+async function api(path, options = {}) {
+  const res = await fetch(API_BASE + path, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Admin-Key': ADMIN_KEY,
+      ...options.headers
+    }
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'API Error ' + res.status);
+  }
+  return res.json();
+}
+
+async function uploadFile(file) {
+  const form = new FormData();
+  form.append('file', file);
+  const res = await fetch(API_BASE + '/admin/upload', {
+    method: 'POST',
+    headers: { 'X-Admin-Key': ADMIN_KEY },
+    body: form
+  });
+  if (!res.ok) throw new Error('Upload failed');
+  return res.json();
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════ */
+function toast(message, type = 'success', duration = 3000) {
+  const container = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`;
+  const icons = { success: '✅', error: '❌', warning: '⚠️' };
+  el.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.classList.add('toast-out');
+    setTimeout(() => el.remove(), 300);
+  }, duration);
+}
+
+/* ═══════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════ */
+let episodes = [];
+let selectedEpisode = null;
+let selectedFrame = null;
+let frameUploads = {}; // temp upload paths per frame field
+let autoSaveTimer = null;
+let isSaving = false;
+
+/* ═══════════════════════════════════════════════
+   EPISODE LIST
+   ═══════════════════════════════════════════════ */
+function renderEpisodeList() {
+  const list = document.getElementById('episodeList');
+  const filter = document.getElementById('episodeSearch').value.toLowerCase();
+  const filtered = episodes.filter(ep => (ep.title || '').toLowerCase().includes(filter));
+  
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">Нет эпизодов</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(ep => `
+    <div class="episode-item ${selectedEpisode?.id === ep.id ? 'active' : ''}" data-id="${ep.id}">
+      <h3>${escapeHtml(ep.title)}</h3>
+      <div class="meta">Кадров: ${ep.frame_count || ep.frames?.length || 0} · Порядок: ${ep.order ?? 0}</div>
+      <span class="badge ${ep.is_published ? 'badge-published' : 'badge-draft'}">
+        ${ep.is_published ? 'Опубликован' : 'Черновик'}
+      </span>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.episode-item').forEach(el => {
+    el.addEventListener('click', () => selectEpisode(parseInt(el.dataset.id)));
+  });
+}
+
+document.getElementById('episodeSearch').addEventListener('input', renderEpisodeList);
+
+async function loadEpisodes() {
+  try {
+    const data = await api('/admin/episodes');
+    episodes = data.episodes;
+    renderEpisodeList();
+  } catch (e) {
+    toast('Ошибка загрузки эпизодов: ' + e.message, 'error');
+  }
+}
+
+async function selectEpisode(id) {
+  selectedEpisode = episodes.find(e => e.id === id);
+  selectedFrame = null;
+  frameUploads = {};
+  renderEpisodeList();
+  if (!selectedEpisode) return;
+
+  try {
+    const data = await api('/admin/episodes/' + id);
+    selectedEpisode = data.episode;
+    renderEditor();
+    if (selectedEpisode.frames?.length) selectFrame(selectedEpisode.frames[0].id);
+  } catch (e) {
+    toast('Ошибка загрузки эпизода: ' + e.message, 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   EDITOR
+   ═══════════════════════════════════════════════ */
+function renderEditor() {
+  const ep = selectedEpisode;
+  const body = document.getElementById('editorBody');
+  document.getElementById('editorTitle').textContent = escapeHtml(ep.title || 'Без названия');
+  document.getElementById('editorActions').innerHTML = `
+    <button class="btn btn-secondary btn-sm" onclick="togglePublish()">${ep.is_published ? '⏸ Снять' : '🚀 Опубликовать'}</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteEpisode()">🗑 Удалить</button>
+  `;
+
+  body.innerHTML = `
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(this, 'info')">📖 Эпизод</button>
+      <button class="tab" onclick="switchTab(this, 'frames')">🎬 Кадры (${ep.frames?.length || 0})</button>
+      <button class="tab" onclick="switchTab(this, 'batch')">📤 Batch Upload</button>
+    </div>
+
+    <div id="tab-info">
+      <div class="grid-2">
+        <div class="card">
+          <h3>Информация</h3>
+          <div class="form-group">
+            <label>Название</label>
+            <input id="epTitle" value="${escapeHtml(ep.title || '')}" oninput="scheduleAutoSave()">
+          </div>
+          <div class="form-group">
+            <label>Описание</label>
+            <textarea id="epDesc" oninput="scheduleAutoSave()">${escapeHtml(ep.description || '')}</textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Порядок</label>
+              <input type="number" id="epOrder" value="${ep.order ?? 0}" oninput="scheduleAutoSave()">
+            </div>
+            <div class="form-group">
+              <label>Книга (book_num)</label>
+              <input type="number" id="epBookNum" value="${ep.book_num ?? 1}" oninput="scheduleAutoSave()">
+            </div>
+          </div>
+          <button class="btn" onclick="saveEpisodeNow()">💾 Сохранить эпизод</button>
+        </div>
+        <div class="card">
+          <h3>Обложка</h3>
+          <div class="dropzone" onclick="document.getElementById('coverInput').click()" id="coverDropzone">
+            <input type="file" id="coverInput" accept="image/*" onchange="handleCoverUpload(this)">
+            ${ep.cover_image ? `<img src="${UPLOADS_BASE}${ep.cover_image}" id="coverPreview">` : '<div>Перетащите или нажмите для загрузки обложки</div>'}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-frames" style="display:none;">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3>Timeline</h3>
+          <button class="btn btn-sm" onclick="addFrame()">+ Добавить кадр</button>
+        </div>
+        <div class="timeline" id="framesTimeline">
+          ${(ep.frames || []).map((f, i) => renderTimelineItem(f, i)).join('')}
+        </div>
+      </div>
+
+      <div id="frameEditorContainer" style="display:none;">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <h3>✏️ Редактор кадра</h3>
+            <div class="autosave-status" id="frameAutosaveStatus"><span class="dot"></span><span>Готово</span></div>
+          </div>
+          <div id="frameEditorForm"></div>
+          <div style="display:flex;gap:10px;margin-top:12px;">
+            <button class="btn" onclick="saveFrameNow()">💾 Сохранить кадр</button>
+            <button class="btn btn-secondary" onclick="duplicateFrame()">📋 Дублировать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-batch" style="display:none;">
+      <div class="card">
+        <h3>📤 Batch Upload</h3>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Перетащите файлы сюда. Они будут загружены во временное хранилище и доступны по пути.</p>
+        <div class="batch-dropzone" id="batchDropzone">
+          <div>Перетащите файлы сюда</div>
+          <input type="file" id="batchInput" multiple style="display:none;" onchange="handleBatchUpload(this)">
+        </div>
+        <div id="batchResults"></div>
+      </div>
+    </div>
+  `;
+
+  setupDropzones();
+  setupDragAndDrop();
+  setupBatchDropzone();
+}
+
+function switchTab(btn, name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  ['info', 'frames', 'batch'].forEach(t => {
+    const el = document.getElementById('tab-' + t);
+    if (el) el.style.display = t === name ? 'block' : 'none';
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════ */
+function renderTimelineItem(frame, index) {
+  const hasImg = frame.background_image || frame.bgImage;
+  const imgUrl = hasImg ? (UPLOADS_BASE + hasImg) : '';
+  return `
+    <div class="timeline-item ${selectedFrame?.id === frame.id ? 'active' : ''}" 
+         data-frame-id="${frame.id}" draggable="true"
+         onclick="selectFrame(${frame.id})">
+      <div class="drag-handle">⋮⋮</div>
+      <div class="frame-thumb">
+        ${imgUrl ? `<img src="${imgUrl}" loading="lazy">` : (index + 1)}
+      </div>
+      <div class="frame-info">
+        <div class="frame-title">${escapeHtml(frame.title || 'Кадр ' + (index + 1))}</div>
+        <div class="frame-meta">
+          ${frame.game_type || frame.game ? '🎮 ' + (frame.game_type || frame.game) + ' · ' : ''}
+          ${frame.dialogue?.length || frame.dialogues?.length ? '💬 ' + (frame.dialogue?.length || frame.dialogues?.length) + ' · ' : ''}
+          ${frame.narration ? '📝 ' : ''}
+        </div>
+      </div>
+      <div class="frame-actions">
+        <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation();editFrameInline(${frame.id})">✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteFrame(${frame.id})">🗑</button>
+      </div>
+    </div>
+  `;
+}
+
+function setupDragAndDrop() {
+  const container = document.getElementById('framesTimeline');
+  if (!container) return;
+  let dragged = null;
+  container.querySelectorAll('.timeline-item').forEach(item => {
+    item.addEventListener('dragstart', e => {
+      dragged = item;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      dragged = null;
+      // Reorder
+      const ids = Array.from(container.querySelectorAll('.timeline-item')).map(el => parseInt(el.dataset.frameId));
+      reorderFrames(ids);
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      if (!dragged || dragged === item) return;
+      const rect = item.getBoundingClientRect();
+      const after = e.clientY > rect.top + rect.height / 2;
+      item.parentNode.insertBefore(dragged, after ? item.nextSibling : item);
+    });
+  });
+}
+
+async function reorderFrames(frameIds) {
+  try {
+    await api('/admin/episodes/' + selectedEpisode.id + '/reorder', {
+      method: 'POST',
+      body: JSON.stringify({ frameIds })
+    });
+    toast('Порядок кадров обновлён');
+    // Refresh frames order locally
+    const newFrames = [];
+    for (const id of frameIds) {
+      const f = selectedEpisode.frames.find(x => x.id === id);
+      if (f) newFrames.push(f);
+    }
+    selectedEpisode.frames = newFrames;
+    renderEditor();
+  } catch (e) {
+    toast('Ошибка сортировки: ' + e.message, 'error');
+  }
+}
+
+async function selectFrame(frameId) {
+  selectedFrame = selectedEpisode.frames.find(f => f.id === frameId);
+  renderTimelineSelection();
+  renderFrameEditor();
+  renderPreview();
+}
+
+function renderTimelineSelection() {
+  document.querySelectorAll('.timeline-item').forEach(el => {
+    el.classList.toggle('active', parseInt(el.dataset.frameId) === selectedFrame?.id);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   FRAME EDITOR
+   ═══════════════════════════════════════════════ */
+function renderFrameEditor() {
+  const container = document.getElementById('frameEditorContainer');
+  const form = document.getElementById('frameEditorForm');
+  if (!selectedFrame || !container || !form) return;
+  container.style.display = 'block';
+
+  const f = selectedFrame;
+  const dialogues = f.dialogue || f.dialogues || [];
+  const dlgAudio = f.dialogueAudio || [];
+  const availableGames = f.availableGames || [];
+
+  form.innerHTML = `
+    <div class="grid-2">
+      <div>
+        <div class="form-group">
+          <label>Заголовок кадра</label>
+          <input id="frameTitle" value="${escapeHtml(f.title || '')}" oninput="scheduleFrameAutoSave()">
+        </div>
+        <div class="form-group">
+          <label>Повествование</label>
+          <textarea id="frameNarration" oninput="scheduleFrameAutoSave()">${escapeHtml(f.narration || '')}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Текст перехода (transitionText)</label>
+          <input id="frameTransition" value="${escapeHtml(f.transitionText || f.transition_text || '')}" oninput="scheduleFrameAutoSave()">
+        </div>
+        <div class="form-group">
+          <label>Video Prompt</label>
+          <textarea id="frameVideoPrompt" oninput="scheduleFrameAutoSave()">${escapeHtml(f.videoPrompt || f.video_prompt || '')}</textarea>
+        </div>
+      </div>
+      <div>
+        <div class="form-group">
+          <label>Фоновый градиент (CSS)</label>
+          <input id="frameBgGradient" value="${escapeHtml(f.bgGradient || f.bg_gradient || '')}" oninput="scheduleFrameAutoSave();renderPreview()">
+        </div>
+        <div class="form-group">
+          <label>Фоновое изображение</label>
+          <div class="dropzone" onclick="document.getElementById('frameImgInput').click()" id="frameImgDropzone">
+            <input type="file" id="frameImgInput" accept="image/*" onchange="handleFrameMediaUpload(this, 'bgImage')">
+            ${f.background_image || f.bgImage ? `<img src="${UPLOADS_BASE}${f.background_image || f.bgImage}">` : '<div>Загрузить изображение</div>'}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Фоновое видео</label>
+          <div class="dropzone" onclick="document.getElementById('frameVidInput').click()" id="frameVidDropzone">
+            <input type="file" id="frameVidInput" accept="video/*" onchange="handleFrameMediaUpload(this, 'videoSrc')">
+            ${f.background_video || f.videoSrc ? `<div class="file-name">${escapeHtml(f.background_video || f.videoSrc)}</div>` : '<div>Загрузить видео</div>'}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Озвучка повествования</label>
+          <div class="dropzone" onclick="document.getElementById('frameAudioInput').click()" id="frameAudioDropzone">
+            <input type="file" id="frameAudioInput" accept="audio/*" onchange="handleFrameMediaUpload(this, 'audioSrc')">
+            ${f.audio_src || f.audioSrc ? `<div class="file-name">${escapeHtml(f.audio_src || f.audioSrc)}</div>` : '<div>Загрузить аудио</div>'}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>⚙️ Настройки</h3>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Настроение</label>
+            <select id="frameMood" onchange="scheduleFrameAutoSave()">
+              <option value="">—</option>
+              ${['cosmic','joyful','tension','peaceful','magical','triumphant','warm','mystery'].map(m =>
+                `<option value="${m}" ${(f.mood === m) ? 'selected' : ''}>${m}</option>`
+              ).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Мини-игра</label>
+            <select id="frameGame" onchange="scheduleFrameAutoSave()">
+              <option value="">—</option>
+              ${['blink','tracker','runner','gym'].map(g =>
+                `<option value="${g}" ${(f.game_type === g || f.game === g) ? 'selected' : ''}>${g}</option>`
+              ).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Доступные игры (availableGames)</label>
+          <div class="checkbox-group" id="availableGamesGroup">
+            ${['blink','tracker','runner','gym'].map(g => `
+              <label class="checkbox-pill ${availableGames.includes(g) ? 'checked' : ''}">
+                <input type="checkbox" value="${g}" ${availableGames.includes(g) ? 'checked' : ''} onchange="toggleGamePill(this);scheduleFrameAutoSave()">
+                ${g}
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>💬 Диалоги</h3>
+        <div id="dialoguesList">
+          ${dialogues.map((d, i) => `
+            <div class="dialogue-row" data-dlg-index="${i}">
+              <input placeholder="Спикер" value="${escapeHtml(d.speaker || '')}" class="dlg-speaker" oninput="scheduleFrameAutoSave()">
+              <input placeholder="Текст" value="${escapeHtml(d.text || '')}" class="dlg-text" oninput="scheduleFrameAutoSave()">
+              <select class="dlg-position" onchange="scheduleFrameAutoSave()">
+                <option value="bl" ${d.position === 'bl' ? 'selected' : ''}>bl</option>
+                <option value="br" ${d.position === 'br' ? 'selected' : ''}>br</option>
+                <option value="tl" ${d.position === 'tl' ? 'selected' : ''}>tl</option>
+                <option value="tr" ${d.position === 'tr' ? 'selected' : ''}>tr</option>
+              </select>
+              <input placeholder="style: top:X%;left:Y%" value="${escapeHtml(d.style || '')}" class="dlg-style" oninput="scheduleFrameAutoSave()">
+              <button class="btn btn-sm btn-danger" onclick="this.closest('.dialogue-row').remove();scheduleFrameAutoSave()">×</button>
+            </div>
+          `).join('')}
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="addDialogueRow()" style="margin-top:8px;">+ Диалог</button>
+
+        <h3 style="margin-top:16px;">🔊 Аудио диалогов</h3>
+        <div id="dialogueAudioList">
+          ${dlgAudio.map((a, i) => `
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+              <span style="font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(a)}</span>
+              <button class="btn btn-sm btn-danger" onclick="removeDialogueAudio(${i})">×</button>
+            </div>
+          `).join('')}
+        </div>
+        <div class="dropzone" style="padding:12px;margin-top:8px;" onclick="document.getElementById('dlgAudioInput').click()">
+          <input type="file" id="dlgAudioInput" accept="audio/*" onchange="handleDialogueAudioUpload(this)">
+          <div style="font-size:11px;">Добавить аудио диалога</div>
+        </div>
+      </div>
+    </div>
+  `;
+  setupDropzones();
+}
+
+function toggleGamePill(checkbox) {
+  checkbox.closest('.checkbox-pill').classList.toggle('checked', checkbox.checked);
+}
+
+function addDialogueRow() {
+  const list = document.getElementById('dialoguesList');
+  const row = document.createElement('div');
+  row.className = 'dialogue-row';
+  row.innerHTML = `
+    <input placeholder="Спикер" class="dlg-speaker" oninput="scheduleFrameAutoSave()">
+    <input placeholder="Текст" class="dlg-text" oninput="scheduleFrameAutoSave()">
+    <select class="dlg-position" onchange="scheduleFrameAutoSave()">
+      <option value="bl">bl</option>
+      <option value="br">br</option>
+      <option value="tl">tl</option>
+      <option value="tr">tr</option>
+    </select>
+    <input placeholder="style" class="dlg-style" oninput="scheduleFrameAutoSave()">
+    <button class="btn btn-sm btn-danger" onclick="this.closest('.dialogue-row').remove();scheduleFrameAutoSave()">×</button>
+  `;
+  list.appendChild(row);
+}
+
+/* ═══════════════════════════════════════════════
+   PREVIEW
+   ═══════════════════════════════════════════════ */
+function renderPreview() {
+  const body = document.getElementById('previewBody');
+  if (!selectedFrame) {
+    body.innerHTML = '<div class="empty-state">Выберите кадр для предпросмотра</div>';
+    return;
+  }
+  const f = selectedFrame;
+  const bgStyle = f.bgGradient || f.bg_gradient || 'var(--bg-tertiary)';
+  const bgImg = f.background_image || f.bgImage;
+  const dialogues = f.dialogue || f.dialogues || [];
+
+  let bgHtml = '';
+  if (bgImg) {
+    bgHtml = `<img src="${UPLOADS_BASE}${bgImg}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;">`;
+  } else {
+    bgHtml = `<div style="position:absolute;inset:0;background:${escapeHtml(bgStyle)};"></div>`;
+  }
+
+  const dlgHtml = dialogues.map((d, i) => {
+    const pos = d.style || (d.position === 'br' ? 'bottom:10%;right:6%;' : d.position === 'bl' ? 'bottom:10%;left:6%;' : d.position === 'tr' ? 'top:10%;right:6%;' : 'top:10%;left:6%;');
+    return `<div class="preview-dialogue" style="${escapeHtml(pos)}">
+      <div class="speaker">${escapeHtml(d.speaker || '???')}</div>
+      <div>${escapeHtml(d.text || '')}</div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="preview-stage" id="previewStage">
+      ${bgHtml}
+      ${dlgHtml}
+    </div>
+    <div style="margin-bottom:8px;font-size:12px;color:var(--text-muted);">
+      ${f.game_type || f.game ? '🎮 ' + (f.game_type || f.game) : ''}
+      ${f.mood ? ' · 🎭 ' + f.mood : ''}
+    </div>
+    <div class="preview-narration">
+      ${escapeHtml(f.narration || '(нет повествования)').replace(/\n/g, '<br>')}
+    </div>
+    ${f.transitionText || f.transition_text ? `<div style="font-size:12px;color:var(--warning);margin-top:8px;padding:8px;background:rgba(251,191,36,0.08);border-radius:6px;">➡️ ${escapeHtml(f.transitionText || f.transition_text)}</div>` : ''}
+  `;
+}
+
+/* ═══════════════════════════════════════════════
+   UPLOAD HANDLERS
+   ═══════════════════════════════════════════════ */
+async function handleCoverUpload(input) {
+  if (!input.files?.[0]) return;
+  try {
+    const result = await uploadFile(input.files[0]);
+    selectedEpisode.cover_image = result.path;
+    renderEditor();
+    toast('Обложка загружена');
+  } catch (e) { toast('Ошибка загрузки: ' + e.message, 'error'); }
+}
+
+async function handleFrameMediaUpload(input, field) {
+  if (!input.files?.[0]) return;
+  try {
+    const result = await uploadFile(input.files[0]);
+    if (!frameUploads[selectedFrame.id]) frameUploads[selectedFrame.id] = {};
+    frameUploads[selectedFrame.id][field] = result.path;
+    toast('Файл загружен: ' + result.filename);
+    renderFrameEditor();
+    renderPreview();
+  } catch (e) { toast('Ошибка загрузки: ' + e.message, 'error'); }
+}
+
+async function handleDialogueAudioUpload(input) {
+  if (!input.files?.[0]) return;
+  try {
+    const result = await uploadFile(input.files[0]);
+    const arr = selectedFrame.dialogueAudio || selectedFrame.dialogue_audio_json ? JSON.parse(selectedFrame.dialogue_audio_json || '[]') : [];
+    arr.push(result.path);
+    selectedFrame.dialogueAudio = arr;
+    if (!frameUploads[selectedFrame.id]) frameUploads[selectedFrame.id] = {};
+    frameUploads[selectedFrame.id].dialogueAudio = arr;
+    renderFrameEditor();
+    toast('Аудио диалога загружено');
+  } catch (e) { toast('Ошибка загрузки: ' + e.message, 'error'); }
+}
+
+function removeDialogueAudio(index) {
+  const arr = selectedFrame.dialogueAudio || [];
+  arr.splice(index, 1);
+  selectedFrame.dialogueAudio = arr;
+  if (!frameUploads[selectedFrame.id]) frameUploads[selectedFrame.id] = {};
+  frameUploads[selectedFrame.id].dialogueAudio = arr;
+  renderFrameEditor();
+}
+
+function setupDropzones() {
+  document.querySelectorAll('.dropzone').forEach(dz => {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('dragover');
+      const input = dz.querySelector('input[type=file]');
+      if (input && e.dataTransfer.files[0]) {
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event('change'));
+      }
+    });
+  });
+}
+
+/* Batch upload */
+function setupBatchDropzone() {
+  const dz = document.getElementById('batchDropzone');
+  if (!dz) return;
+  dz.addEventListener('click', () => document.getElementById('batchInput').click());
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault();
+    dz.classList.remove('dragover');
+    handleBatchFiles(e.dataTransfer.files);
+  });
+}
+
+async function handleBatchUpload(input) {
+  if (input.files) handleBatchFiles(input.files);
+}
+
+async function handleBatchFiles(files) {
+  const results = document.getElementById('batchResults');
+  results.innerHTML = '<div style="font-size:13px;color:var(--text-muted);">Загрузка...</div>';
+  const uploaded = [];
+  for (const file of files) {
+    try {
+      const res = await uploadFile(file);
+      uploaded.push(res);
+    } catch (e) {
+      uploaded.push({ error: true, filename: file.name, message: e.message });
+    }
+  }
+  results.innerHTML = uploaded.map(u => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <span style="${u.error ? 'color:var(--danger)' : ''}">${u.error ? '❌' : '✅'} ${escapeHtml(u.filename || u.path)}</span>
+      ${!u.error ? `<code style="background:var(--bg-card);padding:2px 6px;border-radius:4px;font-size:11px;">${u.path}</code>` : ''}
+    </div>
+  `).join('');
+  toast(`Загружено ${uploaded.filter(u => !u.error).length} из ${uploaded.length} файлов`, uploaded.some(u => u.error) ? 'warning' : 'success');
+}
+
+/* ═══════════════════════════════════════════════
+   SAVE
+   ═══════════════════════════════════════════════ */
+function scheduleAutoSave() {
+  setAutosaveStatus('saving');
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => saveEpisodeNow(true), 1500);
+}
+
+function scheduleFrameAutoSave() {
+  setFrameAutosaveStatus('saving');
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => saveFrameNow(true), 1500);
+}
+
+function setAutosaveStatus(state) {
+  const el = document.getElementById('autosaveStatus');
+  if (!el) return;
+  el.className = 'autosave-status ' + state;
+  document.getElementById('autosaveText').textContent = state === 'saving' ? 'Сохранение...' : 'Сохранено';
+}
+function setFrameAutosaveStatus(state) {
+  const el = document.getElementById('frameAutosaveStatus');
+  if (!el) return;
+  el.className = 'autosave-status ' + state;
+  el.querySelector('span:last-child').textContent = state === 'saving' ? 'Сохранение...' : 'Сохранено';
+}
+
+async function saveEpisodeNow(silent = false) {
+  if (isSaving) return;
+  isSaving = true;
+  setAutosaveStatus('saving');
+  const payload = {
+    title: document.getElementById('epTitle')?.value || '',
+    description: document.getElementById('epDesc')?.value || '',
+    order: parseInt(document.getElementById('epOrder')?.value) || 0,
+    book_num: parseInt(document.getElementById('epBookNum')?.value) || 1,
+    cover_image: selectedEpisode.cover_image || ''
+  };
+  try {
+    await api('/admin/episodes/' + selectedEpisode.id, { method: 'PUT', body: JSON.stringify(payload) });
+    selectedEpisode.title = payload.title;
+    selectedEpisode.description = payload.description;
+    selectedEpisode.order = payload.order;
+    renderEpisodeList();
+    setAutosaveStatus('saved');
+    if (!silent) toast('Эпизод сохранён');
+  } catch (e) {
+    setAutosaveStatus('');
+    toast('Ошибка сохранения: ' + e.message, 'error');
+  } finally {
+    isSaving = false;
+  }
+}
+
+function collectFramePayload() {
+  const uploads = frameUploads[selectedFrame.id] || {};
+  const dialogues = Array.from(document.querySelectorAll('#dialoguesList .dialogue-row')).map(row => ({
+    speaker: row.querySelector('.dlg-speaker')?.value || '',
+    text: row.querySelector('.dlg-text')?.value || '',
+    position: row.querySelector('.dlg-position')?.value || 'bl',
+    style: row.querySelector('.dlg-style')?.value || ''
+  })).filter(d => d.speaker || d.text);
+
+  const availableGames = Array.from(document.querySelectorAll('#availableGamesGroup input:checked')).map(cb => cb.value);
+  const dlgAudio = uploads.dialogueAudio || selectedFrame.dialogueAudio || (selectedFrame.dialogue_audio_json ? JSON.parse(selectedFrame.dialogue_audio_json) : []);
+
+  return {
+    order: selectedFrame.order,
+    title: document.getElementById('frameTitle')?.value || '',
+    narration: document.getElementById('frameNarration')?.value || '',
+    dialogue: dialogues,
+    dialogue_audio: dlgAudio,
+    background_image: uploads.bgImage || selectedFrame.background_image || selectedFrame.bgImage || '',
+    background_video: uploads.videoSrc || selectedFrame.background_video || selectedFrame.videoSrc || '',
+    audio_src: uploads.audioSrc || selectedFrame.audio_src || selectedFrame.audioSrc || '',
+    mood: document.getElementById('frameMood')?.value || '',
+    game_type: document.getElementById('frameGame')?.value || '',
+    choices: selectedFrame.choices || [],
+    transition_text: document.getElementById('frameTransition')?.value || '',
+    video_prompt: document.getElementById('frameVideoPrompt')?.value || '',
+    available_games: availableGames,
+    bg_gradient: document.getElementById('frameBgGradient')?.value || ''
+  };
+}
+
+async function saveFrameNow(silent = false) {
+  if (!selectedFrame || isSaving) return;
+  isSaving = true;
+  setFrameAutosaveStatus('saving');
+  const payload = collectFramePayload();
+  try {
+    await api('/admin/frames/' + selectedFrame.id, { method: 'PUT', body: JSON.stringify(payload) });
+    // Update local state
+    Object.assign(selectedFrame, {
+      title: payload.title,
+      narration: payload.narration,
+      dialogue: payload.dialogue,
+      dialogueAudio: payload.dialogue_audio,
+      background_image: payload.background_image,
+      background_video: payload.background_video,
+      audio_src: payload.audio_src,
+      mood: payload.mood,
+      game_type: payload.game_type,
+      transition_text: payload.transition_text,
+      transitionText: payload.transition_text,
+      video_prompt: payload.video_prompt,
+      videoPrompt: payload.video_prompt,
+      available_games: payload.available_games,
+      availableGames: payload.available_games,
+      bg_gradient: payload.bg_gradient,
+      bgGradient: payload.bg_gradient
+    });
+    frameUploads[selectedFrame.id] = {};
+    setFrameAutosaveStatus('saved');
+    renderEditor();
+    renderPreview();
+    if (!silent) toast('Кадр сохранён');
+  } catch (e) {
+    setFrameAutosaveStatus('');
+    toast('Ошибка сохранения: ' + e.message, 'error');
+  } finally {
+    isSaving = false;
+  }
+}
+
+async function addFrame() {
+  try {
+    const order = selectedEpisode.frames?.length || 0;
+    const res = await api('/admin/episodes/' + selectedEpisode.id + '/frames', {
+      method: 'POST',
+      body: JSON.stringify({ order, title: 'Новый кадр' })
+    });
+    await selectEpisode(selectedEpisode.id);
+    // Select the new frame
+    const newFrame = selectedEpisode.frames.find(f => f.id === res.id);
+    if (newFrame) selectFrame(newFrame.id);
+    toast('Кадр добавлен');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+async function duplicateFrame() {
+  if (!selectedFrame) return;
+  try {
+    const payload = collectFramePayload();
+    payload.order = (selectedEpisode.frames?.length || 0);
+    payload.title = (payload.title || 'Кадр') + ' (копия)';
+    const res = await api('/admin/episodes/' + selectedEpisode.id + '/frames', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+    await selectEpisode(selectedEpisode.id);
+    toast('Кадр дублирован');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+async function deleteFrame(id) {
+  if (!confirm('Удалить кадр?')) return;
+  try {
+    await api('/admin/frames/' + id, { method: 'DELETE' });
+    if (selectedFrame?.id === id) selectedFrame = null;
+    await selectEpisode(selectedEpisode.id);
+    toast('Кадр удалён');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+async function togglePublish() {
+  try {
+    await api('/admin/episodes/' + selectedEpisode.id + '/publish', {
+      method: 'POST',
+      body: JSON.stringify({ is_published: !selectedEpisode.is_published })
+    });
+    selectedEpisode.is_published = !selectedEpisode.is_published;
+    renderEpisodeList();
+    renderEditor();
+    toast(selectedEpisode.is_published ? 'Эпизод опубликован' : 'Эпизод снят с публикации');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+async function deleteEpisode() {
+  if (!confirm('Удалить эпизод и все кадры?')) return;
+  try {
+    await api('/admin/episodes/' + selectedEpisode.id, { method: 'DELETE' });
+    selectedEpisode = null;
+    selectedFrame = null;
+    await loadEpisodes();
+    document.getElementById('editorBody').innerHTML = '<div class="empty-state"><h2>Выберите эпизод или создайте новый</h2></div>';
+    document.getElementById('editorTitle').textContent = 'Редактор';
+    document.getElementById('editorActions').innerHTML = '';
+    document.getElementById('previewBody').innerHTML = '<div class="empty-state">Выберите кадр для предпросмотра</div>';
+    toast('Эпизод удалён');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+// Import episodes from JS
+document.getElementById('importEpisodesBtn').addEventListener('click', async () => {
+  if (!confirm('Импортировать эпизоды из js/episodes/? Существующие эпизоды будут перезаписаны.')) return;
+  try {
+    toast('Импорт запущен...', 'warning');
+    const res = await api('/admin/import-episodes', { method: 'POST' });
+    toast('Импорт завершён!');
+    await loadEpisodes();
+  } catch (e) {
+    toast('Ошибка импорта: ' + e.message, 'error');
+  }
+});
+
+// New episode
+let creatingEpisode = false;
+document.getElementById('newEpisodeBtn').addEventListener('click', async () => {
+  if (creatingEpisode) return;
+  creatingEpisode = true;
+  try {
+    const res = await api('/admin/episodes', {
+      method: 'POST',
+      body: JSON.stringify({ title: 'Новый эпизод', description: '', order: episodes.length })
+    });
+    await loadEpisodes();
+    await selectEpisode(res.id);
+    toast('Эпизод создан');
+  } catch (e) {
+    toast('Ошибка: ' + e.message, 'error');
+  } finally {
+    creatingEpisode = false;
+  }
+});
+
+function editFrameInline(frameId) {
+  selectFrame(frameId);
+  switchTab(document.querySelector('.tab:nth-child(2)'), 'frames');
+}
+
+/* ═══════════════════════════════════════════════
+   UTILS
+   ═══════════════════════════════════════════════ */
+function escapeHtml(text) {
+  if (text == null) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+</script>
+
+</body>
+</html>

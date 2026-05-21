@@ -12,15 +12,22 @@ const progressRoutes = require('./routes/progress');
 const coinsRoutes = require('./routes/coins');
 const subscribeRoutes = require('./routes/subscribe');
 const adminRoutes = require('./routes/admin');
+const episodeRoutes = require('./routes/episodes');
+const adminCmsRoutes = require('./routes/admin-cms');
 
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
 
 const app = express();
 
-// Ensure data directory exists
+// Ensure directories exist
 const dataDir = path.join(__dirname, 'data');
+const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+// Serve uploaded files
+app.use('/uploads', express.static(uploadsDir));
 
 // Security middleware
 app.use(helmet());
@@ -42,6 +49,8 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/coins', coinsRoutes);
 app.use('/api/subscribe', subscribeRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/episodes', episodeRoutes);
+app.use('/api/admin', adminCmsRoutes);
 
 // 404
 app.use((req, res) => {
@@ -56,10 +65,30 @@ app.use((err, req, res, next) => {
 
 async function start() {
   await init();
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log('Superglazka server running on port ' + PORT);
     console.log('Frontend allowed: ' + FRONTEND_URL);
   });
+
+  // Graceful shutdown
+  const shutdown = (signal) => {
+    console.log(`Received ${signal}. Shutting down gracefully...`);
+    server.close(() => {
+      console.log('HTTP server closed');
+      require('./db').db.close(() => {
+        console.log('Database connection closed');
+        process.exit(0);
+      });
+    });
+    // Force exit after 10s
+    setTimeout(() => {
+      console.error('Forced shutdown after timeout');
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 start().catch(err => {

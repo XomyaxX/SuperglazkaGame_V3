@@ -2,11 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' http://localhost:3000; media-src 'self'; manifest-src 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0618">
 <title>Суперглазка — Интерактивный комикс</title>
-<link rel="canonical" href="https://superglazka.ru/app.html">
+<link rel="canonical" href="https://vidial-media.ru/app.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
 <link rel="apple-touch-icon" href="icons/icon-180x180.png">
@@ -144,24 +144,6 @@ if ('serviceWorker' in navigator) {
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleNarration"></div>
-        </div>
-        <div class="settings-row" id="settingsRowDialogue">
-          <div class="settings-row-info">
-            <div class="settings-row-icon">🗣️</div>
-            <div class="settings-row-meta">
-              <div class="settings-row-name">Диалоги</div>
-            </div>
-          </div>
-          <div class="bs-toggle" id="settingsToggleDialogue"></div>
-        </div>
-        <div class="settings-row" id="settingsRowVideo">
-          <div class="settings-row-info">
-            <div class="settings-row-icon">🎬</div>
-            <div class="settings-row-meta">
-              <div class="settings-row-name">Видео</div>
-            </div>
-          </div>
-          <div class="bs-toggle" id="settingsToggleVideo"></div>
         </div>
         <div class="settings-row" id="settingsRowBgMusic">
           <div class="settings-row-info">
@@ -494,6 +476,9 @@ if ('serviceWorker' in navigator) {
     <div class="profile-episodes"></div>
     <div class="profile-section-title">🎮 Мини-игры</div>
     <div class="profile-games"></div>
+    <div class="profile-section-title">🔐 Аккаунт</div>
+    <div class="profile-account" id="profileAccount"></div>
+
     <div class="profile-section-title">🔔 Уведомления</div>
     <div class="profile-subscribe">
       <input type="email" class="profile-sub-input" id="profileSubEmail" placeholder="Твой email">
@@ -508,7 +493,7 @@ if ('serviceWorker' in navigator) {
 <div class="overlay" id="auth-modal" role="dialog" aria-modal="true" aria-label="Авторизация">
   <div class="auth-card">
     <button class="auth-close" id="authClose" aria-label="Закрыть">✕</button>
-    <div class="auth-logo">👁️ СУПЕРГЛАЗКА</div>
+    <div class="auth-logo"><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;">Игросказка</div>👁️ СУПЕРГЛАЗКА</div>
 
     <div class="auth-tabs">
       <button class="auth-tab active" data-tab="guest">Быстрый старт</button>
@@ -609,20 +594,17 @@ if ('serviceWorker' in navigator) {
 <!-- ═══════════════════════════════════════════════════════════
      SCRIPTS
      ═══════════════════════════════════════════════════════════ -->
-<script src="js/error-reporter.js"></script>
-<script src="js/player.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/episodes/assets.js"></script>
-<script src="js/episodes/episode-01.js"></script>
-<script src="js/episodes/episode-02.js"></script>
-<script src="js/episodes/index.js"></script>
-<script src="js/mood-detector.js"></script>
-<script src="js/background-music.js"></script>
-<script src="js/app.js"></script>
-<script src="js/game_runner.js"></script>
-<script src="js/game_gymnastics.js"></script>
-<script src="js/game_blink.js"></script>
-<script src="js/game_tracker.js"></script>
+<script src="js/error-reporter.js" defer></script>
+<script src="js/player.js" defer></script>
+<script src="js/auth.js" defer></script>
+<!-- Episode scripts removed — episodes now loaded dynamically from API -->
+<script src="js/mood-detector.js" defer></script>
+<script src="js/background-music.js" defer></script>
+<script src="js/app.js" defer></script>
+<script src="js/game_runner.js" defer></script>
+<script src="js/game_gymnastics.js" defer></script>
+<script src="js/game_blink.js" defer></script>
+<script src="js/game_tracker.js" defer></script>
   <div class="cookie-banner" id="cookieBanner">
     <div class="cookie-banner-text">
       Мы используем localStorage для сохранения прогресса и настроек.
