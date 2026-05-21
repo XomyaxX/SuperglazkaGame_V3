@@ -2116,11 +2116,24 @@ const App = (function() {
       })
       .catch(function(e) { console.warn('Failed to preload episodes', e); });
 
-    // Handle ?episode=X in URL
+    // Handle ?episode=X and ?game=X in URL
     var urlParams = new URLSearchParams(window.location.search);
     var directEpisode = urlParams.get('episode');
     if (directEpisode) {
       startEpisode(parseInt(directEpisode, 10), 0);
+    }
+    var directGame = urlParams.get('game');
+    if (directGame && ['runner', 'gym', 'blink', 'tracker'].indexOf(directGame) !== -1) {
+      launchGame(directGame);
+    }
+
+    // Embed mode: hide UI when loaded inside an iframe modal
+    if (urlParams.get('embed') === '1') {
+      document.body.classList.add('embed-mode');
+      var appHeader = document.querySelector('.app-header');
+      var appMenu = document.querySelector('.app-menu-container');
+      if (appHeader) appHeader.style.display = 'none';
+      if (appMenu) appMenu.style.display = 'none';
     }
 
     var appNavToggle = document.getElementById('appNavToggle');

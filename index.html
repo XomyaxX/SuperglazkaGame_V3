@@ -45,6 +45,7 @@ if ('serviceWorker' in navigator) {
   <div class="land-nav-links">
     <a href="#about">О комиксе</a>
     <a href="#features">Особенности</a>
+    <a href="#games">Игры</a>
     <a href="#episodes">Эпизоды</a>
     <a href="#characters">Герои</a>
     <a href="parents.html">Родителям</a>
@@ -59,6 +60,7 @@ if ('serviceWorker' in navigator) {
   <button class="land-nav-mobile-close" id="navClose" aria-label="Закрыть">✕</button>
   <a href="#about" class="nav-mobile-link">О комиксе</a>
   <a href="#features" class="nav-mobile-link">Особенности</a>
+  <a href="#games" class="nav-mobile-link">Игры</a>
   <a href="#episodes" class="nav-mobile-link">Эпизоды</a>
   <a href="#characters" class="nav-mobile-link">Герои</a>
   <a href="app.html" class="land-nav-cta">▶ Начать</a>
@@ -139,6 +141,48 @@ if ('serviceWorker' in navigator) {
       <div class="land-feature-icon">🎬</div>
       <div class="land-feature-title">Видео</div>
       <div class="land-feature-desc">AI-генерированные видеовставки оживляют кадры комикса и погружают в атмосферу.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#0a0618"/>
+    <path d="M0,40 C240,70 480,10 720,40 C960,70 1200,10 1440,40 L1440,60 L0,60 Z" fill="rgba(168,85,247,0.08)"/>
+  </svg>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     GAMES SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-section land-games" id="games">
+  <h2 class="land-section-title">Мини-игры</h2>
+  <p class="land-section-sub">Тренируй глаза играя — каждая игра развивает полезные навыки</p>
+  <div class="land-games-grid">
+    <div class="land-game-card reveal" data-game="runner">
+      <div class="land-game-icon">🏃</div>
+      <div class="land-game-title">Погоня за Пиксельком</div>
+      <div class="land-game-desc">Беги, прыгай и собирай бонусы. Тренирует быструю реакцию и концентрацию взгляда.</div>
+      <span class="land-game-btn">▶ Играть</span>
+    </div>
+    <div class="land-game-card reveal" data-game="gym">
+      <div class="land-game-icon">⚔️</div>
+      <div class="land-game-title">Битва с Ленивусом</div>
+      <div class="land-game-desc">Используй три супер-атаки глаз: Лазер, Прицел и Слёзы. Победи злодея!</div>
+      <span class="land-game-btn">▶ Играть</span>
+    </div>
+    <div class="land-game-card reveal" data-game="blink">
+      <div class="land-game-icon">👁️</div>
+      <div class="land-game-title">Гимнастика для глаз</div>
+      <div class="land-game-desc">Моргай, жмурься и широко распахивай глаза. Укрепляет глазные мышцы.</div>
+      <span class="land-game-btn">▶ Играть</span>
+    </div>
+    <div class="land-game-card reveal" data-game="tracker">
+      <div class="land-game-icon">🔮</div>
+      <div class="land-game-title">Следи за шариком</div>
+      <div class="land-game-desc">Следи взглядом за движущимся шариком. Развивает плавность движений глаз.</div>
+      <span class="land-game-btn">▶ Играть</span>
     </div>
   </div>
 </section>
@@ -379,5 +423,106 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
       });
     })();
   </script>
+<!-- Games Modal -->
+<div class="games-modal-backdrop" id="gamesModalBackdrop">
+  <div class="games-modal">
+    <button class="games-modal-close" id="gamesModalClose" aria-label="Закрыть">✕</button>
+    <div class="games-modal-list" id="gamesModalList">
+      <h3 class="games-modal-title">🎮 Выбери игру</h3>
+      <div class="games-modal-items">
+        <div class="games-modal-item" data-game="runner">
+          <div class="games-modal-item-icon">🏃</div>
+          <div class="games-modal-item-info">
+            <div class="games-modal-item-name">Погоня за Пиксельком</div>
+            <div class="games-modal-item-desc">Беги, прыгай и собирай бонусы</div>
+          </div>
+          <span class="games-modal-item-btn">▶</span>
+        </div>
+        <div class="games-modal-item" data-game="gym">
+          <div class="games-modal-item-icon">⚔️</div>
+          <div class="games-modal-item-info">
+            <div class="games-modal-item-name">Битва с Ленивусом</div>
+            <div class="games-modal-item-desc">Три супер-атаки глаз</div>
+          </div>
+          <span class="games-modal-item-btn">▶</span>
+        </div>
+        <div class="games-modal-item" data-game="blink">
+          <div class="games-modal-item-icon">👁️</div>
+          <div class="games-modal-item-info">
+            <div class="games-modal-item-name">Гимнастика для глаз</div>
+            <div class="games-modal-item-desc">Моргай, жмурься, распахивай</div>
+          </div>
+          <span class="games-modal-item-btn">▶</span>
+        </div>
+        <div class="games-modal-item" data-game="tracker">
+          <div class="games-modal-item-icon">🔮</div>
+          <div class="games-modal-item-info">
+            <div class="games-modal-item-name">Следи за шариком</div>
+            <div class="games-modal-item-desc">Тренируем внимание глаз</div>
+          </div>
+          <span class="games-modal-item-btn">▶</span>
+        </div>
+      </div>
+    </div>
+    <div class="games-modal-iframe-wrap" id="gamesModalIframeWrap" style="display:none;">
+      <button class="games-modal-back" id="gamesModalBack">← Назад к списку</button>
+      <iframe class="games-modal-iframe" id="gamesModalIframe" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const backdrop = document.getElementById('gamesModalBackdrop');
+  const listView = document.getElementById('gamesModalList');
+  const iframeWrap = document.getElementById('gamesModalIframeWrap');
+  const iframe = document.getElementById('gamesModalIframe');
+  const closeBtn = document.getElementById('gamesModalClose');
+  const backBtn = document.getElementById('gamesModalBack');
+
+  function openModal() {
+    backdrop.classList.add('visible');
+    listView.style.display = '';
+    iframeWrap.style.display = 'none';
+    iframe.src = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('visible');
+    iframe.src = '';
+    document.body.style.overflow = '';
+  }
+
+  function openGame(game) {
+    listView.style.display = 'none';
+    iframeWrap.style.display = '';
+    iframe.src = 'app.html?game=' + encodeURIComponent(game) + '&embed=1';
+  }
+
+  function backToList() {
+    listView.style.display = '';
+    iframeWrap.style.display = 'none';
+    iframe.src = '';
+  }
+
+  document.querySelectorAll('.land-game-card[data-game]').forEach(card => {
+    card.addEventListener('click', () => openGame(card.dataset.game));
+  });
+
+  document.querySelectorAll('.games-modal-item[data-game]').forEach(item => {
+    item.addEventListener('click', () => openGame(item.dataset.game));
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backBtn.addEventListener('click', backToList);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && backdrop.classList.contains('visible')) closeModal();
+  });
+})();
+</script>
 </body>
 </html>
