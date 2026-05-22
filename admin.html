@@ -202,7 +202,8 @@ input, textarea, select {
 }
 input:focus, textarea:focus, select:focus { border-color: var(--primary); }
 textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
-select { cursor: pointer; }
+select { cursor: pointer; background-color: #1a1a2e; color: #fff; }
+select option { background-color: #1a1a2e; color: #fff; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
@@ -1022,8 +1023,17 @@ function renderFrameEditor() {
             <label>Настроение</label>
             <select id="frameMood" onchange="scheduleFrameAutoSave()">
               <option value="">—</option>
-              ${['cosmic','joyful','tension','peaceful','magical','triumphant','warm','mystery'].map(m =>
-                `<option value="${m}" ${(f.mood === m) ? 'selected' : ''}>${m}</option>`
+              ${[
+                {v:'cosmic',l:'Космические пэды + медленный арпеджио'},
+                {v:'joyful',l:'Мажорные аккорды, лёгкие барабаны'},
+                {v:'tension',l:'Диссонансные дроны, низкие басы'},
+                {v:'peaceful',l:'Арфоподобные плаки, мягкие пэды'},
+                {v:'magical',l:'Колокольчики, арпеджио, задержки'},
+                {v:'triumphant',l:'Героические аккорды, маршевый ритм'},
+                {v:'warm',l:'Гитарные плаки, тёплые пэды'},
+                {v:'mystery',l:'Пиццикато, разреженная мелодия'}
+              ].map(m =>
+                `<option value="${m.v}" ${(f.mood === m.v) ? 'selected' : ''}>${m.l}</option>`
               ).join('')}
             </select>
           </div>
