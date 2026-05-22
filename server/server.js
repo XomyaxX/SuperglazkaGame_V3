@@ -30,17 +30,8 @@ if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 // Serve uploaded files
 app.use('/uploads', (req, res, next) => {
   const filePath = path.join(uploadsDir, decodeURIComponent(req.path));
-  console.log('UPLOADS REQUEST:', req.path, '->', filePath);
   fs.stat(filePath, (err, stats) => {
-    if (err) {
-      console.log('fs.stat ERROR:', err.message);
-      return next();
-    }
-    if (!stats.isFile()) {
-      console.log('Not a file:', filePath);
-      return next();
-    }
-    console.log('Serving file:', filePath);
+    if (err || !stats.isFile()) return next();
     res.sendFile(path.resolve(filePath));
   });
 });
