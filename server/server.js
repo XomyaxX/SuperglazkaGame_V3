@@ -21,8 +21,9 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
 const app = express();
 
 // Ensure directories exist
-const dataDir = path.join(__dirname, 'data');
-const uploadsDir = path.join(__dirname, 'uploads');
+const appDir = path.dirname(require.main.filename);
+const dataDir = path.join(appDir, 'data');
+const uploadsDir = path.join(appDir, 'uploads');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
