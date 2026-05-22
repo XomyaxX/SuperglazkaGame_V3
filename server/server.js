@@ -30,7 +30,22 @@ if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 app.use('/uploads', express.static(uploadsDir));
 
 // Security middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "blob:", "data:"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "blob:", "https:"],
+      connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      mediaSrc: ["'self'", "blob:"],
+      frameSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: []
+    }
+  }
+}));
 const corsOrigins = process.env.NODE_ENV === 'production'
   ? [FRONTEND_URL]
   : [FRONTEND_URL, 'http://localhost:8080', 'http://127.0.0.1:8080'];
