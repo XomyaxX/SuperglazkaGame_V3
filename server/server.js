@@ -28,7 +28,13 @@ if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 // Serve uploaded files
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', (req, res, next) => {
+  const filePath = path.join(uploadsDir, decodeURIComponent(req.path));
+  fs.stat(filePath, (err, stats) => {
+    if (err || !stats.isFile()) return next();
+    res.sendFile(path.resolve(filePath));
+  });
+});
 
 // Security middleware
 app.use(helmet({
