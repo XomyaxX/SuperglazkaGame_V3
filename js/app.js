@@ -1020,6 +1020,7 @@ const App = (function() {
   function resolveMediaPath(path) {
     if (!path) return null;
     if (path.startsWith('http') || path.startsWith('/uploads/')) return path;
+    if (path.startsWith('assets/')) return path;
     if (path.startsWith('/')) return '/uploads' + path;
     return '/uploads/' + path;
   }
@@ -1710,6 +1711,7 @@ const App = (function() {
         booksMap[bookNum].episodes.push({
           id: ep.id,
           title: ep.title,
+          cover_image: ep.cover_image,
           locked: false
         });
       });
