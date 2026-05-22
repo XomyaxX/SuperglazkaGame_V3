@@ -33,3 +33,7 @@ npm-debug.log*
 # Temporary files
 *.tmp
 *.temp
+
+# Server generated data
+certbot-data/
+server/uploads/
