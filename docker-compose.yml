@@ -11,6 +11,7 @@ services:
       - server/.env
     volumes:
       - sqlite_data:/app/data
+      - ./server/uploads:/app/uploads
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
       interval: 10s
