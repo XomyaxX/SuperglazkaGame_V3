@@ -1682,6 +1682,47 @@ const App = (function() {
     };
   }
 
+  var APP_BOOKS = [];
+
+  function isEpisodeLocked(episodes, idx) {
+    if (idx === 0) return false;
+    var prevId = episodes[idx - 1].id;
+    if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProgress) {
+      return !PlayerProfile.getProgress(prevId).completed;
+    }
+    return true;
+  }
+
+  async function loadBooks() {
+    try {
+      const res = await fetch('/api/episodes');
+      const data = await res.json();
+      if (!data || !data.episodes) {
+        APP_BOOKS = BOOKS;
+        return;
+      }
+      var booksMap = {};
+      data.episodes.forEach(function(ep) {
+        var bookNum = ep.book_num || 1;
+        if (!booksMap[bookNum]) {
+          booksMap[bookNum] = { num: bookNum, title: 'Книга ' + bookNum, episodes: [] };
+        }
+        booksMap[bookNum].episodes.push({
+          id: ep.id,
+          title: ep.title,
+          locked: false
+        });
+      });
+      APP_BOOKS = Object.keys(booksMap).sort(function(a, b) { return a - b; }).map(function(k) {
+        return booksMap[k];
+      });
+      if (!APP_BOOKS.length) APP_BOOKS = BOOKS;
+    } catch (e) {
+      console.warn('Failed to load books from API, using defaults:', e);
+      APP_BOOKS = BOOKS;
+    }
+  }
+
   function renderBooks() {
     const tabsContainer = document.getElementById('booksTabs');
     const contentContainer = document.getElementById('booksContent');
@@ -2132,9 +2173,36 @@ const App = (function() {
     }
 
     // Main menu v2 bindings
-    renderBooks();
-    renderOverallProgress();
     startCountdown('2026-05-25T12:00:00');
+
+    // Load books from API, cache episodes, then render menu
+    loadBooks().then(function() {
+      renderBooks();
+      renderOverallProgress();
+      return fetch('/api/episodes');
+    }).then(function(r) { return r.json(); })
+      .then(async function(list) {
+        if (list && list.episodes) {
+          await Promise.all(list.episodes.map(function(ep) {
+            return fetchEpisode(ep.id);
+          }));
+          renderBooks();
+          renderOverallProgress();
+          renderContinueButton();
+        }
+      })
+      .catch(function(e) { console.warn('Failed to preload episodes', e); });
+
+    // Handle ?episode=X and ?game=X in URL
+    var urlParams = new URLSearchParams(window.location.search);
+    var directEpisode = urlParams.get('episode');
+    if (directEpisode) {
+      startEpisode(parseInt(directEpisode, 10), 0);
+    }
+    var directGame = urlParams.get('game');
+    if (directGame && ['runner', 'gym', 'blink', 'tracker'].indexOf(directGame) !== -1) {
+      launchGame(directGame);
+    }
 
     var appNavToggle = document.getElementById('appNavToggle');
     var appNavMobile = document.getElementById('appNavMobile');
