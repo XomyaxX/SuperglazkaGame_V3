@@ -1404,7 +1404,9 @@ async function addFrame() {
       body: JSON.stringify({ order, title: 'Новый кадр' })
     });
     await selectEpisode(selectedEpisode.id);
-    // Select the new frame
+    // Switch to frames tab and select the new frame
+    const framesTabBtn = document.querySelectorAll('.tab')[1];
+    if (framesTabBtn) switchTab(framesTabBtn, 'frames');
     const newFrame = selectedEpisode.frames.find(f => f.id === res.id);
     if (newFrame) selectFrame(newFrame.id);
     toast('Кадр добавлен');
