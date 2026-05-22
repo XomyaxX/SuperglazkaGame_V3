@@ -93,6 +93,38 @@ async function init() {
     )
   `);
 
+  await run(`
+    CREATE TABLE IF NOT EXISTS episodes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      cover_image TEXT,
+      "order" INTEGER DEFAULT 0,
+      is_published INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS frames (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      episode_id INTEGER NOT NULL,
+      "order" INTEGER DEFAULT 0,
+      title TEXT,
+      narration TEXT,
+      dialogue_json TEXT,
+      background_image TEXT,
+      background_video TEXT,
+      mood TEXT,
+      game_type TEXT,
+      choices_json TEXT,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (episode_id) REFERENCES episodes(id) ON DELETE CASCADE
+    )
+  `);
+
   // Migration: add confirm_token to existing subscriptions table
   try {
     const subColumns = await all("PRAGMA table_info(subscriptions)");
@@ -148,38 +180,6 @@ async function init() {
   } catch (migErr) {
     console.warn('Episodes migration check skipped:', migErr.message);
   }
-
-  await run(`
-    CREATE TABLE IF NOT EXISTS episodes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      title TEXT NOT NULL,
-      description TEXT,
-      cover_image TEXT,
-      "order" INTEGER DEFAULT 0,
-      is_published INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  await run(`
-    CREATE TABLE IF NOT EXISTS frames (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      episode_id INTEGER NOT NULL,
-      "order" INTEGER DEFAULT 0,
-      title TEXT,
-      narration TEXT,
-      dialogue_json TEXT,
-      background_image TEXT,
-      background_video TEXT,
-      mood TEXT,
-      game_type TEXT,
-      choices_json TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (episode_id) REFERENCES episodes(id) ON DELETE CASCADE
-    )
-  `);
 
   await run(`
     CREATE TABLE IF NOT EXISTS media (

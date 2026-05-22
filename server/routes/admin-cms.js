@@ -5,7 +5,6 @@ const fs = require('fs');
 const { run, get, all } = require('../db');
 const { requireAdmin } = require('../middleware/admin');
 
-const { exec } = require('child_process');
 
 const router = express.Router();
 router.use(requireAdmin);
@@ -267,27 +266,6 @@ router.delete('/media/:filename', async (req, res) => {
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     await run('DELETE FROM media WHERE filename = ?', [req.params.filename]);
     res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// POST /api/admin/import-episodes
-router.post('/import-episodes', async (req, res) => {
-  try {
-    const scriptPath = path.join(__dirname, '..', 'scripts', 'import-episodes.js');
-    const nodePath = process.execPath;
-    const cmd = `"${nodePath}" "${scriptPath}"`;
-    exec(cmd, { cwd: path.join(__dirname, '..', '..'), timeout: 120000 }, (error, stdout, stderr) => {
-      if (error) {
-        console.error('Import error:', error);
-        return res.status(500).json({ error: 'Import failed', details: stderr || error.message });
-      }
-      console.log('Import stdout:', stdout);
-      if (stderr) console.warn('Import stderr:', stderr);
-      res.json({ success: true, output: stdout });
-    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });

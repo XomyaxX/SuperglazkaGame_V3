@@ -21,19 +21,18 @@ services:
       - superglazka-net
 
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    container_name: superglazka-frontend
+    image: nginx:alpine
+    container_name: superglazka-nginx
     restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
+      - ./:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certbot-data:/etc/letsencrypt:ro
     depends_on:
-      backend:
-        condition: service_healthy
+      - backend
     networks:
       - superglazka-net
 

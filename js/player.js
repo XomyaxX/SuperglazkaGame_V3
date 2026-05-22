@@ -225,12 +225,11 @@ const PlayerProfile = (function() {
     const epList = modal.querySelector('.profile-episodes');
     if (epList) {
       epList.textContent = '';
-      const names = { 1: 'Рождение героини', 2: 'Кто я?', 3: 'Великая битва' };
       Object.entries(p.episodes).forEach(([id, data]) => {
         const row = document.createElement('div');
         row.className = 'profile-row';
         const left = document.createElement('span');
-        left.textContent = 'Эпизод ' + id + ': ' + (names[id] || '');
+        left.textContent = 'Эпизод ' + id;
         const right = document.createElement('span');
         right.textContent = data.completed ? '✅' : '🔒';
         row.appendChild(left);

@@ -1,194 +1,120 @@
-# Руководство по деплою на Timeweb Cloud (VPS)
+# Руководство по деплою Superglazka V3 (Docker)
+
+## Актуальная архитектура
+```
+┌─────────────────┐      ┌─────────────────┐
+│  superglazka-   │:80/443│  superglazka-   │:3000
+│  nginx          │◄────►│  backend        │
+│  (nginx:alpine) │      │  (node:20-alpine)
+└─────────────────┘      └─────────────────┘
+```
+- **Frontend**: nginx раздаёт статику из `/opt/superglazka` (volume mount).
+- **Backend**: Node.js + Express + SQLite.
+- **SSL**: Let's Encrypt через certbot (certbot-data volume).
 
 ## Что понадобится
-- VPS на Timeweb Cloud (Ubuntu 22.04 LTS)
-- Домен (например, `superglazka.ru`)
-- Доступ по SSH
-- 15–20 минут времени
+- Доступ к серверу `83.217.203.41` (SSH или консоль хостинга)
+- Проект склонирован в `/opt/superglazka`
+- Docker и Docker Compose Plugin установлены
 
 ---
 
-## Шаг 1. Подготовка VPS
-
-1. Зайди в панель Timeweb Cloud → выбери свой VPS.
-2. Убедись, что открыты порты: **22 (SSH), 80 (HTTP), 443 (HTTPS)**.
-3. Подключись по SSH:
-   ```bash
-   ssh root@ТВОЙ_IP
-   ```
-
----
-
-## Шаг 2. Загрузка проекта на сервер
-
-### Вариант A: Через SCP (с твоего компьютера)
-
-Сначала заархивируй проект:
-```bash
-cd папка_с_проектом
-zip -r superglazka.zip . -x "node_modules/*" ".git/*"
-```
-
-Загрузи на сервер:
-```bash
-scp superglazka.zip root@ТВОЙ_IP:/root/
-```
-
-На сервере распакуй:
-```bash
-ssh root@ТВОЙ_IP
-apt-get update && apt-get install -y unzip
-unzip /root/superglazka.zip -d /var/www/superglazka
-```
-
-### Вариант B: Через Git (если проект в репозитории)
+## Первоначальная установка (один раз)
 
 ```bash
-ssh root@ТВОЙ_IP
-apt-get update && apt-get install -y git
-mkdir -p /var/www/superglazka
-cd /var/www/superglazka
-git clone https://github.com/ТВОЙ_РЕПО.git .
+cd /opt/superglazka
+
+# 1. Создать .env из шаблона
+cp server/.env.example server/.env
+nano server/.env        # заполнить реальные секреты
+
+# 2. Запустить
+docker compose up -d --build
+
+# 3. Проверить
+curl http://localhost:3000/api/health
 ```
 
 ---
 
-## Шаг 3. Запуск установки
+## Ежедневный workflow обновления
 
+### 1. Локально — закоммитить и запушить
 ```bash
-cd /var/www/superglazka/deploy
-export DOMAIN=superglazka.ru
-sudo bash install.sh
+git add .
+git commit -m "описание изменений"
+git push origin main
 ```
 
-Скрипт автоматически установит:
-- Node.js 20
-- PM2 (менеджер процессов)
-- Nginx
-- Certbot (для SSL)
-- Зависимости бэкенда
+### 2. На сервере — стянуть изменения и перезапустить
+```bash
+ssh root@83.217.203.41
+cd /opt/superglazka
+git pull origin main
+
+# Пересобрать backend (если менялся server/)
+docker compose up -d --build backend
+
+# Или просто перезапустить контейнеры
+docker restart superglazka-backend superglazka-nginx
+```
+
+> **Важно:** если изменились только статические файлы (HTML/JS/CSS), достаточно `git pull` + `docker restart superglazka-nginx` (или вообще ничего, nginx читает volume в реальном времени).
 
 ---
 
-## Шаг 4. Настройка переменных окружения
+## Управление контейнерами
 
-Отредактируй `.env`:
-```bash
-nano /var/www/superglazka/server/.env
-```
-
-Укажи реальные значения:
-```env
-PORT=3000
-JWT_SECRET=сгенерирован_автоматически
-RESEND_API_KEY=re_ТВОЙ_КЛЮЧ_ИЗ_RESEND
-FROM_EMAIL=noreply@superglazka.ru
-ADMIN_API_KEY=сгенерирован_автоматически
-FRONTEND_URL=https://superglazka.ru
-```
-
-Сохрани: `Ctrl+O`, `Enter`, `Ctrl+X`.
+| Команда | Описание |
+|---------|----------|
+| `docker compose up -d --build` | Пересобрать и запустить все сервисы |
+| `docker restart superglazka-backend` | Перезапустить только backend |
+| `docker restart superglazka-nginx` | Перезапустить только nginx |
+| `docker logs -f superglazka-backend` | Смотреть логи backend |
+| `docker logs -f superglazka-nginx` | Смотреть логи nginx |
+| `docker compose down` | Остановить всё |
 
 ---
 
-## Шаг 5. Настройка DNS
-
-В панели управления доменом создай **A-запись**:
-- Имя: `@` (или `www`)
-- Значение: IP-адрес твоего VPS
-- TTL: 300–600
-
-Подожди 5–15 минут, пока DNS обновится.
-
----
-
-## Шаг 6. SSL (HTTPS)
+## Обновление SSL-сертификата
 
 ```bash
-certbot --nginx -d superglazka.ru -d www.superglazka.ru
-```
+docker run -it --rm \
+  -v /opt/superglazka/certbot-data:/etc/letsencrypt \
+  -v /opt/superglazka/certbot-data/www:/var/www/certbot \
+  certbot/certbot renew
 
-Следуй инструкциям:
-1. Введи email для уведомлений
-2. Согласись с условиями (`Y`)
-3. Выбери редирект HTTP → HTTPS (`2`)
-
-Certbot автоматически обновит Nginx-конфиг и получит сертификат Let's Encrypt.
-
-Проверь автообновление:
-```bash
-certbot renew --dry-run
+docker restart superglazka-nginx
 ```
 
 ---
 
-## Шаг 7. Проверка работы
+## Типичные проблемы
 
-### API
-```bash
-curl https://superglazka.ru/api/health
-```
-Должно вернуть: `{"status":"ok"}`
+### 502 Bad Gateway
+- Проверить backend: `docker logs -f superglazka-backend`
+- Проверить health: `curl http://localhost:3000/api/health`
 
-### Главная страница
-Открой в браузере: `https://superglazka.ru`
+### CORS ошибки
+- Проверить `FRONTEND_URL` в `server/.env`
+- Перезапустить backend: `docker restart superglazka-backend`
 
-### Приложение
-Открой: `https://superglazka.ru/app.html`
+### Изменения не применились после git pull
+- nginx кэширует статику — попробовать `docker restart superglazka-nginx`
+- Service Worker в браузере может кэшировать старые JS — поднять версию в `service-worker.js`
 
----
-
-## Управление сервером
-
-### Перезапуск API
-```bash
-pm2 restart superglazka-api
-```
-
-### Просмотр логов
-```bash
-pm2 logs superglazka-api
-```
-
-### Статус
-```bash
-pm2 status
-```
-
-### Перезагрузка Nginx
-```bash
-systemctl restart nginx
-```
-
-### Логи Nginx
-```bash
-tail -f /var/log/nginx/access.log
-tail -f /var/log/nginx/error.log
-```
+### Permission denied (publickey) при SSH
+- Проверить, что ключ `~/.ssh/id_ed25519_kimi` добавлен в `~/.ssh/authorized_keys` на сервере
+- Альтернатива: заходить через пароль или другой ключ
 
 ---
 
-## Обновление проекта
+## Полезные пути
 
-1. Загрузи новые файлы на сервер (через SCP или Git pull)
-2. Перезапусти:
-   ```bash
-   cd /var/www/superglazka
-   pm2 restart superglazka-api
-   ```
-
----
-
-## Возможные проблемы
-
-### Ошибка 502 Bad Gateway
-- Проверь, запущен ли Node.js: `pm2 status`
-- Проверь логи: `pm2 logs superglazka-api`
-
-### SSL не работает
-- Убедись, что домен уже указывает на IP (проверь через `nslookup superglazka.ru`)
-- Повтори `certbot --nginx -d superglazka.ru`
-
-### CORS ошибки в консоли браузера
-- Проверь `FRONTEND_URL` в `.env` — должен совпадать с реальным доменом
-- Перезапусти API: `pm2 restart superglazka-api`
+| Путь | Назначение |
+|------|------------|
+| `/opt/superglazka` | Корень проекта на сервере |
+| `/opt/superglazka/server/.env` | Переменные окружения backend |
+| `/opt/superglazka/server/data` | SQLite БД (в Docker volume `sqlite_data`) |
+| `/opt/superglazka/server/uploads` | Загруженные через CMS файлы |
+| `/opt/superglazka/certbot-data` | SSL-сертификаты Let's Encrypt |

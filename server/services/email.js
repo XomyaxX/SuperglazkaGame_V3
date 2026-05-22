@@ -5,11 +5,19 @@ const path = require('path');
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@vidial-media.ru';
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function loadTemplate(name, replacements) {
   const templatePath = path.join(__dirname, '..', 'templates', name + '.html');
   let html = fs.readFileSync(templatePath, 'utf-8');
   for (const [key, value] of Object.entries(replacements)) {
-    html = html.replace(new RegExp('{{' + key + '}}', 'g'), value);
+    html = html.replace(new RegExp('{{' + key + '}}', 'g'), escapeHtml(value));
   }
   return html;
 }

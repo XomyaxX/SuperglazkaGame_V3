@@ -453,78 +453,32 @@ const AudioController = {
     const turningOn = !this.activeTracks[type];
     this.activeTracks[type] = !this.activeTracks[type];
 
-    if (type === 'video') {
-      const video = document.querySelector('.frame.active video');
-      if (this.activeTracks.video) {
-        this.pause();
-        this.state = 'video';
-        if (video) {
-          video.muted = true;
-          video.volume = 0;
-          video.play().catch(() => {});
-        }
+    const wasPlaying = this.state === 'playing';
+    if (this.currentAudio) {
+      this.savedSrc = this._normalizeSrc(this.currentAudio.src);
+      this.savedTime = this.currentAudio.currentTime;
+    }
+    this.stopCurrent();
+    this.buildQueue();
+    if (this.savedSrc) {
+      const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
+      if (newIdx !== -1) {
+        this.currentIdx = newIdx;
       } else {
-        this.state = 'idle';
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-        this.play();
-      }
-    } else {
-      const wasPlaying = this.state === 'playing';
-      const wasVideo = this.state === 'video';
-      if (this.currentAudio) {
-        this.savedSrc = this._normalizeSrc(this.currentAudio.src);
-        this.savedTime = this.currentAudio.currentTime;
-      }
-      this.stopCurrent();
-      this.buildQueue();
-      if (this.savedSrc) {
-        const newIdx = this.queue.findIndex(q => this._normalizeSrc(q.src) === this.savedSrc);
-        if (newIdx !== -1) {
-          this.currentIdx = newIdx;
-        } else {
-          this.currentIdx = 0;
-        }
-      }
-      if (turningOn && !this.activeTracks.video) {
-        this.play();
-      } else if (wasPlaying && !this.activeTracks.video) {
-        this.state = 'playing';
-        this.playNext();
-      } else if (wasVideo) {
-        this.state = 'video';
-        this.updateUI();
-      } else {
-        this.state = 'idle';
-        this.updateUI();
+        this.currentIdx = 0;
       }
     }
-    this._notifyStateChange();
-    this.updateUI();
-  },
-
-  /** @param {HTMLVideoElement} videoEl - Video element to control */
-  playVideo(videoEl) {
-    this.stop();
-    this.state = 'video';
-    this.activeTracks.video = true;
-    videoEl.muted = false;
-    videoEl.volume = this.volume * this.videoVolumeMultiplier;
-    this._notifyStateChange();
-    this.updateUI();
-  },
-
-  /** Resume audio queue after the active video finishes. */
-  onVideoEnded() {
-    if (this.state === 'video') {
-      this.activeTracks.video = false;
-      this.state = 'idle';
-      this.buildQueue();
+    if (turningOn) {
       this.play();
+    } else if (wasPlaying) {
+      this.state = 'playing';
+      this.playNext();
+    } else {
+      this.state = 'idle';
       this.updateUI();
     }
+    this._notifyStateChange();
+    this.updateUI();
   },
 
   /** Notify the app when the entire audio queue finishes. */
@@ -952,7 +906,7 @@ const App = (function() {
   let frames = [];
   let gameAdvancePending = false;
   let typeWriterInterval = null;
-  let dialogueTimeouts = [];
+
   let audioEndedForFrame = false;
   let typewriterEndedForFrame = false;
   let uiHideTimeout = null;
@@ -1183,11 +1137,6 @@ const App = (function() {
     typewriterEndedForFrame = false;
   }
 
-  function clearDialogueTimeouts() {
-    dialogueTimeouts.forEach(id => clearTimeout(id));
-    dialogueTimeouts = [];
-  }
-
   function checkFrameEnd() {
     if (audioEndedForFrame && typewriterEndedForFrame) {
       const frameData = frames[currentFrameIdx];
@@ -1329,7 +1278,6 @@ const App = (function() {
     AudioController.stop();
     stopTypeWriter();
     if (subtitleSyncCleanup) { subtitleSyncCleanup(); subtitleSyncCleanup = null; }
-    clearDialogueTimeouts();
     resetEndFlags();
     BottomSheet.hideNextButton();
 
@@ -1898,7 +1846,6 @@ const App = (function() {
           video.muted = true;
           video.volume = 0;
           video.play().catch(() => {});
-          AudioController.playVideo(video);
         }
         playBtn.style.display = 'none';
         return;
@@ -2175,8 +2122,6 @@ const App = (function() {
     }
 
     // Main menu v2 bindings
-    startCountdown('2026-05-25T12:00:00');
-
     // Load books from API, cache episodes, then render menu
     loadBooks().then(function() {
       renderBooks();

@@ -31,8 +31,11 @@ app.use('/uploads', express.static(uploadsDir));
 
 // Security middleware
 app.use(helmet());
+const corsOrigins = process.env.NODE_ENV === 'production'
+  ? [FRONTEND_URL]
+  : [FRONTEND_URL, 'http://localhost:8080', 'http://127.0.0.1:8080'];
 app.use(cors({
-  origin: [FRONTEND_URL, 'http://localhost:8080', 'http://127.0.0.1:8080'],
+  origin: corsOrigins,
   credentials: true
 }));
 app.use(generalLimiter);
@@ -48,9 +51,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/coins', coinsRoutes);
 app.use('/api/subscribe', subscribeRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes, adminCmsRoutes);
 app.use('/api/episodes', episodeRoutes);
-app.use('/api/admin', adminCmsRoutes);
 
 // 404
 app.use((req, res) => {

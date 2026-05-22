@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v13';
+const CACHE_NAME = 'superglazka-v14';
 
 const STATIC_ASSETS = [
   '/',
@@ -22,10 +22,6 @@ const STATIC_ASSETS = [
   '/js/mood-detector.js',
   '/js/background-music.js',
   '/js/auth.js',
-  '/js/episodes/assets.js',
-  '/js/episodes/index.js',
-  '/js/episodes/episode-01.js',
-  '/js/episodes/episode-02.js',
   '/assets/shared/characters/lenivus.png',
   '/assets/shared/characters/superglazka.png',
   '/assets/shared/characters/vanya.png',
