@@ -2064,6 +2064,7 @@ const App = (function() {
     initSwipe();
     BottomSheet.init();
     renderContinueButton();
+    startCountdown('2026-05-25T12:00:00');
     AudioController.onAudioStart((audio) => syncSubtitles(audio));
 
     const navArrowUp = document.getElementById('navArrowUp');
