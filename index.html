@@ -291,6 +291,66 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
+     GAME PROFILE SECTION
+     ═══════════════════════════════════════════════════════════ -->
+<section class="land-section land-profile" id="gameProfile">
+  <h2 class="land-section-title">🎮 Твой игровой профиль</h2>
+  <p class="land-section-sub">Сохраняй прогресс, собирай монеты и соревнуйся с друзьями</p>
+  <div id="profileContainer">
+    <div class="profile-guest-card" id="profileGuest">
+      <div class="profile-avatar">🎮</div>
+      <div class="profile-guest-title">Стань частью команды!</div>
+      <div class="profile-guest-sub">Зарегистрируйся, чтобы сохранять прогресс, получать награды за победы и участвовать в соревнованиях.</div>
+      <div class="profile-guest-form" id="guestForm">
+        <input type="text" id="guestNickname" placeholder="Придумай никнейм" maxlength="20">
+        <button class="profile-guest-btn" id="guestPlayBtn">🚀 Играть!</button>
+      </div>
+      <div class="profile-login-form" id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Пароль">
+        <button class="profile-guest-btn" id="loginBtn">🔑 Войти</button>
+      </div>
+      <button class="profile-guest-switch" id="authSwitch">Уже есть аккаунт? Войти</button>
+    </div>
+    <div class="profile-user-card" id="profileUser" style="display:none;">
+      <div class="profile-avatar" id="userAvatar">👤</div>
+      <div class="profile-nickname" id="userNickname">Игрок</div>
+      <div class="profile-coins"><span id="userCoins">0</span> 🪙</div>
+      <div class="profile-stats-grid" id="userStats">
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🏃</div>
+          <div class="profile-stat-name">Погоня</div>
+          <div class="profile-stat-value" id="statRunner">Ещё не сыграно</div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">⚔️</div>
+          <div class="profile-stat-name">Битва</div>
+          <div class="profile-stat-value" id="statGym">Ещё не сыграно</div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">👁️</div>
+          <div class="profile-stat-name">Моргайка</div>
+          <div class="profile-stat-value" id="statBlink">Ещё не сыграно</div>
+        </div>
+        <div class="profile-stat-card">
+          <div class="profile-stat-icon">🔮</div>
+          <div class="profile-stat-name">Шарик</div>
+          <div class="profile-stat-value" id="statTracker">Ещё не сыграно</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAVE DIVIDER -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,30 C240,60 480,0 720,30 C960,60 1200,0 1440,30 L1440,60 L0,60 Z" fill="#0a0618"/>
+    <path d="M0,40 C240,70 480,10 720,40 C960,70 1200,10 1440,40 L1440,60 L0,60 Z" fill="rgba(168,85,247,0.08)"/>
+  </svg>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
      CTA SECTION
      ═══════════════════════════════════════════════════════════ -->
 <section class="land-cta" id="cta">
@@ -507,7 +567,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 
   document.querySelectorAll('.land-game-card[data-game]').forEach(card => {
-    card.addEventListener('click', () => openGame(card.dataset.game));
+    card.addEventListener('click', () => openModal());
   });
 
   document.querySelectorAll('.games-modal-item[data-game]').forEach(item => {
@@ -524,5 +584,116 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   });
 })();
 </script>
+
+<script src="js/auth.js" defer></script>
+<script src="js/player.js" defer></script>
+
+<script>
+(function() {
+  function renderProfile() {
+    const guestCard = document.getElementById('profileGuest');
+    const userCard = document.getElementById('profileUser');
+    if (!guestCard || !userCard) return;
+
+    const isLoggedIn = typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn();
+    const isGuest = typeof Auth !== 'undefined' && Auth.isGuest && Auth.isGuest();
+
+    if (isLoggedIn && !isGuest) {
+      guestCard.style.display = 'none';
+      userCard.style.display = 'flex';
+      const profile = (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) ? PlayerProfile.getProfile() : {};
+      document.getElementById('userNickname').textContent = profile.nickname || (Auth.user && Auth.user.nickname) || 'Игрок';
+      document.getElementById('userCoins').textContent = profile.coins || 0;
+
+      const games = {
+        runner: { el: 'statRunner', label: '⭐' },
+        gym: { el: 'statGym', label: '🏆' },
+        blink: { el: 'statBlink', label: '⭐' },
+        tracker: { el: 'statTracker', label: '⭐' }
+      };
+      for (const [key, cfg] of Object.entries(games)) {
+        const stat = profile.games && profile.games[key];
+        const el = document.getElementById(cfg.el);
+        if (!el) continue;
+        if (stat && stat.played > 0) {
+          let text = 'Сыграно: ' + stat.played + ' раз';
+          if (stat.bestScore > 0) text += ' · 🏆 ' + stat.bestScore;
+          el.textContent = text;
+        } else {
+          el.textContent = 'Ещё не сыграно';
+        }
+      }
+    } else {
+      guestCard.style.display = 'flex';
+      userCard.style.display = 'none';
+    }
+  }
+
+  function initGuestForm() {
+    const guestBtn = document.getElementById('guestPlayBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const switchBtn = document.getElementById('authSwitch');
+    const guestForm = document.getElementById('guestForm');
+    const loginForm = document.getElementById('loginForm');
+
+    if (switchBtn) {
+      switchBtn.addEventListener('click', function() {
+        const showingLogin = loginForm.classList.contains('active');
+        if (showingLogin) {
+          loginForm.classList.remove('active');
+          guestForm.style.display = 'flex';
+          switchBtn.textContent = 'Уже есть аккаунт? Войти';
+        } else {
+          guestForm.style.display = 'none';
+          loginForm.classList.add('active');
+          switchBtn.textContent = 'Нет аккаунта? Быстрый старт';
+        }
+      });
+    }
+
+    if (guestBtn) {
+      guestBtn.addEventListener('click', async function() {
+        const nick = document.getElementById('guestNickname').value.trim();
+        if (!nick) { alert('Введи никнейм!'); return; }
+        if (typeof Auth !== 'undefined' && Auth.guestLogin) {
+          try {
+            await Auth.guestLogin(nick);
+            window.location.reload();
+          } catch (e) {
+            alert('Ошибка: ' + (e.message || 'Не удалось войти'));
+          }
+        }
+      });
+    }
+
+    if (loginBtn) {
+      loginBtn.addEventListener('click', async function() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) { alert('Введи email и пароль!'); return; }
+        if (typeof Auth !== 'undefined' && Auth.login) {
+          try {
+            await Auth.login(email, password);
+            window.location.reload();
+          } catch (e) {
+            alert('Ошибка: ' + (e.message || 'Неверный email или пароль'));
+          }
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      renderProfile();
+      initGuestForm();
+    });
+  } else {
+    renderProfile();
+    initGuestForm();
+  }
+})();
+</script>
+
 </body>
 </html>
