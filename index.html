@@ -45,7 +45,7 @@ if ('serviceWorker' in navigator) {
   <div class="land-nav-links">
     <a href="#about">О комиксе</a>
     <a href="#features">Особенности</a>
-    <a href="#games">Игры</a>
+    <a href="#" class="js-open-games-modal">Игры</a>
     <a href="#episodes">Эпизоды</a>
     <a href="#characters">Герои</a>
     <a href="parents.html">Родителям</a>
@@ -60,7 +60,7 @@ if ('serviceWorker' in navigator) {
   <button class="land-nav-mobile-close" id="navClose" aria-label="Закрыть">✕</button>
   <a href="#about" class="nav-mobile-link">О комиксе</a>
   <a href="#features" class="nav-mobile-link">Особенности</a>
-  <a href="#games" class="nav-mobile-link">Игры</a>
+  <a href="#" class="nav-mobile-link js-open-games-modal">Игры</a>
   <a href="#episodes" class="nav-mobile-link">Эпизоды</a>
   <a href="#characters" class="nav-mobile-link">Герои</a>
   <a href="app.html" class="land-nav-cta">▶ Начать</a>
@@ -569,7 +569,16 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 
   document.querySelectorAll('.land-game-card[data-game]').forEach(card => {
-    card.addEventListener('click', () => openModal());
+    card.addEventListener('click', () => openGame(card.dataset.game));
+  });
+
+  document.querySelectorAll('.js-open-games-modal').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+      const mobileMenu = document.getElementById('navMobile');
+      if (mobileMenu) mobileMenu.classList.remove('open');
+    });
   });
 
   document.querySelectorAll('.games-modal-item[data-game]').forEach(item => {
