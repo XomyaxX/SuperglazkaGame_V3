@@ -148,9 +148,12 @@ const AppSettings = {
   /** Apply all current settings to the DOM and audio controller. */
   apply() {
     const d = this._data;
-    const prevNarration = AudioController.activeTracks.narration;
 
-    AudioController.activeTracks.narration = d.narration;
+    // Narration: toggleTrack actually starts/stops audio; avoid double-toggle on init
+    if (AudioController.activeTracks.narration !== d.narration) {
+      AudioController.toggleTrack('narration');
+    }
+
     AudioController.volume = d.volume / 100;
     if (AudioController.currentAudio) {
       AudioController.currentAudio.volume = AudioController.volume;
@@ -159,6 +162,15 @@ const AppSettings = {
     if (typeof BackgroundMusic !== 'undefined') {
       BackgroundMusic.setEnabled(d.bgMusic);
       BackgroundMusic.setVolume(d.volume / 100);
+      if (d.bgMusic) {
+        BackgroundMusic.resumeContext();
+        const mood = AudioController.frameData && typeof MoodDetector !== 'undefined'
+          ? MoodDetector.detectMood(AudioController.frameData)
+          : 'peaceful';
+        BackgroundMusic.crossfadeTo(mood);
+      } else {
+        BackgroundMusic.stop();
+      }
     }
 
     document.body.classList.toggle('subtitles-off', !d.subtitles);
