@@ -555,6 +555,8 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
   }
 
   function openGame(game) {
+    backdrop.classList.add('visible');
+    document.body.style.overflow = 'hidden';
     listView.style.display = 'none';
     iframeWrap.style.display = '';
     iframe.src = 'app.html?game=' + encodeURIComponent(game) + '&embed=1';

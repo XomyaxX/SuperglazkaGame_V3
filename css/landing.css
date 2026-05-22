@@ -423,6 +423,7 @@ body {
 }
 
 .land-game-card {
+  cursor: pointer;
   display: block;
   background: var(--bg-glass);
   backdrop-filter: blur(20px);
