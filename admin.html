@@ -551,9 +551,9 @@ select option { background-color: #1a1a2e; color: #fff; }
   <!-- Sidebar: Episodes -->
   <div class="sidebar-col">
     <h1><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;">Игросказка</div>👁️ Суперглазка CMS</h1>
-    <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск эпизодов...">
-    <button class="btn" id="newEpisodeBtn">+ Новый эпизод</button>
-    <button class="btn btn-secondary" id="importEpisodesBtn" style="font-size:12px;padding:8px 10px;">🔄 Импортировать эпизоды</button>
+    <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск глав...">
+    <button class="btn" id="newEpisodeBtn">+ Новая глава</button>
+    <button class="btn btn-secondary" id="importEpisodesBtn" style="font-size:12px;padding:8px 10px;">🔄 Импортировать главы</button>
     <div class="episode-list" id="episodeList">
       <div class="empty-state">Загрузка...</div>
     </div>
@@ -574,7 +574,7 @@ select option { background-color: #1a1a2e; color: #fff; }
     </div>
     <div class="editor-body" id="editorBody">
       <div class="empty-state">
-        <h2>Выберите эпизод или создайте новый</h2>
+        <h2>Выберите главу или создайте новую</h2>
       </div>
     </div>
   </div>
@@ -709,7 +709,7 @@ function renderEpisodeList() {
   const filtered = episodes.filter(ep => (ep.title || '').toLowerCase().includes(filter));
   
   if (!filtered.length) {
-    list.innerHTML = '<div class="empty-state">Нет эпизодов</div>';
+    list.innerHTML = '<div class="empty-state">Нет глав</div>';
     return;
   }
   list.innerHTML = filtered.map(ep => `
@@ -735,7 +735,7 @@ async function loadEpisodes() {
     episodes = data.episodes;
     renderEpisodeList();
   } catch (e) {
-    toast('Ошибка загрузки эпизодов: ' + e.message, 'error');
+    toast('Ошибка загрузки глав: ' + e.message, 'error');
   }
 }
 
@@ -752,7 +752,7 @@ async function selectEpisode(id) {
     renderEditor();
     if (selectedEpisode.frames?.length) selectFrame(selectedEpisode.frames[0].id);
   } catch (e) {
-    toast('Ошибка загрузки эпизода: ' + e.message, 'error');
+    toast('Ошибка загрузки главы: ' + e.message, 'error');
   }
 }
 
@@ -770,7 +770,7 @@ function renderEditor() {
 
   body.innerHTML = `
     <div class="tabs">
-      <button class="tab active" onclick="switchTab(this, 'info')">📖 Эпизод</button>
+      <button class="tab active" onclick="switchTab(this, 'info')">📖 Глава</button>
       <button class="tab" onclick="switchTab(this, 'frames')">🎬 Кадры (${ep.frames?.length || 0})</button>
       <button class="tab" onclick="switchTab(this, 'batch')">📤 Batch Upload</button>
     </div>
@@ -797,7 +797,7 @@ function renderEditor() {
               <input type="number" id="epBookNum" value="${ep.book_num ?? 1}" oninput="scheduleAutoSave()">
             </div>
           </div>
-          <button class="btn" onclick="saveEpisodeNow()">💾 Сохранить эпизод</button>
+          <button class="btn" onclick="saveEpisodeNow()">💾 Сохранить главу</button>
         </div>
         <div class="card">
           <h3>Обложка</h3>
@@ -1316,7 +1316,7 @@ async function saveEpisodeNow(silent = false) {
     selectedEpisode.order = payload.order;
     renderEpisodeList();
     setAutosaveStatus('saved');
-    if (!silent) toast('Эпизод сохранён');
+    if (!silent) toast('Глава сохранена');
   } catch (e) {
     setAutosaveStatus('');
     toast('Ошибка сохранения: ' + e.message, 'error');
@@ -1447,28 +1447,28 @@ async function togglePublish() {
     selectedEpisode.is_published = !selectedEpisode.is_published;
     renderEpisodeList();
     renderEditor();
-    toast(selectedEpisode.is_published ? 'Эпизод опубликован' : 'Эпизод снят с публикации');
+    toast(selectedEpisode.is_published ? 'Глава опубликована' : 'Глава снята с публикации');
   } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
 }
 
 async function deleteEpisode() {
-  if (!confirm('Удалить эпизод и все кадры?')) return;
+  if (!confirm('Удалить главу и все кадры?')) return;
   try {
     await api('/admin/episodes/' + selectedEpisode.id, { method: 'DELETE' });
     selectedEpisode = null;
     selectedFrame = null;
     await loadEpisodes();
-    document.getElementById('editorBody').innerHTML = '<div class="empty-state"><h2>Выберите эпизод или создайте новый</h2></div>';
+    document.getElementById('editorBody').innerHTML = '<div class="empty-state"><h2>Выберите главу или создайте новую</h2></div>';
     document.getElementById('editorTitle').textContent = 'Редактор';
     document.getElementById('editorActions').innerHTML = '';
     document.getElementById('previewBody').innerHTML = '<div class="empty-state">Выберите кадр для предпросмотра</div>';
-    toast('Эпизод удалён');
+    toast('Глава удалена');
   } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
 }
 
 // Import episodes from JS
 document.getElementById('importEpisodesBtn').addEventListener('click', async () => {
-  if (!confirm('Импортировать эпизоды из js/episodes/? Существующие эпизоды будут перезаписаны.')) return;
+  if (!confirm('Импортировать главы из js/episodes/? Существующие главы будут перезаписаны.')) return;
   try {
     toast('Импорт запущен...', 'warning');
     const res = await api('/admin/import-episodes', { method: 'POST' });
@@ -1487,11 +1487,11 @@ document.getElementById('newEpisodeBtn').addEventListener('click', async () => {
   try {
     const res = await api('/admin/episodes', {
       method: 'POST',
-      body: JSON.stringify({ title: 'Новый эпизод', description: '', order: episodes.length })
+      body: JSON.stringify({ title: 'Новая глава', description: '', order: episodes.length })
     });
     await loadEpisodes();
     await selectEpisode(res.id);
-    toast('Эпизод создан');
+    toast('Глава создана');
   } catch (e) {
     toast('Ошибка: ' + e.message, 'error');
   } finally {

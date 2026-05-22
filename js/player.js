@@ -229,7 +229,7 @@ const PlayerProfile = (function() {
         const row = document.createElement('div');
         row.className = 'profile-row';
         const left = document.createElement('span');
-        left.textContent = 'Эпизод ' + id;
+        left.textContent = 'Глава ' + id;
         const right = document.createElement('span');
         right.textContent = data.completed ? '✅' : '🔒';
         row.appendChild(left);

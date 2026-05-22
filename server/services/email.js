@@ -24,7 +24,7 @@ function loadTemplate(name, replacements) {
 
 async function sendNewEpisodeNotification(to, episodeTitle, episodeNumber, episodeUrl) {
   const html = loadTemplate('new-episode', {
-    episodeTitle: episodeTitle || 'Новый эпизод',
+    episodeTitle: episodeTitle || 'Новая глава',
     episodeNumber: String(episodeNumber || ''),
     episodeUrl: episodeUrl || '#',
     year: String(new Date().getFullYear())
@@ -33,7 +33,7 @@ async function sendNewEpisodeNotification(to, episodeTitle, episodeNumber, episo
   const result = await resend.emails.send({
     from: 'Superglazka <' + FROM_EMAIL + '>',
     to: [to],
-    subject: '\uD83C\uDF1F Новый эпизод Суперглазки: ' + (episodeTitle || 'Эпизод ' + episodeNumber),
+    subject: '\uD83C\uDF1F Новая глава Суперглазки: ' + (episodeTitle || 'Глава ' + episodeNumber),
     html: html
   });
 

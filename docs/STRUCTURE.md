@@ -15,7 +15,7 @@ SuperglazkaGame_V3/
 │   │   └── bottom-sheet.ts       # Нижний sheet (TODO)
 │   ├── ui/                       # UI-компоненты
 │   │   ├── main-menu.ts          # Главное меню (TODO)
-│   │   ├── episode-viewer.ts     # Просмотрщик эпизодов (TODO)
+│   │   ├── episode-viewer.ts     # Просмотрщик глав (TODO)
 │   │   ├── auth-modal.ts         # Авторизация (TODO)
 │   │   ├── profile-modal.ts      # Профиль (TODO)
 │   │   └── cookie-banner.ts      # Cookie баннер ✅
@@ -24,10 +24,10 @@ SuperglazkaGame_V3/
 │   │   ├── game-tracker.ts       # Следи за шариком (TODO)
 │   │   ├── game-runner.ts        # Погоня (TODO)
 │   │   └── game-gymnastics.ts    # Ваня vs Ленивус (TODO)
-│   ├── episodes/                 # Данные эпизодов
-│   │   ├── episode-01.ts         # Эпизод 1 (TODO)
-│   │   ├── episode-02.ts         # Эпизод 2 (TODO)
-│   │   ├── episode-registry.ts   # Реестр эпизодов (TODO)
+│   ├── episodes/                 # Данные глав
+│   │   ├── episode-01.ts         # Глава 1 (TODO)
+│   │   ├── episode-02.ts         # Глава 2 (TODO)
+│   │   ├── episode-registry.ts   # Реестр глав (TODO)
 │   │   └── asset-utils.ts        # Утилиты для ассетов (TODO)
 │   ├── services/                 # Сервисный слой ✅
 │   │   ├── api-client.ts         # HTTP клиент
@@ -88,7 +88,7 @@ SuperglazkaGame_V3/
 ├── docs/                         # Документация
 │   ├── STRUCTURE.md              # Этот файл ✅
 │   ├── DEPLOY.md                 # Гайд деплоя (TODO)
-│   └── ADD_EPISODE.md            # Добавление эпизода (TODO)
+│   └── ADD_EPISODE.md            # Добавление главы (TODO)
 │
 ├── package.json                  # Frontend зависимости ✅
 ├── vite.config.ts                # Vite конфиг ✅

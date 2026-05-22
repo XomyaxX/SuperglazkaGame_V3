@@ -1470,7 +1470,7 @@ const App = (function() {
 
   function showEndScreen() {
     const text = document.querySelector('#transition-overlay .transition-text');
-    if (text) text.textContent = 'Эпизод завершён! Скоро продолжение...';
+    if (text) text.textContent = 'Глава завершена! Скоро продолжение...';
     const overlay = document.getElementById('transition-overlay');
     if (overlay) overlay.classList.add('visible');
     // Mark episode as completed
@@ -1535,8 +1535,8 @@ const App = (function() {
     var pos = PlayerProfile.getLastPosition();
     if (pos && pos.frameIdx >= 0) {
       var cached = episodesCache[pos.episodeId];
-      var epName = cached && cached.title ? cached.title : 'Эпизод ' + pos.episodeId;
-      if (info) info.textContent = 'Эпизод ' + pos.episodeId + ' — ' + epName;
+      var epName = cached && cached.title ? cached.title : 'Глава ' + pos.episodeId;
+      if (info) info.textContent = 'Глава ' + pos.episodeId + ' — ' + epName;
       if (previewImg) {
         var episode = episodesCache[pos.episodeId];
         if (!episode) {
@@ -1682,7 +1682,7 @@ const App = (function() {
     contentContainer.textContent = '';
 
     if (!APP_BOOKS.length) {
-      contentContainer.innerHTML = '<div class="empty-state" style="padding:40px;text-align:center;color:rgba(255,255,255,0.5);">Загрузка эпизодов...</div>';
+      contentContainer.innerHTML = '<div class="empty-state" style="padding:40px;text-align:center;color:rgba(255,255,255,0.5);">Загрузка глав...</div>';
       return;
     }
 
