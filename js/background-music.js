@@ -130,18 +130,23 @@ const BackgroundMusic = (function() {
   };
 
   function initTone() {
-    if (toneReady) return true;
-    if (typeof Tone === 'undefined') return false;
-    try {
-      masterGainNode = new Tone.Gain(volume).toDestination();
-      reverbNode = new Tone.Reverb({ decay: 3, wet: 0.35 }).connect(masterGainNode);
-      reverbNode.generate();
-      toneReady = true;
-      return true;
-    } catch (e) {
-      console.warn('Tone.js init failed:', e);
-      return false;
-    }
+    if (toneReady) return Promise.resolve(true);
+    if (typeof Tone === 'undefined') return Promise.resolve(false);
+    return new Promise(function(resolve) {
+      try {
+        masterGainNode = new Tone.Gain(volume).toDestination();
+        reverbNode = new Tone.Reverb({ decay: 3, wet: 0.35 }).connect(masterGainNode);
+        reverbNode.generate().then(function() {
+          toneReady = true;
+          resolve(true);
+        }).catch(function() {
+          resolve(false);
+        });
+      } catch (e) {
+        console.warn('Tone.js init failed:', e);
+        resolve(false);
+      }
+    });
   }
 
   function disposeActive() {
@@ -323,17 +328,32 @@ const BackgroundMusic = (function() {
   }
 
   function playProcedural(mood) {
-    if (!initTone()) {
-      playSynthesized(mood);
-      return;
-    }
+    initTone().then(function(ready) {
+      if (!ready) {
+        playSynthesized(mood);
+        return;
+      }
+      // Ensure AudioContext is running (requires user gesture on first use)
+      if (Tone.context.state === 'suspended') {
+        Tone.start().then(function() {
+          _doPlayProcedural(mood);
+        }).catch(function() {
+          playSynthesized(mood);
+        });
+      } else {
+        _doPlayProcedural(mood);
+      }
+    });
+  }
+
+  function _doPlayProcedural(mood) {
     const next = buildToneMood(mood);
     if (!next) return;
 
     // Crossfade
     if (isPlaying && currentProceduralGain) {
       nextProceduralGain = next.groupGain;
-      fadeGainNode(currentProceduralGain, volume, 0, CROSSFADE_DURATION, () => {
+      fadeGainNode(currentProceduralGain, volume, 0, CROSSFADE_DURATION, function() {
         if (currentProceduralGain) currentProceduralGain.dispose();
         currentProceduralGain = null;
       });
@@ -346,7 +366,7 @@ const BackgroundMusic = (function() {
     }
 
     // Clean up old loops/synths after crossfade
-    setTimeout(() => {
+    setTimeout(function() {
       disposeActive();
       activeLoops = next.localLoops;
       activeSynths = next.localSynths;
