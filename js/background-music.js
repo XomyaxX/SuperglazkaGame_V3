@@ -480,10 +480,10 @@ const BackgroundMusic = (function() {
 
     // Crossfade
     if (isPlaying && currentProceduralGain) {
+      const oldGain = currentProceduralGain;
       nextProceduralGain = next.groupGain;
-      fadeGainNode(currentProceduralGain, volume, 0, CROSSFADE_DURATION, function() {
-        if (currentProceduralGain) currentProceduralGain.dispose();
-        currentProceduralGain = null;
+      fadeGainNode(oldGain, volume, 0, CROSSFADE_DURATION, function() {
+        oldGain.dispose();
       });
       fadeGainNode(next.groupGain, 0, volume, CROSSFADE_DURATION);
       currentProceduralGain = next.groupGain;
