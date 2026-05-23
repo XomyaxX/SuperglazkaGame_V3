@@ -456,6 +456,24 @@ const BackgroundMusic = (function() {
     return { groupGain, localLoops, localSynths };
   }
 
+  function playProcedural(mood) {
+    initTone().then(function(ready) {
+      if (!ready) {
+        playSynthesized(mood);
+        return;
+      }
+      if (Tone.context.state === 'suspended') {
+        Tone.start().then(function() {
+          _doPlayProcedural(mood);
+        }).catch(function() {
+          playSynthesized(mood);
+        });
+      } else {
+        _doPlayProcedural(mood);
+      }
+    });
+  }
+
   function _doPlayProcedural(mood) {
     const next = buildToneMood(mood);
     if (!next) return;
