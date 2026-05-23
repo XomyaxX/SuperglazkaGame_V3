@@ -53,142 +53,141 @@ const BackgroundMusic = (function() {
   let currentProceduralGain = null;
   let nextProceduralGain = null;
 
-  // ─── Richer MOOD_CONFIG with bass, structured melodies, fills, dynamics ───
+  // ─── Game Music Style MOOD_CONFIG ───
   const MOOD_CONFIG = {
     cosmic: {
-      bpm: 58,
-      scale: ['A3','C4','E4','G4','A4','C5'],
-      chords: [['A3','C4','E4','G4'], ['C4','E4','G4','B4'], ['E4','G4','B4','D5'], ['G4','B4','D5','F5']],
-      pad: { type: 'sine', attack: 2.5, release: 4, filter: 1500 },
-      bass: { type: 'sine', attack: 1, release: 3, pattern: ['A2','C2','E2','G2'], interval: '1m' },
-      arp: { interval: '8n', notes: ['A3','E4','C4','G4','B4','D5'] },
+      bpm: 60,
+      scale: ['A4','C5','E5','G5','A5','C6'],
+      pad: { type: 'sine', attack: 2, release: 4 },
+      bass: { type: 'sine', attack: 1, release: 3, pattern: ['A2','C3','E3','G3'], interval: '1m' },
+      arp: { interval: '8n', notes: ['A5','E6','C6','G6'] },
+      twinkle: true,
       reverb: 6,
-      delay: 0.5,
-      drums: false,
-      dynamics: { volumeCurve: [0.3, 0.5, 0.7, 0.5] }
+      delay: 0.4
     },
     joyful: {
-      bpm: 115,
-      scale: ['C4','D4','E4','G4','A4','B4','C5','D5'],
-      chords: [['C4','E4','G4','B4'], ['G3','B3','D4','F4'], ['A3','C4','E4','G4'], ['F3','A3','C4','E4']],
-      pad: { type: 'triangle', attack: 0.6, release: 1.5, filter: 2800 },
-      bass: { type: 'triangle', attack: 0.05, release: 0.4, pattern: ['C3','G2','A2','F2'], interval: '2n' },
+      bpm: 120,
+      scale: ['C5','D5','E5','G5','A5','C6'],
+      chords: [['C4','E4','G4'], ['G3','B3','D4'], ['F3','A3','C4'], ['C3','E3','G3']],
+      pad: { type: 'triangle', attack: 0.4, release: 1 },
+      bass: { type: 'triangle', attack: 0.05, release: 0.3, pattern: ['C3','G2','F2','C3'], interval: '2n' },
       melody: {
-        type: 'triangle', attack: 0.02, release: 0.3,
+        type: 'triangle', attack: 0.01, release: 0.3,
         motifs: [
-          ['C5','E5','D5','G5'], ['E5','G5','A5','B5'],
-          ['G5','E5','D5','C5'], ['A5','G5','E5','D5']
+          ['C5','E5','G5','C6'], ['E5','G5','E5','C5'],
+          ['G5','A5','G5','E5'], ['C6','G5','E5','C5']
         ],
-        interval: '4n', variation: 0.3
+        interval: '4n', variation: 0.2
       },
-      reverb: 2,
-      delay: 0.2,
-      drums: { kick: '4n', snare: '2n', hat: '8n', shaker: '16n' }
+      reverb: 1.5,
+      delay: 0.1,
+      drums: { kick: '4n', hat: '8n', pop: '4n' }
     },
     tension: {
-      bpm: 85,
-      scale: ['C3','C#3','F3','G#3','A3','D4'],
-      chords: [['C3','C#3','F3','G#3'], ['C#3','F3','G#3','B3'], ['F3','G#3','B3','D4']],
-      pad: { type: 'sawtooth', attack: 1.5, release: 2.5, filter: 500 },
-      bass: { type: 'sawtooth', attack: 0.5, release: 1.5, pattern: ['C1','C#1','F1','G#1'], interval: '2n' },
-      drone: { note: 'C2', type: 'sawtooth', filter: 300 },
-      reverb: 5,
+      bpm: 70,
+      scale: ['C4','D#4','F4','G#4','A#4','C5'],
+      pad: { type: 'triangle', attack: 1, release: 2.5 },
+      bass: { type: 'sine', attack: 0.8, release: 2, pattern: ['C2','C2','G1','C2'], interval: '2n' },
+      melody: {
+        type: 'sine', attack: 0.05, release: 0.8,
+        motifs: [
+          ['C4','D#4','C4','G#3'], ['D#4','F4','D#4','C4'],
+          ['G4','F4','D#4','C4'], ['C4','G3','C4','D#4']
+        ],
+        interval: '2n', variation: 0.3
+      },
+      reverb: 4,
       delay: 0,
-      drums: { kick: '2n.', noise: '1m', hit: '4n' },
-      dynamics: { volumeCurve: [0.4, 0.6, 0.8, 0.5] }
+      drums: { kick: '2n', hit: '4n' }
     },
     peaceful: {
-      bpm: 52,
-      scale: ['F3','A3','C4','D4','E4','F4','G4','A4'],
-      chords: [['F3','A3','C4','E4'], ['C4','E4','G4','B4'], ['D4','F4','A4','C5'], ['A3','C4','E4','G4']],
-      pad: { type: 'sine', attack: 1.5, release: 4, filter: 800 },
-      bass: { type: 'sine', attack: 1, release: 3, pattern: ['F2','C2','D2','A1'], interval: '1m' },
+      bpm: 55,
+      scale: ['F4','A4','C5','D5','F5','A5'],
+      pad: { type: 'sine', attack: 1.5, release: 4 },
+      bass: { type: 'sine', attack: 1, release: 3, pattern: ['F2','C3','A2','F2'], interval: '1m' },
       pluck: { type: 'triangle', attack: 0.01, release: 1.5 },
       melody: {
         type: 'sine', attack: 0.05, release: 1.2,
         motifs: [
-          ['C4','A4','G4','F4'], ['A4','F4','E4','C4'],
-          ['F4','G4','A4','C5'], ['E4','C4','A3','F3']
+          ['C5','A5','F5','D5'], ['A5','F5','C5','A4'],
+          ['F5','A5','C6','D6'], ['C6','A5','F5','D5']
         ],
-        interval: '2n', variation: 0.2
+        interval: '2n', variation: 0.15
       },
       reverb: 7,
-      delay: 0.4,
-      drums: false
+      delay: 0.3
     },
     magical: {
-      bpm: 78,
-      scale: ['D4','F4','A4','B4','D5','F5','A5'],
-      chords: [['D4','F4','A4','C5'], ['F4','A4','C5','E5'], ['A4','C5','E5','G5'], ['B4','D5','F5','A5']],
-      pad: { type: 'sine', attack: 0.8, release: 2.5, filter: 2200 },
-      bass: { type: 'sine', attack: 0.3, release: 1.5, pattern: ['D3','F3','A2','B2'], interval: '2n' },
-      bell: { type: 'sine', attack: 0.01, release: 2, mod: 5 },
+      bpm: 90,
+      scale: ['D5','F5','A5','B5','D6','F6'],
+      chords: [['D4','F4','A4'], ['F4','A4','C5'], ['A4','C5','E5'], ['B4','D5','F5']],
+      pad: { type: 'sine', attack: 0.6, release: 2 },
+      bass: { type: 'sine', attack: 0.2, release: 1.5, pattern: ['D3','A2','B2','F#2'], interval: '2n' },
+      bell: { type: 'sine', attack: 0.01, release: 1.5, mod: 4 },
       melody: {
-        type: 'sine', attack: 0.02, release: 0.8,
+        type: 'sine', attack: 0.02, release: 0.6,
         motifs: [
-          ['D5','F5','A5','D6'], ['F5','A5','D6','F6'],
-          ['A5','F5','D5','B4'], ['D6','A5','F5','D5']
+          ['D6','F6','A6','D7'], ['F6','D6','B5','A5'],
+          ['A6','F6','D6','B5'], ['D7','A6','F6','D6']
         ],
-        interval: '8n', variation: 0.4
+        interval: '8n', variation: 0.3
       },
-      reverb: 5,
-      delay: 0.5,
-      drums: { hat: '16n', shaker: '8n' }
+      reverb: 4,
+      delay: 0.4,
+      drums: { hat: '8n', pop: '4n' }
     },
     triumphant: {
-      bpm: 105,
-      scale: ['C3','E3','G3','A3','C4','E4','G4','C5'],
-      chords: [['C3','E3','G3','C4'], ['G2','B2','D3','G3'], ['F2','A2','C3','F3'], ['C3','G3','C4','E4']],
-      pad: { type: 'sawtooth', attack: 0.4, release: 1.5, filter: 2400 },
-      bass: { type: 'sawtooth', attack: 0.05, release: 0.3, pattern: ['C2','G1','F1','C2'], interval: '2n' },
+      bpm: 110,
+      scale: ['C5','E5','G5','A5','C6','E6'],
+      chords: [['C4','E4','G4'], ['G3','B3','D4'], ['F3','A3','C4'], ['C3','G3','C4']],
+      pad: { type: 'triangle', attack: 0.3, release: 1 },
+      bass: { type: 'triangle', attack: 0.05, release: 0.3, pattern: ['C3','G2','F2','C3'], interval: '2n' },
       melody: {
-        type: 'triangle', attack: 0.03, release: 0.5,
+        type: 'triangle', attack: 0.02, release: 0.4,
         motifs: [
-          ['C4','E4','G4','C5'], ['E4','G4','C5','E5'],
-          ['G4','E4','C4','G3'], ['C5','G4','E4','C4']
+          ['C5','E5','G5','C6'], ['E5','G5','C6','E6'],
+          ['G5','E5','C5','G4'], ['C6','G5','E5','C5']
         ],
-        interval: '4n', variation: 0.25
+        interval: '4n', variation: 0.2
       },
-      reverb: 2.5,
-      delay: 0.15,
-      drums: { kick: '4n', snare: '2n', hat: '8n', crash: '1m' }
+      reverb: 2,
+      delay: 0.1,
+      drums: { kick: '4n', hat: '8n', pop: '2n' }
     },
     warm: {
-      bpm: 62,
-      scale: ['G3','B3','D4','E4','G4','A4','B4','D5'],
-      chords: [['G3','B3','D4','F#4'], ['D4','F#4','A4','C5'], ['E4','G4','B4','D5'], ['B3','D4','F#4','A4']],
-      pad: { type: 'triangle', attack: 1.5, release: 3, filter: 1000 },
+      bpm: 65,
+      scale: ['G4','B4','D5','E5','G5','B5'],
+      chords: [['G3','B3','D4'], ['D3','F#3','A3'], ['E3','G3','B3'], ['B2','D3','F#3']],
+      pad: { type: 'triangle', attack: 1.2, release: 2.5 },
       bass: { type: 'triangle', attack: 0.8, release: 2, pattern: ['G2','D2','E2','B1'], interval: '1m' },
       pluck: { type: 'triangle', attack: 0.02, release: 1 },
       melody: {
         type: 'triangle', attack: 0.04, release: 1,
         motifs: [
-          ['D4','E4','G4','B4'], ['G4','B4','D5','E5'],
-          ['B4','G4','E4','D4'], ['E5','D5','B4','G4']
+          ['D5','E5','G5','B5'], ['G5','B5','D6','E6'],
+          ['B5','G5','E5','D5'], ['E6','D6','B5','G5']
         ],
-        interval: '2n', variation: 0.2
+        interval: '2n', variation: 0.15
       },
-      reverb: 3.5,
-      delay: 0.3,
-      drums: false
+      reverb: 3,
+      delay: 0.25
     },
     mystery: {
-      bpm: 68,
-      scale: ['E3','G3','A3','B3','D4','E4','G4','B4'],
-      chords: [['E3','G3','B3','D4'], ['G3','B3','D4','F4'], ['A3','C4','E4','G4'], ['B3','D4','F4','A4']],
-      pad: { type: 'sine', attack: 0.8, release: 2.5, filter: 1200 },
+      bpm: 72,
+      scale: ['E4','G4','A4','B4','D5','E5'],
+      pad: { type: 'sine', attack: 0.6, release: 2 },
       bass: { type: 'sine', attack: 0.5, release: 2, pattern: ['E2','G2','A2','B2'], interval: '2n' },
       melody: {
         type: 'sine', attack: 0.04, release: 0.8,
         motifs: [
-          ['E4','G4','B4','E5'], ['G4','B4','E5','G5'],
-          ['B4','G4','E4','B3'], ['E5','B4','G4','E4']
+          ['E5','G5','B5','E6'], ['G5','E5','B4','A4'],
+          ['B5','G5','E5','B4'], ['E6','B5','G5','E5']
         ],
-        interval: '4n', variation: 0.35
+        interval: '4n', variation: 0.3
       },
-      reverb: 6,
-      delay: 0.4,
-      drums: { hat: '8n', shaker: '4n' }
+      reverb: 5,
+      delay: 0.3,
+      drums: { hat: '8n', pop: '2n' }
     }
   };
 
@@ -233,20 +232,23 @@ const BackgroundMusic = (function() {
     const localLoops = [];
     const localSynths = [];
 
-    // Shared effects chain: delay → reverb
+    // Shared effects chain
     let fxChain = groupGain;
     if (cfg.delay) {
-      const delayFx = new Tone.FeedbackDelay('8n', cfg.delay).connect(fxChain);
+      const delayFx = new Tone.PingPongDelay('8n', cfg.delay).connect(fxChain);
       fxChain = delayFx;
     }
 
-    // ─── PAD / CHORDS ───
+    // ─── SOFT PAD / CHORDS ───
     if (cfg.pad) {
-      const pad = new Tone.PolySynth(Tone.Synth, {
+      const pad = new Tone.PolySynth(Tone.AMSynth, {
+        harmonicity: 2,
         oscillator: { type: cfg.pad.type },
-        envelope: { attack: cfg.pad.attack, decay: 0.5, sustain: 0.6, release: cfg.pad.release },
+        envelope: { attack: cfg.pad.attack, decay: 0.3, sustain: 0.7, release: cfg.pad.release },
+        modulation: { type: 'sine' },
+        modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 }
       }).connect(fxChain);
-      pad.volume.value = -10;
+      pad.volume.value = -14;
       localSynths.push(pad);
 
       if (cfg.chords) {
@@ -263,15 +265,13 @@ const BackgroundMusic = (function() {
       }
     }
 
-    // ─── BASS ───
+    // ─── SOFT BASS (game style, not aggressive) ───
     if (cfg.bass) {
-      const bass = new Tone.MonoSynth({
+      const bass = new Tone.Synth({
         oscillator: { type: cfg.bass.type },
-        envelope: { attack: cfg.bass.attack, decay: 0.3, sustain: 0.7, release: cfg.bass.release },
-        filter: { Q: 2, type: 'lowpass', rolloff: -24 },
-        filterEnvelope: { attack: 0.06, decay: 0.2, sustain: 0.5, release: 0.5, baseFrequency: 200, octaves: 2.5 }
-      }).connect(fxChain);
-      bass.volume.value = -6;
+        envelope: { attack: cfg.bass.attack, decay: 0.2, sustain: 0.6, release: cfg.bass.release }
+      }).connect(groupGain);
+      bass.volume.value = -10;
       localSynths.push(bass);
       const bassSeq = new Tone.Sequence(function(time, note) {
         bass.triggerAttackRelease(note, cfg.bass.interval, time);
@@ -279,44 +279,41 @@ const BackgroundMusic = (function() {
       localLoops.push(bassSeq);
     }
 
-    // ─── PLUCK (harp/guitar-like) ───
+    // ─── XYLOPHONE / PLUCK (toy-like) ───
     if (cfg.pluck) {
-      const pluck = new Tone.PluckSynth({
-        attackNoise: 1,
-        dampening: 4000,
-        resonance: 0.9
+      const xylo = new Tone.Synth({
+        oscillator: { type: cfg.pluck.type },
+        envelope: { attack: cfg.pluck.attack, decay: 0.3, sustain: 0, release: cfg.pluck.release }
       }).connect(fxChain);
-      pluck.volume.value = -8;
-      localSynths.push(pluck);
+      xylo.volume.value = -10;
+      localSynths.push(xylo);
 
-      // Structured pluck patterns instead of random
-      const pluckPatterns = [
+      const xyloPatterns = [
         cfg.scale.slice(0, 4),
         cfg.scale.slice(2, 6),
         cfg.scale.slice(1, 5),
         cfg.scale.slice(3, 7)
       ];
-      let pluckPatIdx = 0;
-      const pluckSeq = new Tone.Sequence(function(time, note) {
-        if (note) pluck.triggerAttackRelease(note, '8n', time);
-      }, pluckPatterns[0], '8n').start(0);
-      localLoops.push(pluckSeq);
+      let xyloPatIdx = 0;
+      const xyloSeq = new Tone.Sequence(function(time, note) {
+        if (note) xylo.triggerAttackRelease(note, '16n', time);
+      }, xyloPatterns[0], '8n').start(0);
+      localLoops.push(xyloSeq);
 
-      // Rotate pattern every 2 bars
-      const pluckRotate = new Tone.Loop(function(time) {
-        pluckPatIdx = (pluckPatIdx + 1) % pluckPatterns.length;
-        pluckSeq.set({ events: pluckPatterns[pluckPatIdx] });
+      const xyloRotate = new Tone.Loop(function(time) {
+        xyloPatIdx = (xyloPatIdx + 1) % xyloPatterns.length;
+        xyloSeq.set({ events: xyloPatterns[xyloPatIdx] });
       }, '2m').start(0);
-      localLoops.push(pluckRotate);
+      localLoops.push(xyloRotate);
     }
 
-    // ─── STRUCTURED MELODY (motifs, not random) ───
+    // ─── BOUNCY MELODY (short motifs, game style) ───
     if (cfg.melody) {
       const mel = new Tone.Synth({
         oscillator: { type: cfg.melody.type },
-        envelope: { attack: cfg.melody.attack, decay: 0.3, sustain: 0.3, release: cfg.melody.release },
+        envelope: { attack: cfg.melody.attack, decay: 0.2, sustain: 0.2, release: cfg.melody.release },
       }).connect(fxChain);
-      mel.volume.value = -9;
+      mel.volume.value = -8;
       localSynths.push(mel);
 
       const motifs = cfg.melody.motifs || [cfg.scale.slice(0, 4), cfg.scale.slice(2, 6)];
@@ -325,8 +322,7 @@ const BackgroundMusic = (function() {
       const melLoop = new Tone.Loop(function(time) {
         const motif = motifs[motifIdx];
         const note = motif[noteIdx % motif.length];
-        // Variation: sometimes skip or transpose
-        if (Math.random() > (cfg.melody.variation || 0.3)) {
+        if (Math.random() > (cfg.melody.variation || 0.25)) {
           mel.triggerAttackRelease(note, cfg.melody.interval, time);
         }
         noteIdx++;
@@ -338,23 +334,22 @@ const BackgroundMusic = (function() {
       localLoops.push(melLoop);
     }
 
-    // ─── BELL / FM SYNTH ───
+    // ─── FAIRY BELLS (soft FM) ───
     if (cfg.bell) {
       const bell = new Tone.FMSynth({
-        harmonicity: cfg.bell.mod || 3,
-        modulationIndex: 10,
+        harmonicity: cfg.bell.mod || 2,
+        modulationIndex: 3,
         oscillator: { type: 'sine' },
-        envelope: { attack: cfg.bell.attack, decay: 0.5, sustain: 0, release: cfg.bell.release },
-        modulation: { type: 'square' },
-        modulationEnvelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.2 }
+        envelope: { attack: cfg.bell.attack, decay: 0.3, sustain: 0, release: cfg.bell.release },
+        modulation: { type: 'triangle' },
+        modulationEnvelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 }
       }).connect(fxChain);
-      bell.volume.value = -14;
+      bell.volume.value = -16;
       localSynths.push(bell);
 
-      // Bell pattern: sparse, accenting beat 1 and 3
       const bellPattern = [];
       for (let i = 0; i < 16; i++) {
-        bellPattern.push((i === 0 || i === 8 || Math.random() > 0.7) ? cfg.scale[i % cfg.scale.length] : null);
+        bellPattern.push((i === 0 || i === 8 || Math.random() > 0.75) ? cfg.scale[i % cfg.scale.length] : null);
       }
       const bellSeq = new Tone.Sequence(function(time, note) {
         if (note) bell.triggerAttackRelease(note, '16n', time);
@@ -362,13 +357,13 @@ const BackgroundMusic = (function() {
       localLoops.push(bellSeq);
     }
 
-    // ─── ARPEGGIO ───
+    // ─── ARPEGGIO (light, airy) ───
     if (cfg.arp) {
       const arp = new Tone.Synth({
         oscillator: { type: 'sine' },
-        envelope: { attack: 0.02, decay: 0.2, sustain: 0.1, release: 0.5 },
+        envelope: { attack: 0.02, decay: 0.15, sustain: 0.1, release: 0.4 },
       }).connect(fxChain);
-      arp.volume.value = -16;
+      arp.volume.value = -18;
       localSynths.push(arp);
       const arpSeq = new Tone.Sequence(function(time, note) {
         arp.triggerAttackRelease(note, cfg.arp.interval, time);
@@ -376,163 +371,89 @@ const BackgroundMusic = (function() {
       localLoops.push(arpSeq);
     }
 
-    // ─── DRONE ───
-    if (cfg.drone) {
-      const drone = new Tone.Synth({
-        oscillator: { type: cfg.drone.type },
-        envelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 },
-      }).connect(fxChain);
-      drone.volume.value = -14;
-      localSynths.push(drone);
-      const droneLoop = new Tone.Loop(function(time) {
-        drone.triggerAttackRelease(cfg.drone.note, '1m', time);
-      }, '1m').start(0);
-      localLoops.push(droneLoop);
-    }
-
-    // ─── RICH PERCUSSION ───
+    // ─── GAME-LIGHT PERCUSSION (musical, not noisy) ───
     if (cfg.drums) {
-      // Kick
+      // Soft kick (like a soft drum)
       if (cfg.drums.kick) {
         const kick = new Tone.MembraneSynth({
-          pitchDecay: 0.05,
-          octaves: 4,
+          pitchDecay: 0.03,
+          octaves: 2,
           oscillator: { type: 'sine' },
-          envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-        }).connect(fxChain);
-        kick.volume.value = -8;
+          envelope: { attack: 0.001, decay: 0.2, sustain: 0.01, release: 0.5 }
+        }).connect(groupGain);
+        kick.volume.value = -14;
         localSynths.push(kick);
         const kickLoop = new Tone.Loop(function(time) {
-          kick.triggerAttackRelease('C1', '8n', time);
+          kick.triggerAttackRelease('C2', '8n', time);
         }, cfg.drums.kick).start(0);
         localLoops.push(kickLoop);
       }
 
-      // Snare / Backbeat
-      if (cfg.drums.snare) {
-        const snare = new Tone.NoiseSynth({
-          noise: { type: 'pink' },
-          envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
-        }).connect(fxChain);
-        snare.volume.value = -14;
-        localSynths.push(snare);
-        const snareLoop = new Tone.Loop(function(time) {
-          snare.triggerAttackRelease('16n', time);
-        }, cfg.drums.snare).start(0);
-        localLoops.push(snareLoop);
-      }
-
-      // Hi-hat with pattern variation
+      // Soft hi-hat (like a wood block or clave)
       if (cfg.drums.hat) {
         const hat = new Tone.MetalSynth({
-          harmonicity: 5.1,
-          modulationIndex: 32,
-          resonance: 4000,
-          octaves: 1.5,
-          envelope: { attack: 0.001, decay: 0.1, release: 0.01 }
-        }).connect(fxChain);
-        hat.volume.value = -20;
-        localSynths.push(hat);
-
-        // Varying hat pattern
-        const hatPatterns = [
-          ['16n', null, '16n', null, '16n', null, '16n', null],
-          ['16n', '16n', null, '16n', '16n', null, '16n', null],
-          ['16n', null, '16n', '16n', null, '16n', null, '16n']
-        ];
-        let hatPatIdx = 0;
-        const hatSeq = new Tone.Sequence(function(time, dur) {
-          if (dur) hat.triggerAttackRelease(dur, time, 0.3);
-        }, hatPatterns[0], '16n').start(0);
-        localLoops.push(hatSeq);
-        const hatRotate = new Tone.Loop(function(time) {
-          hatPatIdx = (hatPatIdx + 1) % hatPatterns.length;
-          hatSeq.set({ events: hatPatterns[hatPatIdx] });
-        }, '1m').start(0);
-        localLoops.push(hatRotate);
-      }
-
-      // Shaker / tambourine
-      if (cfg.drums.shaker) {
-        const shaker = new Tone.NoiseSynth({
-          noise: { type: 'white' },
-          envelope: { attack: 0.001, decay: 0.05, sustain: 0 }
-        }).connect(fxChain);
-        shaker.volume.value = -26;
-        localSynths.push(shaker);
-        const shakerLoop = new Tone.Loop(function(time) {
-          shaker.triggerAttackRelease('32n', time);
-        }, cfg.drums.shaker).start(0);
-        localLoops.push(shakerLoop);
-      }
-
-      // Cymbal crash on downbeat
-      if (cfg.drums.crash) {
-        const crash = new Tone.MetalSynth({
-          harmonicity: 3,
-          modulationIndex: 16,
+          harmonicity: 2,
+          modulationIndex: 4,
           resonance: 2000,
-          octaves: 2,
-          envelope: { attack: 0.01, decay: 1.5, sustain: 0, release: 1.5 }
-        }).connect(fxChain);
-        crash.volume.value = -18;
-        localSynths.push(crash);
-        const crashLoop = new Tone.Loop(function(time) {
-          crash.triggerAttackRelease('1n', time, 0.4);
-        }, cfg.drums.crash).start(0);
-        localLoops.push(crashLoop);
+          octaves: 1,
+          envelope: { attack: 0.001, decay: 0.05, release: 0.01 }
+        }).connect(groupGain);
+        hat.volume.value = -24;
+        localSynths.push(hat);
+        const hatLoop = new Tone.Loop(function(time) {
+          hat.triggerAttackRelease('32n', time, 0.2);
+        }, cfg.drums.hat).start(0);
+        localLoops.push(hatLoop);
       }
 
-      // Noise / ambient hits
-      if (cfg.drums.noise) {
-        const noise = new Tone.NoiseSynth({
-          noise: { type: 'pink' },
-          envelope: { attack: 0.5, decay: 1, sustain: 0.5, release: 2 }
+      // Bubble pop / game sfx
+      if (cfg.drums.pop) {
+        const pop = new Tone.Synth({
+          oscillator: { type: 'sine' },
+          envelope: { attack: 0.001, decay: 0.08, sustain: 0, release: 0.05 }
         }).connect(fxChain);
-        noise.volume.value = -22;
-        localSynths.push(noise);
-        const noiseLoop = new Tone.Loop(function(time) {
-          noise.triggerAttackRelease('2m', time);
-        }, cfg.drums.noise).start(0);
-        localLoops.push(noiseLoop);
+        pop.volume.value = -18;
+        localSynths.push(pop);
+        const popLoop = new Tone.Loop(function(time) {
+          if (Math.random() > 0.5) pop.triggerAttackRelease('C6', '32n', time, 0.15);
+        }, cfg.drums.pop).start(0);
+        localLoops.push(popLoop);
       }
 
-      // Random accent hits
+      // Accent hit (soft tom)
       if (cfg.drums.hit) {
         const hit = new Tone.MembraneSynth({
           pitchDecay: 0.02,
           octaves: 2,
-          envelope: { attack: 0.001, decay: 0.15, sustain: 0, release: 0.1 }
-        }).connect(fxChain);
-        hit.volume.value = -16;
+          envelope: { attack: 0.001, decay: 0.1, sustain: 0, release: 0.1 }
+        }).connect(groupGain);
+        hit.volume.value = -18;
         localSynths.push(hit);
         const hitLoop = new Tone.Loop(function(time) {
-          if (Math.random() > 0.6) hit.triggerAttackRelease('G2', '16n', time);
+          if (Math.random() > 0.6) hit.triggerAttackRelease('G3', '16n', time);
         }, cfg.drums.hit).start(0);
         localLoops.push(hitLoop);
       }
     }
 
-    return { groupGain, localLoops, localSynths };
-  }
+    // ─── TWINKLE / STAR SFX (for cosmic & magical) ───
+    if (cfg.twinkle) {
+      const twinkle = new Tone.Synth({
+        oscillator: { type: 'sine' },
+        envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.5 }
+      }).connect(fxChain);
+      twinkle.volume.value = -22;
+      localSynths.push(twinkle);
+      const twinkleLoop = new Tone.Loop(function(time) {
+        if (Math.random() > 0.7) {
+          const note = cfg.scale[Math.floor(Math.random() * cfg.scale.length)];
+          twinkle.triggerAttackRelease(note, '16n', time, 0.1);
+        }
+      }, '4n').start(0);
+      localLoops.push(twinkleLoop);
+    }
 
-  function playProcedural(mood) {
-    initTone().then(function(ready) {
-      if (!ready) {
-        playSynthesized(mood);
-        return;
-      }
-      // Ensure AudioContext is running (requires user gesture on first use)
-      if (Tone.context.state === 'suspended') {
-        Tone.start().then(function() {
-          _doPlayProcedural(mood);
-        }).catch(function() {
-          playSynthesized(mood);
-        });
-      } else {
-        _doPlayProcedural(mood);
-      }
-    });
+    return { groupGain, localLoops, localSynths };
   }
 
   function _doPlayProcedural(mood) {
