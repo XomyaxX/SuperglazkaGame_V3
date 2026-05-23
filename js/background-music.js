@@ -239,14 +239,13 @@ const BackgroundMusic = (function() {
       const delayFx = new Tone.FeedbackDelay('8n', cfg.delay).connect(fxChain);
       fxChain = delayFx;
     }
-    const filterFx = new Tone.Filter(cfg.pad ? cfg.pad.filter : 2000, 'lowpass').connect(fxChain);
 
     // ─── PAD / CHORDS ───
     if (cfg.pad) {
       const pad = new Tone.PolySynth(Tone.Synth, {
         oscillator: { type: cfg.pad.type },
         envelope: { attack: cfg.pad.attack, decay: 0.5, sustain: 0.6, release: cfg.pad.release },
-      }).connect(filterFx);
+      }).connect(fxChain);
       pad.volume.value = -10;
       localSynths.push(pad);
 
@@ -271,7 +270,7 @@ const BackgroundMusic = (function() {
         envelope: { attack: cfg.bass.attack, decay: 0.3, sustain: 0.7, release: cfg.bass.release },
         filter: { Q: 2, type: 'lowpass', rolloff: -24 },
         filterEnvelope: { attack: 0.06, decay: 0.2, sustain: 0.5, release: 0.5, baseFrequency: 200, octaves: 2.5 }
-      }).connect(groupGain);
+      }).connect(fxChain);
       bass.volume.value = -6;
       localSynths.push(bass);
       const bassSeq = new Tone.Sequence(function(time, note) {
@@ -286,7 +285,7 @@ const BackgroundMusic = (function() {
         attackNoise: 1,
         dampening: 4000,
         resonance: 0.9
-      }).connect(filterFx);
+      }).connect(fxChain);
       pluck.volume.value = -8;
       localSynths.push(pluck);
 
@@ -316,7 +315,7 @@ const BackgroundMusic = (function() {
       const mel = new Tone.Synth({
         oscillator: { type: cfg.melody.type },
         envelope: { attack: cfg.melody.attack, decay: 0.3, sustain: 0.3, release: cfg.melody.release },
-      }).connect(filterFx);
+      }).connect(fxChain);
       mel.volume.value = -9;
       localSynths.push(mel);
 
@@ -348,7 +347,7 @@ const BackgroundMusic = (function() {
         envelope: { attack: cfg.bell.attack, decay: 0.5, sustain: 0, release: cfg.bell.release },
         modulation: { type: 'square' },
         modulationEnvelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.2 }
-      }).connect(filterFx);
+      }).connect(fxChain);
       bell.volume.value = -14;
       localSynths.push(bell);
 
@@ -368,7 +367,7 @@ const BackgroundMusic = (function() {
       const arp = new Tone.Synth({
         oscillator: { type: 'sine' },
         envelope: { attack: 0.02, decay: 0.2, sustain: 0.1, release: 0.5 },
-      }).connect(filterFx);
+      }).connect(fxChain);
       arp.volume.value = -16;
       localSynths.push(arp);
       const arpSeq = new Tone.Sequence(function(time, note) {
@@ -382,7 +381,7 @@ const BackgroundMusic = (function() {
       const drone = new Tone.Synth({
         oscillator: { type: cfg.drone.type },
         envelope: { attack: 2, decay: 0.1, sustain: 1, release: 3 },
-      }).connect(groupGain);
+      }).connect(fxChain);
       drone.volume.value = -14;
       localSynths.push(drone);
       const droneLoop = new Tone.Loop(function(time) {
@@ -400,7 +399,7 @@ const BackgroundMusic = (function() {
           octaves: 4,
           oscillator: { type: 'sine' },
           envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         kick.volume.value = -8;
         localSynths.push(kick);
         const kickLoop = new Tone.Loop(function(time) {
@@ -414,7 +413,7 @@ const BackgroundMusic = (function() {
         const snare = new Tone.NoiseSynth({
           noise: { type: 'pink' },
           envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         snare.volume.value = -14;
         localSynths.push(snare);
         const snareLoop = new Tone.Loop(function(time) {
@@ -431,7 +430,7 @@ const BackgroundMusic = (function() {
           resonance: 4000,
           octaves: 1.5,
           envelope: { attack: 0.001, decay: 0.1, release: 0.01 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         hat.volume.value = -20;
         localSynths.push(hat);
 
@@ -458,7 +457,7 @@ const BackgroundMusic = (function() {
         const shaker = new Tone.NoiseSynth({
           noise: { type: 'white' },
           envelope: { attack: 0.001, decay: 0.05, sustain: 0 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         shaker.volume.value = -26;
         localSynths.push(shaker);
         const shakerLoop = new Tone.Loop(function(time) {
@@ -475,7 +474,7 @@ const BackgroundMusic = (function() {
           resonance: 2000,
           octaves: 2,
           envelope: { attack: 0.01, decay: 1.5, sustain: 0, release: 1.5 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         crash.volume.value = -18;
         localSynths.push(crash);
         const crashLoop = new Tone.Loop(function(time) {
@@ -489,7 +488,7 @@ const BackgroundMusic = (function() {
         const noise = new Tone.NoiseSynth({
           noise: { type: 'pink' },
           envelope: { attack: 0.5, decay: 1, sustain: 0.5, release: 2 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         noise.volume.value = -22;
         localSynths.push(noise);
         const noiseLoop = new Tone.Loop(function(time) {
@@ -504,7 +503,7 @@ const BackgroundMusic = (function() {
           pitchDecay: 0.02,
           octaves: 2,
           envelope: { attack: 0.001, decay: 0.15, sustain: 0, release: 0.1 }
-        }).connect(groupGain);
+        }).connect(fxChain);
         hit.volume.value = -16;
         localSynths.push(hit);
         const hitLoop = new Tone.Loop(function(time) {
@@ -512,26 +511,6 @@ const BackgroundMusic = (function() {
         }, cfg.drums.hit).start(0);
         localLoops.push(hitLoop);
       }
-    }
-
-    // ─── DYNAMICS: Volume automation ───
-    if (cfg.dynamics && cfg.dynamics.volumeCurve) {
-      const curve = cfg.dynamics.volumeCurve;
-      let step = 0;
-      const dynLoop = new Tone.Loop(function(time) {
-        const targetVol = curve[step % curve.length] * volume;
-        groupGain.gain.linearRampToValueAtTime(targetVol, time + 2);
-        step++;
-      }, '2m').start(0);
-      localLoops.push(dynLoop);
-    }
-
-    // ─── FILTER SWEEP for movement ───
-    if (cfg.pad && cfg.pad.filter) {
-      const sweepLfo = new Tone.LFO('0.1hz', cfg.pad.filter * 0.5, cfg.pad.filter * 1.5);
-      sweepLfo.connect(filterFx.frequency);
-      sweepLfo.start();
-      localSynths.push({ dispose: function() { sweepLfo.stop(); sweepLfo.dispose(); } });
     }
 
     return { groupGain, localLoops, localSynths };
