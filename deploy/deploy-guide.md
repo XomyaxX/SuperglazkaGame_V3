@@ -39,8 +39,11 @@ curl http://localhost:3000/api/health
 
 ## Ежедневный workflow обновления
 
-### 1. Локально — закоммитить и запушить
+### 1. Локально — бамп версии SW, закоммитить и запушить
 ```bash
+# Обновить версию кэша Service Worker (обязательно!)
+node deploy/bump-sw.js
+
 git add .
 git commit -m "описание изменений"
 git push origin main

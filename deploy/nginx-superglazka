@@ -31,8 +31,15 @@ server {
         proxy_read_timeout 60s;
     }
 
-    # Static files (long cache)
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webm|mp3|ogg|wav)$ {
+    # JS/CSS — short cache because they change frequently
+    location ~* \.(js|css)$ {
+        expires 1h;
+        access_log off;
+        add_header Cache-Control "public, must-revalidate";
+    }
+
+    # Images, fonts, media — long cache because they rarely change
+    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webm|mp3|ogg|wav)$ {
         expires 6M;
         access_log off;
         add_header Cache-Control "public, immutable";

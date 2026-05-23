@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v14';
+const CACHE_NAME = 'superglazka-v15';
 
 const STATIC_ASSETS = [
   '/',
@@ -21,6 +21,7 @@ const STATIC_ASSETS = [
   '/js/error-reporter.js',
   '/js/mood-detector.js',
   '/js/background-music.js',
+  '/js/tone.min.js',
   '/js/auth.js',
   '/assets/shared/characters/lenivus.png',
   '/assets/shared/characters/superglazka.png',
@@ -54,9 +55,9 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: cache-first strategy
+// Fetch: stale-while-revalidate for JS/CSS, cache-first for everything else
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests and external resources (Google Fonts, analytics, etc.)
+  // Skip non-GET requests and external resources
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
@@ -65,25 +66,45 @@ self.addEventListener('fetch', (event) => {
   const path = url.pathname.toLowerCase();
   if (path.endsWith('.mp4') || path.endsWith('.mp3') || path.endsWith('.webm') || path.endsWith('.wav')) return;
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
-        .then((response) => {
-          // Cache successful responses for future offline use
-          if (response && response.status === 200 && response.type === 'basic') {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
-          // Fallback for navigation requests
-          if (event.request.mode === 'navigate') {
-            return caches.match('/app.html');
-          }
-          return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
-        });
-    })
-  );
+  const isJsOrCss = path.endsWith('.js') || path.endsWith('.css');
+
+  if (isJsOrCss) {
+    // Stale-while-revalidate: serve from cache immediately, but update in background
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        const fetchPromise = fetch(event.request)
+          .then((response) => {
+            if (response && response.status === 200 && response.type === 'basic') {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => cached); // fallback to cache if network fails
+
+        return cached || fetchPromise;
+      })
+    );
+  } else {
+    // Cache-first for images, fonts, and other static assets
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(event.request)
+          .then((response) => {
+            if (response && response.status === 200 && response.type === 'basic') {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => {
+            if (event.request.mode === 'navigate') {
+              return caches.match('/app.html');
+            }
+            return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
+          });
+      })
+    );
+  }
 });
