@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v18';
+const CACHE_NAME = 'superglazka-v19';
 
 const STATIC_ASSETS = [
   '/',
@@ -23,6 +23,10 @@ const STATIC_ASSETS = [
   '/js/background-music.js',
   '/js/tone.min.js',
   '/js/auth.js',
+  '/js/i18n.js',
+  '/locales/ru.json',
+  '/locales/en.json',
+  '/locales/kz.json',
   '/assets/shared/characters/lenivus.png',
   '/assets/shared/characters/superglazka.png',
   '/assets/shared/characters/vanya.png',

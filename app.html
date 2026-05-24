@@ -45,31 +45,31 @@ if ('serviceWorker' in navigator) {
       <div class="logo-title">СУПЕРГЛАЗКА</div>
     </div>
     <nav class="app-nav" aria-label="Основная навигация">
-      <a href="index.html">Главная</a>
-      <a href="blog.html">Блог</a>
-      <a href="parents.html">Родителям</a>
-      <a href="checklist.html">Чек-лист</a>
-      <button id="menuSettingsBtn" aria-label="Настройки">⚙️</button>
-      <button class="profile-btn" id="menuProfileBtn" title="Профиль" aria-label="Профиль">
+      <a href="index.html" data-i18n="nav.home">Главная</a>
+      <a href="blog.html" data-i18n="nav.blog">Блог</a>
+      <a href="parents.html" data-i18n="nav.parents">Родителям</a>
+      <a href="checklist.html" data-i18n="nav.checklist">Чек-лист</a>
+      <button id="menuSettingsBtn" aria-label="Настройки" data-i18n="nav.settings">⚙️</button>
+      <button class="profile-btn" id="menuProfileBtn" title="Профиль" aria-label="Профиль" data-i18n-title="nav.profile">
         <span>👤</span>
         <span class="profile-coins-val">0</span>
         <span>🪙</span>
       </button>
     </nav>
-    <button class="app-nav-mobile-toggle" id="appNavToggle" aria-label="Меню">☰</button>
+    <button class="app-nav-mobile-toggle" id="appNavToggle" aria-label="Меню" data-i18n="nav.menu">☰</button>
   </header>
 
   <!-- Mobile nav overlay -->
   <div class="app-nav-mobile" id="appNavMobile">
     <button class="app-nav-mobile-close" id="appNavClose" aria-label="Закрыть">✕</button>
-    <a href="index.html">Главная</a>
-    <a href="blog.html">Блог</a>
-    <a href="parents.html">Родителям</a>
-    <a href="checklist.html">Чек-лист</a>
-    <button id="menuSettingsBtnMobile" class="app-nav-mobile-btn">⚙️ Настройки</button>
-    <button class="profile-btn app-nav-mobile-btn" id="menuProfileBtnMobile" title="Профиль" aria-label="Профиль">
+    <a href="index.html" data-i18n="nav.home">Главная</a>
+    <a href="blog.html" data-i18n="nav.blog">Блог</a>
+    <a href="parents.html" data-i18n="nav.parents">Родителям</a>
+    <a href="checklist.html" data-i18n="nav.checklist">Чек-лист</a>
+    <button id="menuSettingsBtnMobile" class="app-nav-mobile-btn" data-i18n="nav.settings">⚙️ Настройки</button>
+    <button class="profile-btn app-nav-mobile-btn" id="menuProfileBtnMobile" title="Профиль" aria-label="Профиль" data-i18n-title="nav.profile">
       <span>👤</span>
-      <span>Профиль</span>
+      <span data-i18n="nav.profile">Профиль</span>
     </button>
   </div>
 
@@ -77,13 +77,13 @@ if ('serviceWorker' in navigator) {
     <!-- Top row -->
     <div class="menu-top-row">
       <div class="continue-card" id="continueBlock" style="display:none;">
-        <div class="card-title">Продолжить приключение</div>
+        <div class="card-title" data-i18n="app.continueAdventure">Продолжить приключение</div>
         <img class="continue-preview" id="continuePreview" alt="Последний кадр" style="display:none;">
         <div class="card-info" id="continueInfo"></div>
-        <button class="chapter-btn continue-btn" id="continueBtn">▶ Продолжить</button>
+        <button class="chapter-btn continue-btn" id="continueBtn" data-i18n="app.continue">▶ Продолжить</button>
       </div>
       <div class="countdown-card">
-        <div class="card-title">До новой главы</div>
+        <div class="card-title" data-i18n="app.nextChapterSoon">До новой главы</div>
         <div class="countdown-display" id="countdownDisplay">
           <div class="countdown-group"><div class="countdown-value" id="cdDays">00</div><div class="countdown-unit">дней</div></div>
           <div class="countdown-sep">:</div>
@@ -133,14 +133,28 @@ if ('serviceWorker' in navigator) {
   <!-- Settings dropdown -->
   <div class="audio-dropdown" id="settingsDropdown" role="dialog" aria-label="Настройки" aria-modal="true">
     <div class="settings-panel">
+      <!-- Language -->
+      <div class="settings-section">
+        <div class="settings-section-title">🌐 Язык</div>
+        <div class="settings-row">
+          <div class="settings-row-info">
+            <div class="settings-row-icon">🌐</div>
+            <div class="settings-row-meta">
+              <div class="settings-row-name">Language / Тіл / Язык</div>
+            </div>
+          </div>
+          <div class="lang-switcher" id="langSwitcherApp" style="margin-left:auto;"></div>
+        </div>
+      </div>
+
       <!-- Audio -->
       <div class="settings-section">
-        <div class="settings-section-title">🎵 Аудио</div>
+        <div class="settings-section-title" data-i18n="app.audio">🎵 Аудио</div>
         <div class="settings-row" id="settingsRowNarration">
           <div class="settings-row-info">
             <div class="settings-row-icon">🎙️</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Рассказчик</div>
+              <div class="settings-row-name" data-i18n="app.narrator">Рассказчик</div>
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleNarration"></div>
@@ -149,7 +163,7 @@ if ('serviceWorker' in navigator) {
           <div class="settings-row-info">
             <div class="settings-row-icon">🎵</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Фоновая музыка</div>
+              <div class="settings-row-name" data-i18n="app.bgMusic">Фоновая музыка</div>
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleBgMusic"></div>
@@ -163,12 +177,12 @@ if ('serviceWorker' in navigator) {
 
       <!-- Subtitles -->
       <div class="settings-section">
-        <div class="settings-section-title">💬 Субтитры</div>
+        <div class="settings-section-title" data-i18n="app.subtitles">💬 Субтитры</div>
         <div class="settings-row" id="settingsRowSubtitles">
           <div class="settings-row-info">
             <div class="settings-row-icon">📝</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Показывать субтитры</div>
+              <div class="settings-row-name" data-i18n="app.showSubtitles">Показывать субтитры</div>
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleSubtitles"></div>
@@ -177,7 +191,7 @@ if ('serviceWorker' in navigator) {
           <div class="settings-row-info">
             <div class="settings-row-icon">🔤</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Размер шрифта субтитров</div>
+              <div class="settings-row-name" data-i18n="app.subtitleFontSize">Размер шрифта субтитров</div>
             </div>
           </div>
           <div class="font-size-group" id="subtitleFontSizeGroup">
@@ -190,12 +204,12 @@ if ('serviceWorker' in navigator) {
 
       <!-- Accessibility -->
       <div class="settings-section">
-        <div class="settings-section-title">♿ Доступность</div>
+        <div class="settings-section-title" data-i18n="app.accessibility">♿ Доступность</div>
         <div class="settings-row" id="settingsRowHighContrast">
           <div class="settings-row-info">
             <div class="settings-row-icon">🌓</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Высокая контрастность</div>
+              <div class="settings-row-name" data-i18n="app.highContrast">Высокая контрастность</div>
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleHighContrast"></div>
@@ -204,7 +218,7 @@ if ('serviceWorker' in navigator) {
           <div class="settings-row-info">
             <div class="settings-row-icon">✋</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Уменьшить анимации</div>
+              <div class="settings-row-name" data-i18n="app.reduceMotion">Уменьшить анимации</div>
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleReduceMotion"></div>
@@ -213,12 +227,12 @@ if ('serviceWorker' in navigator) {
 
       <!-- Interface -->
       <div class="settings-section">
-        <div class="settings-section-title">🎨 Интерфейс</div>
+        <div class="settings-section-title" data-i18n="app.interface">🎨 Интерфейс</div>
         <div class="settings-row">
           <div class="settings-row-info">
             <div class="settings-row-icon">📐</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Размер текста</div>
+              <div class="settings-row-name" data-i18n="app.textSize">Размер текста</div>
             </div>
           </div>
           <div class="font-size-group" id="uiFontSizeGroup">
@@ -231,7 +245,7 @@ if ('serviceWorker' in navigator) {
           <div class="settings-row-info">
             <div class="settings-row-icon">🌙</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Тёмная тема</div>
+              <div class="settings-row-name" data-i18n="app.darkTheme">Тёмная тема</div>
             </div>
           </div>
           <div class="bs-toggle" id="settingsToggleDarkTheme"></div>
@@ -244,34 +258,34 @@ if ('serviceWorker' in navigator) {
   <div class="audio-dropdown" id="faqDropdown" role="dialog" aria-label="Помощь" aria-modal="true">
     <div class="settings-panel faq-panel">
       <div class="faq-header">
-        <h3>❓ Помощь</h3>
+        <h3 data-i18n="app.help">❓ Помощь</h3>
         <button class="faq-close" id="faqClose" aria-label="Закрыть">✕</button>
       </div>
       <div class="faq-list">
         <details class="faq-item">
-          <summary>Как управлять?</summary>
-          <p><strong>На компьютере:</strong> используйте стрелки вверх/вниз или клавишу Пробел для перехода к следующему кадру. Клавиша Esc скрывает/показывает интерфейс.</p>
-          <p><strong>На телефоне:</strong> свайпайте вверх/вниз для переключения кадров. Тап по экрану ставит видео на паузу.</p>
+          <summary data-i18n="faq.controls.question">Как управлять?</summary>
+          <p data-i18n="faq.controls.answer"><strong>На компьютере:</strong> используйте стрелки вверх/вниз или клавишу Пробел для перехода к следующему кадру. Клавиша Esc скрывает/показывает интерфейс.</p>
+          <p data-i18n="faq.controls.answer2"><strong>На телефоне:</strong> свайпайте вверх/вниз для переключения кадров. Тап по экрану ставит видео на паузу.</p>
         </details>
         <details class="faq-item">
-          <summary>Что делать, если звук не работает?</summary>
-          <p>1. Проверьте, что в настройках (⚙️) включены нужные аудиотреки.<br>2. На iOS звук включается только после первого касания экрана пользователем — это ограничение Safari.<br>3. Проверьте громкость устройства и не включён ли беззвучный режим.<br>4. Перезагрузите страницу — иногда браузер блокирует автовоспроизведение.</p>
+          <summary data-i18n="faq.sound.question">Что делать, если звук не работает?</summary>
+          <p data-i18n="faq.sound.answer">1. Проверьте, что в настройках (⚙️) включены нужные аудиотреки.<br>2. На iOS звук включается только после первого касания экрана пользователем — это ограничение Safari.<br>3. Проверьте громкость устройства и не включён ли беззвучный режим.<br>4. Перезагрузите страницу — иногда браузер блокирует автовоспроизведение.</p>
         </details>
         <details class="faq-item">
-          <summary>Как заработать монеты?</summary>
-          <p>Монеты начисляются за прохождение кадров и мини-игр. Чем лучше результат в игре (больше звёзд), тем больше монет. Также можно получить бонусные монеты за повторное прохождение главы.</p>
+          <summary data-i18n="faq.coins.question">Как заработать монеты?</summary>
+          <p data-i18n="faq.coins.answer">Монеты начисляются за прохождение кадров и мини-игр. Чем лучше результат в игре (больше звёзд), тем больше монет. Также можно получить бонусные монеты за повторное прохождение главы.</p>
         </details>
         <details class="faq-item">
-          <summary>Почему глава заблокирована?</summary>
-          <p>Главы открываются последовательно. Чтобы разблокировать следующую главу, нужно досмотреть предыдущую до конца. Прогресс сохраняется автоматически.</p>
+          <summary data-i18n="faq.locked.question">Почему глава заблокирована?</summary>
+          <p data-i18n="faq.locked.answer">Главы открываются последовательно. Чтобы разблокировать следующую главу, нужно досмотреть предыдущую до конца. Прогресс сохраняется автоматически.</p>
         </details>
         <details class="faq-item">
-          <summary>Как включить субтитры?</summary>
-          <p>Откройте настройки (⚙️) → раздел «Субтитры» → переключите тумблер. Там же можно выбрать размер шрифта: маленький, средний или большой.</p>
+          <summary data-i18n="faq.subtitles.question">Как включить субтитры?</summary>
+          <p data-i18n="faq.subtitles.answer">Откройте настройки (⚙️) → раздел «Субтитры» → переключите тумблер. Там же можно выбрать размер шрифта: маленький, средний или большой.</p>
         </details>
         <details class="faq-item">
-          <summary>Как поменять тему?</summary>
-          <p>В настройках (⚙️) → раздел «Интерфейс» → переключатель «Тёмная тема». Выбор сохраняется и работает на обеих страницах.</p>
+          <summary data-i18n="faq.theme.question">Как поменять тему?</summary>
+          <p data-i18n="faq.theme.answer">В настройках (⚙️) → раздел «Интерфейс» → переключатель «Тёмная тема». Выбор сохраняется и работает на обеих страницах.</p>
         </details>
       </div>
     </div>
@@ -301,15 +315,15 @@ if ('serviceWorker' in navigator) {
         <div class="bs-narrator-full" id="bsNarratorFull" aria-live="polite" aria-atomic="true"></div>
         <div class="bs-narrator-fade"></div>
       </div>
-      <button class="bs-narrator-toggle" id="bsNarratorToggle" style="display:none;" aria-label="Развернуть или свернуть текст рассказчика" aria-expanded="false">
-        <span class="bs-narrator-toggle-text">Показать полностью</span>
+      <button class="bs-narrator-toggle" id="bsNarratorToggle" style="display:none;" aria-label="Развернуть или свернуть текст рассказчика" aria-expanded="false" data-i18n="app.showFullText">
+        <span class="bs-narrator-toggle-text" data-i18n="app.showFullText">Показать полностью</span>
         <svg class="bs-narrator-toggle-icon" viewBox="0 0 24 24" width="14" height="14">
           <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
 
       <div class="bs-game-panel" id="bsGamePanel">
-        <div class="bs-section-title">🎮 Мини-игры</div>
+        <div class="bs-section-title" data-i18n="app.miniGames">🎮 Мини-игры</div>
         <div id="bsGamePanelInner"></div>
       </div>
 
@@ -323,8 +337,8 @@ if ('serviceWorker' in navigator) {
       </div>
 
       <div class="bs-nav">
-        <button class="bs-nav-btn" id="bsPrevBtn">◀ Назад</button>
-        <button class="bs-nav-btn" id="bsNavNextBtn">Далее ▶</button>
+        <button class="bs-nav-btn" id="bsPrevBtn" data-i18n="app.back">◀ Назад</button>
+        <button class="bs-nav-btn" id="bsNavNextBtn" data-i18n="app.next">Далее ▶</button>
       </div>
     </div>
   </div>
@@ -341,9 +355,9 @@ if ('serviceWorker' in navigator) {
      ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="game-transition-overlay">
   <div class="tr-badge"><span style="font-size:50px">🎮</span></div>
-  <div class="gt-title tr-title">Мини-игра!</div>
-  <div class="gt-sub tr-sub">Готовься к испытанию...</div>
-  <button class="gt-btn tr-btn">Играть! 🚀</button>
+  <div class="gt-title tr-title" data-i18n="app.miniGame">Мини-игра!</div>
+  <div class="gt-sub tr-sub" data-i18n="app.getReady">Готовься к испытанию...</div>
+  <button class="gt-btn tr-btn" data-i18n="app.playGame">Играть! 🚀</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -351,9 +365,9 @@ if ('serviceWorker' in navigator) {
      ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="tr-overlay-runner">
   <div class="tr-badge"><span style="font-size:50px">🏃</span></div>
-  <div class="tr-title">Мини-игра!</div>
-  <div class="tr-sub">Помоги Суперглазке догнать Пикселька на столе!<br>Уворачивайся от посуды.</div>
-  <button class="tr-btn" onclick="startRunnerGame()">Играть! 🚀</button>
+  <div class="tr-title" data-i18n="app.miniGame">Мини-игра!</div>
+  <div class="tr-sub" data-i18n="games.runner.intro">Помоги Суперглазке догнать Пикселька на столе!<br>Уворачивайся от посуды.</div>
+  <button class="tr-btn" onclick="startRunnerGame()" data-i18n="app.playGame">Играть! 🚀</button>
 </div>
 
 <div class="overlay" id="game-overlay-runner">
@@ -374,7 +388,7 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <div class="overlay" id="runner-stats-overlay">
-  <div class="stats-title">🏃 Погоня завершена!</div>
+  <div class="stats-title" data-i18n="games.runner.completed">🏃 Погоня завершена!</div>
   <div class="win-stars" style="margin:10px 0;">
     <span class="win-star" id="runner-star-1">⭐</span>
     <span class="win-star" id="runner-star-2">⭐</span>
@@ -382,12 +396,12 @@ if ('serviceWorker' in navigator) {
   </div>
   <div class="stats-card">
     <div class="stats-time" id="runner-stats-time">⏱️ Время: 0:00</div>
-    <div class="stats-section"><h3>❤️ Жизни</h3><div class="stat-row"><span>Осталось жизней:</span><span class="stat-value" id="runner-stats-lives">3/3</span></div></div>
-    <div class="stats-section"><h3>💎 Бонусы</h3><div class="stat-row"><span>Собрано:</span><span class="stat-value" id="runner-stats-bonuses">0</span></div></div>
-    <div class="stats-section"><h3>🎯 Результат</h3><div class="stat-row"><span>Дистанция:</span><span class="stat-value">2000м</span></div><div class="stat-row"><span>Статус:</span><span class="stat-value" id="runner-stats-status">Победа!</span></div></div>
-    <div class="total-score" id="runner-total-score">🏆 Оценка: ⭐⭐⭐</div>
+    <div class="stats-section"><h3 data-i18n="games.stats.lives">❤️ Жизни</h3><div class="stat-row"><span data-i18n="games.stats.livesLeft">Осталось жизней:</span><span class="stat-value" id="runner-stats-lives">3/3</span></div></div>
+    <div class="stats-section"><h3 data-i18n="games.stats.bonuses">💎 Бонусы</h3><div class="stat-row"><span data-i18n="games.stats.collected">Собрано:</span><span class="stat-value" id="runner-stats-bonuses">0</span></div></div>
+    <div class="stats-section"><h3 data-i18n="games.stats.result">🎯 Результат</h3><div class="stat-row"><span data-i18n="games.stats.distance">Дистанция:</span><span class="stat-value">2000м</span></div><div class="stat-row"><span data-i18n="games.stats.status">Статус:</span><span class="stat-value" id="runner-stats-status" data-i18n="games.stats.victory">Победа!</span></div></div>
+    <div class="total-score" id="runner-total-score" data-i18n="games.stats.rating">🏆 Оценка: ⭐⭐⭐</div>
   </div>
-  <button class="tr-btn" onclick="showRunnerRegistration()" style="margin-top:20px;">Продолжить ➜</button>
+  <button class="tr-btn" onclick="showRunnerRegistration()" style="margin-top:20px;" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
 <div class="overlay" id="runner-registration-overlay">
@@ -409,9 +423,9 @@ if ('serviceWorker' in navigator) {
      ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="tr-overlay-gym">
   <div class="tr-badge"><span style="font-size:50px">⚔️</span></div>
-  <div class="tr-title">Ваня против Ленивуса!</div>
-  <div class="tr-sub">Помоги Ване победить Ленивуса!<br>Используй три супер-атаки: Лазер, Прицел и Слёзы.</div>
-  <button class="tr-btn" onclick="startGymGame()">В бой! 🚀</button>
+  <div class="tr-title" data-i18n="games.gym.title">Ваня против Ленивуса!</div>
+  <div class="tr-sub" data-i18n="games.gym.intro">Помоги Ване победить Ленивуса!<br>Используй три супер-атаки: Лазер, Прицел и Слёзы.</div>
+  <button class="tr-btn" onclick="startGymGame()" data-i18n="app.fight">В бой! 🚀</button>
 </div>
 
 <div class="overlay" id="game-overlay-gym">
@@ -421,20 +435,20 @@ if ('serviceWorker' in navigator) {
   </video>
   <div class="boss-overlay-darken"></div>
   <div class="gym-header-new">
-    <div class="boss-hp-display"><span class="boss-label">👁️ ЛЕНИВУС</span><div class="boss-hp-bar-large"><div class="boss-hp-fill-large" id="boss-hp-fill" style="width:100%"></div></div></div>
-    <div class="rays-counter-new"><span class="rays-label">Лучики</span><span class="rays-icons" id="gym-rays">⚪⚪⚪</span></div>
+    <div class="boss-hp-display"><span class="boss-label" data-i18n="games.gym.bossName">👁️ ЛЕНИВУС</span><div class="boss-hp-bar-large"><div class="boss-hp-fill-large" id="boss-hp-fill" style="width:100%"></div></div></div>
+    <div class="rays-counter-new"><span class="rays-label" data-i18n="games.gym.rays">Лучики</span><span class="rays-icons" id="gym-rays">⚪⚪⚪</span></div>
   </div>
   <div class="player-vanya" id="player-vanya"><img src="assets/shared/characters/vanya.png" alt="Ваня"><div class="player-charge-indicator" id="player-charge"></div></div>
   <div class="attack-effects" id="attack-effects"></div>
   <div class="phase-controls" id="phase-container"></div>
-  <button class="skip-btn" onclick="closeGym(true)">Пропустить ▸</button>
+  <button class="skip-btn" onclick="closeGym(true)" data-i18n="app.skip">Пропустить ▸</button>
 </div>
 
 <div class="overlay" id="win-overlay">
   <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
-  <div class="win-title" id="win-title">Отлично!</div>
-  <div class="win-sub" id="win-sub">Ты справился!<br>Продолжение в комиксе...</div>
-  <button class="win-btn" onclick="closeWinContinue()">Продолжить ➜</button>
+  <div class="win-title" id="win-title" data-i18n="app.great">Отлично!</div>
+  <div class="win-sub" id="win-sub" data-i18n="app.youDidIt">Ты справился!<br>Продолжение в комиксе...</div>
+  <button class="win-btn" onclick="closeWinContinue()" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
 <div class="overlay" id="stats-overlay">
@@ -472,18 +486,18 @@ if ('serviceWorker' in navigator) {
     <div class="profile-avatar">👤</div>
     <input type="text" class="profile-nickname" value="Игрок" maxlength="20">
     <div class="profile-coins-big">0 <span>🪙</span></div>
-    <div class="profile-section-title">📖 Главы</div>
+    <div class="profile-section-title" data-i18n="app.chapters">📖 Главы</div>
     <div class="profile-episodes"></div>
-    <div class="profile-section-title">🎮 Мини-игры</div>
+    <div class="profile-section-title" data-i18n="app.miniGames">🎮 Мини-игры</div>
     <div class="profile-games"></div>
     <div class="profile-achievements"></div>
-    <div class="profile-section-title">🔐 Аккаунт</div>
+    <div class="profile-section-title" data-i18n="app.account">🔐 Аккаунт</div>
     <div class="profile-account" id="profileAccount"></div>
 
-    <div class="profile-section-title">🔔 Уведомления</div>
+    <div class="profile-section-title" data-i18n="app.notifications">🔔 Уведомления</div>
     <div class="profile-subscribe">
-      <input type="email" class="profile-sub-input" id="profileSubEmail" placeholder="Твой email">
-      <button class="profile-sub-btn" id="profileSubBtn">Подписаться на новые главы</button>
+      <input type="email" class="profile-sub-input" id="profileSubEmail" placeholder="Твой email" data-i18n-placeholder="app.yourEmail">
+      <button class="profile-sub-btn" id="profileSubBtn" data-i18n="app.subscribe">Подписаться на новые главы</button>
     </div>
   </div>
 </div>
@@ -494,18 +508,18 @@ if ('serviceWorker' in navigator) {
 <div class="overlay" id="auth-modal" role="dialog" aria-modal="true" aria-label="Авторизация">
   <div class="auth-card">
     <button class="auth-close" id="authClose" aria-label="Закрыть">✕</button>
-    <div class="auth-logo"><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;">Игросказка</div>👁️ СУПЕРГЛАЗКА</div>
+    <div class="auth-logo"><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:2px;" data-i18n="brand.subtitle">Игросказка</div>👁️ СУПЕРГЛАЗКА</div>
 
     <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="guest">Быстрый старт</button>
-      <button class="auth-tab" data-tab="register">Полный аккаунт</button>
+      <button class="auth-tab active" data-tab="guest" data-i18n="auth.quickStart">Быстрый старт</button>
+      <button class="auth-tab" data-tab="register" data-i18n="auth.fullAccount">Полный аккаунт</button>
     </div>
 
     <!-- Guest form -->
     <div class="auth-panel active" id="authPanelGuest">
-      <div class="auth-desc">Введи никнейм и начни играть. Прогресс сохранится, но монетки пока нельзя тратить.</div>
-      <input type="text" class="auth-input" id="authGuestNickname" placeholder="Твой никнейм" maxlength="20">
-      <button class="auth-btn" id="authGuestBtn">🚀 Играть!</button>
+      <div class="auth-desc" data-i18n="auth.guestDesc">Введи никнейм и начни играть. Прогресс сохранится, но монетки пока нельзя тратить.</div>
+      <input type="text" class="auth-input" id="authGuestNickname" placeholder="Твой никнейм" maxlength="20" data-i18n-placeholder="auth.yourNickname">
+      <button class="auth-btn" id="authGuestBtn" data-i18n="auth.play">🚀 Играть!</button>
     </div>
 
     <!-- Register form -->
@@ -521,9 +535,9 @@ if ('serviceWorker' in navigator) {
     <!-- Login form -->
     <div class="auth-panel" id="authPanelLogin">
       <input type="email" class="auth-input" id="authLoginEmail" placeholder="Email">
-      <input type="password" class="auth-input" id="authLoginPassword" placeholder="Пароль">
-      <button class="auth-btn" id="authLoginBtn">🔑 Войти</button>
-      <div class="auth-switch">Нет аккаунта? <a href="#" id="authShowRegister">Зарегистрироваться</a></div>
+      <input type="password" class="auth-input" id="authLoginPassword" placeholder="Пароль" data-i18n-placeholder="auth.password">
+      <button class="auth-btn" id="authLoginBtn" data-i18n="auth.loginBtn">🔑 Войти</button>
+      <div class="auth-switch" data-i18n="auth.noAccount">Нет аккаунта? <a href="#" id="authShowRegister" data-i18n="auth.register">Зарегистрироваться</a></div>
     </div>
   </div>
 </div>
@@ -533,22 +547,22 @@ if ('serviceWorker' in navigator) {
      ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="game-overlay-blink">
   <div class="game-header">
-    <div class="score-pill"><span class="score-lbl">Раунд</span><span class="score-val" id="blink-round">1/3</span></div>
-    <div class="score-pill"><span class="score-lbl">Время</span><span class="score-val" id="blink-timer">5</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.blink.round">Раунд</span><span class="score-val" id="blink-round">1/3</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.blink.time">Время</span><span class="score-val" id="blink-timer">5</span></div>
   </div>
   <canvas id="blink-canvas" width="400" height="300"></canvas>
   <div class="blink-controls">
-    <div class="blink-hint" id="blink-hint">Кликай по экрану, чтобы моргать!</div>
+    <div class="blink-hint" id="blink-hint" data-i18n="games.blink.hint">Кликай по экрану, чтобы моргать!</div>
     <div class="blink-progress-bar"><div class="blink-progress-fill" id="blink-progress" style="width:0%"></div></div>
   </div>
-  <button class="skip-btn" onclick="closeBlink(true)">Пропустить ▸</button>
+  <button class="skip-btn" onclick="closeBlink(true)" data-i18n="app.skip">Пропустить ▸</button>
 </div>
 
 <div class="overlay" id="blink-win-overlay">
   <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
-  <div class="win-title">Молодец!</div>
-  <div class="win-sub">Глаза в порядке!<br>+100 🪙</div>
-  <button class="win-btn" onclick="closeBlinkContinue()">Продолжить ➜</button>
+  <div class="win-title" data-i18n="app.wellDone">Молодец!</div>
+  <div class="win-sub" data-i18n="games.blink.win">Глаза в порядке!<br>+100 🪙</div>
+  <button class="win-btn" onclick="closeBlinkContinue()" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -556,21 +570,21 @@ if ('serviceWorker' in navigator) {
      ═══════════════════════════════════════════════════════════ -->
 <div class="overlay" id="game-overlay-tracker">
   <div class="game-header">
-    <div class="score-pill"><span class="score-lbl">Фаза</span><span class="score-val" id="tracker-phase">1/4</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.tracker.phase">Фаза</span><span class="score-val" id="tracker-phase">1/4</span></div>
   </div>
   <canvas id="tracker-canvas" width="500" height="400"></canvas>
   <div class="tracker-controls">
-    <div class="tracker-hint" id="tracker-hint">Следи за шариком глазами 👀</div>
+    <div class="tracker-hint" id="tracker-hint" data-i18n="games.tracker.hint">Следи за шариком глазами 👀</div>
     <div class="tracker-progress-bar"><div class="tracker-progress-fill" id="tracker-progress" style="width:0%"></div></div>
   </div>
-  <button class="skip-btn" onclick="closeTracker(true)">Пропустить ▸</button>
+  <button class="skip-btn" onclick="closeTracker(true)" data-i18n="app.skip">Пропустить ▸</button>
 </div>
 
 <div class="overlay" id="tracker-win-overlay">
   <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
-  <div class="win-title">Отлично!</div>
-  <div class="win-sub">Глаза отдохнули!<br>+100 🪙</div>
-  <button class="win-btn" onclick="closeTrackerContinue()">Продолжить ➜</button>
+  <div class="win-title" data-i18n="app.great">Отлично!</div>
+  <div class="win-sub" data-i18n="games.tracker.win">Глаза отдохнули!<br>+100 🪙</div>
+  <button class="win-btn" onclick="closeTrackerContinue()" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -589,12 +603,14 @@ if ('serviceWorker' in navigator) {
       </linearGradient>
     </defs>
   </svg>
-  <div class="transition-text">Следующий кадр...</div>
+  <div class="transition-text" data-i18n="app.nextFrame">Следующий кадр...</div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
      SCRIPTS
      ═══════════════════════════════════════════════════════════ -->
+<script src="js/i18n.js"></script>
+<script>I18n.init(); I18n.onReady(function(){ I18n.renderSwitcher(document.getElementById('langSwitcherApp')); });</script>
 <script src="js/error-reporter.js" defer></script>
 <script src="js/player.js" defer></script>
 <script src="js/auth.js" defer></script>
@@ -611,10 +627,10 @@ if ('serviceWorker' in navigator) {
 <script src="js/app.js" defer></script>
   <div class="cookie-banner" id="cookieBanner">
     <div class="cookie-banner-text">
-      Мы используем localStorage для сохранения прогресса и настроек.
-      <a href="privacy.html">Политика конфиденциальности</a>
+      <span data-i18n="cookie.text">Мы используем localStorage для сохранения прогресса и настроек.</span>
+      <a href="privacy.html" data-i18n="cookie.privacy">Политика конфиденциальности</a>
     </div>
-    <button class="cookie-banner-btn" id="cookieAccept">Принять</button>
+    <button class="cookie-banner-btn" id="cookieAccept" data-i18n="cookie.accept">Принять</button>
   </div>
   <script>
     (function() {

@@ -26,7 +26,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/landing.css">
+<style>
+.lang-switcher { display:flex; gap:4px; align-items:center; }
+.lang-switcher .lang-btn {
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+  border-radius:6px; padding:4px 8px; font-size:12px; font-weight:700;
+  color:rgba(255,255,255,0.7); cursor:pointer; transition:all .2s;
+}
+.lang-switcher .lang-btn:hover, .lang-switcher .lang-btn.active {
+  background:linear-gradient(135deg,#c084fc,#e879f9);
+  border-color:transparent; color:#fff;
+}
+</style>
+<script src="js/i18n.js"></script>
 <script src="js/error-reporter.js"></script>
+<script>I18n.init();</script>
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
@@ -43,14 +57,15 @@ if ('serviceWorker' in navigator) {
 <nav class="land-nav" id="landNav">
   <div class="land-logo"><span class="land-logo-pretitle">Игросказка</span><span class="land-logo-title">👁️ СУПЕРГЛАЗКА</span></div>
   <div class="land-nav-links">
-    <a href="#about">О комиксе</a>
-    <a href="#features">Особенности</a>
-    <a href="#" class="js-open-games-modal">Игры</a>
-    <a href="#episodes">Главы</a>
-    <a href="#characters">Герои</a>
-    <a href="parents.html">Родителям</a>
-    <a href="blog.html">Блог</a>
-    <a href="app.html" class="land-nav-cta">▶ Начать</a>
+    <a href="#about" data-i18n="nav.about">О комиксе</a>
+    <a href="#features" data-i18n="nav.features">Особенности</a>
+    <a href="#" class="js-open-games-modal" data-i18n="nav.games">Игры</a>
+    <a href="#episodes" data-i18n="nav.chapters">Главы</a>
+    <a href="#characters" data-i18n="nav.characters">Герои</a>
+    <a href="parents.html" data-i18n="nav.parents">Родителям</a>
+    <a href="blog.html" data-i18n="nav.blog">Блог</a>
+    <span class="lang-switcher" id="langSwitcherNav"></span>
+    <a href="app.html" class="land-nav-cta" data-i18n="nav.start">▶ Начать</a>
   </div>
   <button class="land-nav-toggle" id="navToggle" aria-label="Меню">☰</button>
 </nav>
@@ -58,12 +73,13 @@ if ('serviceWorker' in navigator) {
 <!-- Mobile Menu -->
 <div class="land-nav-mobile" id="navMobile">
   <button class="land-nav-mobile-close" id="navClose" aria-label="Закрыть">✕</button>
-  <a href="#about" class="nav-mobile-link">О комиксе</a>
-  <a href="#features" class="nav-mobile-link">Особенности</a>
-  <a href="#" class="nav-mobile-link js-open-games-modal">Игры</a>
-  <a href="#episodes" class="nav-mobile-link">Главы</a>
-  <a href="#characters" class="nav-mobile-link">Герои</a>
-  <a href="app.html" class="land-nav-cta">▶ Начать</a>
+  <a href="#about" class="nav-mobile-link" data-i18n="nav.about">О комиксе</a>
+  <a href="#features" class="nav-mobile-link" data-i18n="nav.features">Особенности</a>
+  <a href="#" class="nav-mobile-link js-open-games-modal" data-i18n="nav.games">Игры</a>
+  <a href="#episodes" class="nav-mobile-link" data-i18n="nav.chapters">Главы</a>
+  <a href="#characters" class="nav-mobile-link" data-i18n="nav.characters">Герои</a>
+  <span class="lang-switcher" id="langSwitcherMobile" style="margin:8px 0;"></span>
+  <a href="app.html" class="land-nav-cta" data-i18n="nav.start">▶ Начать</a>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -72,17 +88,17 @@ if ('serviceWorker' in navigator) {
 <section class="land-hero" id="hero">
   <canvas id="particle-canvas"></canvas>
   <div class="land-hero-content">
-    <div class="land-hero-badge">✨ Новая глава уже доступна</div>
-    <h1 class="land-hero-title">СУПЕРГЛАЗКА</h1>
-    <p class="land-hero-sub">Интерактивный комикс о здоровье глаз. Спаси планету Видеаль вместе с супергероиней!</p>
+    <div class="land-hero-badge" data-i18n="hero.badge">✨ Новая глава уже доступна</div>
+    <h1 class="land-hero-title" data-i18n="hero.title">СУПЕРГЛАЗКА</h1>
+    <p class="land-hero-sub" data-i18n="hero.subtitle">Интерактивный комикс о здоровье глаз. Спаси планету Видеаль вместе с супергероиней!</p>
     <div class="land-hero-btns">
-      <a href="app.html" class="land-btn-primary">▶ Начать приключение</a>
-      <a href="#about" class="land-btn-secondary">Узнать больше</a>
+      <a href="app.html" class="land-btn-primary" data-i18n="hero.ctaPrimary">▶ Начать приключение</a>
+      <a href="#about" class="land-btn-secondary" data-i18n="hero.ctaSecondary">Узнать больше</a>
     </div>
   </div>
   <a href="#about" class="land-hero-scroll">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-    <span>Листай вниз</span>
+    <span data-i18n="hero.scroll">Листай вниз</span>
   </a>
 </section>
 
@@ -453,6 +469,19 @@ navClose.addEventListener('click', () => navMobile.classList.remove('open'));
 navMobileLinks.forEach(link => {
   link.addEventListener('click', () => navMobile.classList.remove('open'));
 });
+
+/* ─── LANGUAGE SWITCHER ─── */
+(function() {
+  function initLangSwitcher() {
+    if (typeof I18n === 'undefined' || !I18n.isLoaded()) {
+      setTimeout(initLangSwitcher, 100);
+      return;
+    }
+    I18n.renderSwitcher(document.getElementById('langSwitcherNav'));
+    I18n.renderSwitcher(document.getElementById('langSwitcherMobile'));
+  }
+  initLangSwitcher();
+})();
 
 /* ─── SCROLL REVEAL ─── */
 const revealObserver = new IntersectionObserver((entries) => {

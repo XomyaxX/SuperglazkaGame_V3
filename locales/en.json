@@ -1,0 +1,588 @@
+{
+  "meta": {
+    "siteName": "Superglazka",
+    "siteDesc": "Interactive eye health comic"
+  },
+  "nav": {
+    "about": "About",
+    "features": "Features",
+    "games": "Games",
+    "chapters": "Chapters",
+    "characters": "Characters",
+    "parents": "For Parents",
+    "blog": "Blog",
+    "start": "▶ Start",
+    "menu": "Menu",
+    "close": "Close",
+    "home": "",
+    "checklist": ""
+  },
+  "hero": {
+    "badge": "✨ New chapter available",
+    "title": "SUPERGLAZKA",
+    "subtitle": "Interactive comic about eye health. Save planet Videal together with the superheroine!",
+    "ctaPrimary": "▶ Start Adventure",
+    "ctaSecondary": "Learn more",
+    "scroll": "Scroll down"
+  },
+  "about": {
+    "title": "About the comic",
+    "subtitle": "In a magical world, eye health is the main superpower",
+    "p1": "Far, far away in the Universe there is a planet Videal — a world where every resident devotes themselves to protecting the eyesight of children on Earth. But one day the Great Darkness threatens to consume the planet...",
+    "p2": "From an ancient ritual appears a girl with huge blue eyes — Superglazka. In a red suit with a white cape, she goes on a journey to save Videal and teach children to take care of their eyes.",
+    "p3": "Together with loyal friends — Vanya, Wise Crystal and Advisor — she goes through exciting adventures, mini-games and eye trainings. Every frame is voiced, every choice matters!"
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "What makes Superglazka a unique project for children",
+    "comic": {
+      "title": "Interactive comic",
+      "desc": "Every frame is a full-screen panel with dialogues, voice acting and video inserts. Scroll like stories!"
+    },
+    "games": {
+      "title": "Mini-games",
+      "desc": "Train your eyes with the heroes: runner, gymnastics, blinking and battle with the villain Lenivus!"
+    },
+    "voice": {
+      "title": "Voice acting",
+      "desc": "Professional audio narration of every frame. Listen to the story like an audio play!"
+    },
+    "video": {
+      "title": "Video",
+      "desc": "AI-generated video inserts bring comic frames to life and immerse you in the atmosphere."
+    }
+  },
+  "gamesSection": {
+    "title": "Mini-games",
+    "subtitle": "Train your eyes while playing — each game develops useful skills",
+    "runner": {
+      "title": "Pixel Chase",
+      "desc": "Run, jump and collect bonuses. Trains quick reaction and gaze concentration."
+    },
+    "gym": {
+      "title": "Battle with Lenivus",
+      "desc": "Use three super eye attacks: Laser, Aim and Tears. Defeat the villain!"
+    },
+    "blink": {
+      "title": "Eye Gymnastics",
+      "desc": "Blink, squint and open your eyes wide. Strengthens eye muscles."
+    },
+    "tracker": {
+      "title": "Follow the Ball",
+      "desc": "Follow the moving ball with your eyes. Develops smooth eye movements."
+    },
+    "play": "▶ Play",
+    "chooseGame": "🎮 Choose a game",
+    "backToList": "← Back to list"
+  },
+  "episodes": {
+    "title": "Chapters",
+    "subtitle": "Choose a chapter and dive into the story",
+    "read": "▶ Read",
+    "locked": "🔒",
+    "ep1": {
+      "num": "Chapter 1",
+      "name": "Birth of the Heroine",
+      "desc": "Planet Videal is in danger. An ancient ritual summons a protector — a girl with the superpower of vision."
+    },
+    "ep2": {
+      "num": "Chapter 2",
+      "name": "Who am I?",
+      "desc": "Superglazka learns about her mission. Trainings, first trials and encounter with darkness."
+    },
+    "ep3": {
+      "num": "Chapter 3",
+      "name": "The Great Battle",
+      "desc": "The final confrontation with the Great Darkness. The entire future of planet Videal is in your hands!"
+    }
+  },
+  "characters": {
+    "title": "Heroes",
+    "subtitle": "Meet the main characters of the comic",
+    "superglazka": {
+      "name": "Superglazka",
+      "role": "Main heroine",
+      "desc": "A girl from an ancient ritual with the superpower of vision. In a red suit with a white cape she protects children."
+    },
+    "vanya": {
+      "name": "Vanya",
+      "role": "Loyal friend",
+      "desc": "An earthly boy who was the first to believe in Superglazka. Helps her in the mission to save children's eyes."
+    },
+    "wiseCrystal": {
+      "name": "Wise Crystal",
+      "role": "Ruler of Videal",
+      "desc": "The wise ruler of planet Videal. Performed the Summoning Ritual and became Superglazka's mentor."
+    },
+    "lenivus": {
+      "name": "Lenivus",
+      "role": "Main villain",
+      "desc": "The Great Evil threatening to consume Videal. His weakness — active and healthy eyes!"
+    }
+  },
+  "profileLanding": {
+    "title": "🎮 Your Game Profile",
+    "subtitle": "Save progress, collect coins and compete with friends",
+    "guestTitle": "Join the team!",
+    "guestSub": "Register to save progress, get rewards for victories and participate in competitions.",
+    "nicknamePlaceholder": "Create a nickname",
+    "play": "🚀 Play!",
+    "login": "🔑 Login",
+    "haveAccount": "Already have an account? Login",
+    "noAccount": "No account? Quick start",
+    "coins": "🪙",
+    "notPlayed": "Not played yet",
+    "playedTimes": "Played: {{count}} times",
+    "bestScore": "🏆 {{score}}"
+  },
+  "cta": {
+    "title": "Ready for adventure?",
+    "subtitle": "Start reading the comic right now",
+    "button": "▶ Start reading"
+  },
+  "footer": {
+    "text": "Made with ❤️ for children's vision protection · Superglazka · 2025"
+  },
+  "cookieBanner": {
+    "text": "We use localStorage to save progress and settings.",
+    "privacy": "Privacy Policy",
+    "accept": "Accept"
+  },
+  "app": {
+    "back": "Back",
+    "settings": "Settings",
+    "profile": "Profile",
+    "cinema": "Cinema",
+    "faq": "Help",
+    "continueReading": "Continue reading",
+    "newChapter": "Until new chapter",
+    "soon": "Soon!",
+    "books": "Books",
+    "chaptersTab": "Chapters",
+    "framesTab": "Frames",
+    "uploadTab": "Upload",
+    "narrator": "Narrator",
+    "subtitles": "Subtitles",
+    "fontSize": "Font size",
+    "highContrast": "High contrast",
+    "reduceMotion": "Reduce animation",
+    "textSize": "Text size",
+    "darkTheme": "Dark theme",
+    "bgMusic": "Background music",
+    "volume": "Volume",
+    "audio": "Audio",
+    "accessibility": "Accessibility",
+    "interface": "Interface",
+    "faqItems": {
+      "howToPlay": "How to play?",
+      "saveProgress": "How to save progress?",
+      "gamesHelp": "Why mini-games?",
+      "eyeHealth": "Does it really help eyes?",
+      "forParents": "For parents",
+      "contacts": "Contacts"
+    },
+    "gameTransition": {
+      "title": "🎮 Mini-game",
+      "subtitle": "Train your eyes and help Superglazka!",
+      "start": "▶ Start"
+    },
+    "continueAdventure": "",
+    "continue": "",
+    "nextChapterSoon": "",
+    "comingSoon": "",
+    "showSubtitles": "",
+    "subtitleFontSize": "",
+    "help": "",
+    "showFullText": "",
+    "miniGames": "",
+    "miniGame": "",
+    "tapToPlay": "",
+    "play": "",
+    "next": "",
+    "getReady": "",
+    "playGame": "",
+    "fight": "",
+    "skip": "",
+    "great": "",
+    "youDidIt": "",
+    "greatJob": "",
+    "chapters": "",
+    "account": "",
+    "notifications": "",
+    "yourEmail": "",
+    "subscribe": "",
+    "wellDone": "",
+    "nextFrame": ""
+  },
+  "games": {
+    "runner": {
+      "title": "Pixel Chase",
+      "start": "Start",
+      "jump": "Jump!",
+      "gameOver": "Game Over",
+      "win": "Victory!",
+      "stats": "Statistics",
+      "continue": "Continue",
+      "intro": "",
+      "completed": ""
+    },
+    "gym": {
+      "title": "Battle with Lenivus",
+      "phaseLaser": "Phase 1: Laser",
+      "phaseAim": "Phase 2: Aim",
+      "phaseTears": "Phase 3: Tears",
+      "charge": "Charge!",
+      "release": "Release!",
+      "aim": "Aim!",
+      "tap": "Tap!",
+      "win": "Victory!",
+      "stats": "Statistics",
+      "continue": "Continue",
+      "intro": "",
+      "bossName": "",
+      "rays": "",
+      "ray": "",
+      "scope": "",
+      "tears": ""
+    },
+    "blink": {
+      "title": "Eye Gymnastics",
+      "round1": "Round 1: Blink",
+      "round2": "Round 2: Squint",
+      "round3": "Round 3: Open wide",
+      "blink": "Blink!",
+      "squeeze": "Squeeze!",
+      "wide": "Open wide!",
+      "win": "Great!",
+      "stats": "Statistics",
+      "continue": "Continue",
+      "round": "",
+      "time": "",
+      "hint": ""
+    },
+    "tracker": {
+      "title": "Follow the Ball",
+      "follow": "Follow with your eyes!",
+      "win": "Done!",
+      "stats": "Statistics",
+      "continue": "Continue",
+      "phase": "",
+      "hint": ""
+    },
+    "stats": {
+      "lives": "",
+      "livesLeft": "",
+      "bonuses": "",
+      "collected": "",
+      "result": "",
+      "distance": "",
+      "status": "",
+      "victory": "",
+      "rating": "",
+      "hits": "",
+      "accuracy": "",
+      "avgTime": "",
+      "waterfalls": "",
+      "totalBlinks": "",
+      "totalScore": ""
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "nickname": "Nickname",
+    "coins": "Coins",
+    "episodes": "📖 Chapters",
+    "games": "🎮 Mini-games",
+    "achievements": "🏆 Achievements",
+    "account": "🔐 Account",
+    "guestText": "You are playing as a guest. Progress is saved, but you cannot spend coins yet.",
+    "createAccount": "🔐 Create full account",
+    "loginBtn": "🔑 Already have an account? Login",
+    "enterLogin": "🔑 Login / Register",
+    "email": "Email",
+    "logout": "🚪 Logout",
+    "notifications": "🔔 Notifications",
+    "subscribePlaceholder": "Your email",
+    "subscribeBtn": "Subscribe to new chapters"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "guest": "Guest",
+    "email": "Email",
+    "password": "Password",
+    "nickname": "Nickname",
+    "enter": "Login",
+    "create": "Create",
+    "quickStart": "Quick start",
+    "or": "or",
+    "loginError": "Invalid email or password",
+    "registerError": "Registration error",
+    "emptyFields": "Fill in all fields!",
+    "enterNickname": "Enter a nickname!",
+    "enterEmailPassword": "Enter email and password!",
+    "joinTeam": "",
+    "joinBenefits": "",
+    "nicknamePlaceholder": "",
+    "parentEmailPlaceholder": "",
+    "parentsAllowed": "",
+    "registerBtn": "",
+    "skipRegistration": "",
+    "joinBenefitsGym": "",
+    "fullAccount": "",
+    "guestDesc": "",
+    "yourNickname": "",
+    "play": "",
+    "parentEmail": "",
+    "phoneOptional": "",
+    "passwordMin6": "",
+    "haveAccount": "",
+    "loginBtn": "",
+    "noAccount": ""
+  },
+  "achievements": {
+    "unlocked": "🏆 Achievement unlocked!",
+    "title": "Achievements",
+    "first_step": "First Step",
+    "first_step_desc": "View the first frame",
+    "pixel_hunter": "Pixel Hunter",
+    "pixel_hunter_desc": "Complete \"Pixel Chase\"",
+    "eye_gymnast": "Eye Gymnast",
+    "eye_gymnast_desc": "Complete gymnastics 3 times",
+    "blinker": "Blinker",
+    "blinker_desc": "Complete \"Blink Game\"",
+    "tracker": "Tracker",
+    "tracker_desc": "Complete \"Follow the Ball\"",
+    "bookworm": "Bookworm",
+    "bookworm_desc": "Complete one chapter",
+    "librarian": "Librarian",
+    "librarian_desc": "Complete all chapters",
+    "rich": "Rich",
+    "rich_desc": "Collect 500 coins"
+  },
+  "daily": {
+    "title": "🎁 Daily Reward",
+    "subtitle": "Come back every day and get coins!",
+    "streak": "🔥 Streak: {{count}} days",
+    "day": "Day",
+    "claim": "Claim {{amount}} 🪙",
+    "claimed": "✅ You already claimed today's reward. Come back tomorrow!",
+    "received": "🎉 Received {{amount}} coins! Streak: {{streak}}"
+  },
+  "parents": {
+    "title": "For Parents",
+    "subtitle": "Everything you need to know about your child's eye health",
+    "benefits": {
+      "title": "🎯 Project Benefits",
+      "attention": "Attention development",
+      "attentionDesc": "Game exercises train voluntary attention in children.",
+      "hygiene": "Vision hygiene",
+      "hygieneDesc": "The comic introduces children to eye health rules in an engaging form.",
+      "fatigue": "Fatigue prevention",
+      "fatigueDesc": "Exercises relieve tension after screen time.",
+      "muscles": "Muscle strengthening",
+      "musclesDesc": "Accommodation exercises strengthen eye muscles."
+    },
+    "time": {
+      "title": "⏱️ Time Recommendations",
+      "chapterTime": "One chapter — 10–15 minutes.",
+      "break": "20 minute break after a chapter.",
+      "maxChapters": "No more than 2 chapters per day.",
+      "lighting": "Good lighting."
+    },
+    "explain": {
+      "title": "💬 How to explain to a child",
+      "p1": "«Superglazka teaches your eyes to be strong like a superhero's!»",
+      "p2": "«Exercises help eyes rest after tablet and phone use.»",
+      "p3": "«Every time you train, your eyes become faster and smarter.»",
+      "p4": "«It's like a gym, but for eyes — the more you practice, the better you see.»"
+    },
+    "checklist": {
+      "title": "📋 Parent Checklist",
+      "distance": "Child sits at least 30 cm from the screen.",
+      "rule202020": "After 20 minutes of screen time — 20 seconds of rest.",
+      "noGlare": "Room is well lit, no glare on the screen.",
+      "blink": "Child blinks during activities.",
+      "noScreenBeforeBed": "Evening: no screens 1 hour before bedtime."
+    },
+    "contact": {
+      "title": "📧 Feedback",
+      "text": "Have questions, suggestions or comments? We are always happy to hear from you.",
+      "email": "Write to hello@superglazka.ru",
+      "socials": "Or find us on social media:"
+    }
+  },
+  "blog": {
+    "title": "Superglazka Blog",
+    "subtitle": "Useful eye health tips for children and parents",
+    "loading": "Loading articles...",
+    "empty": "No articles yet. Check back later!",
+    "error": "Failed to load articles"
+  },
+  "checklistPage": {
+    "title": "10 Eye Health Rules",
+    "subtitle": "Checklist for parents · Print and hang on the fridge",
+    "progress": "Completed {{done}} of {{total}}",
+    "dailyRules": "📋 Daily Rules",
+    "rule202020": "20-20-20 Rule. Every 20 minutes of screen time — 20 seconds rest, look at 6 meters.",
+    "distance": "Screen distance. Minimum 50–60 cm to monitor, 30 cm to tablet.",
+    "lighting": "Good lighting. No glare on the screen, enough light in the room.",
+    "blink": "Blink more! Remind your child to blink during screen work.",
+    "noScreenBeforeBed": "No screens 1 hour before bed. Blue light disrupts melatonin production.",
+    "nutrition": "🥗 Nutrition and Lifestyle",
+    "vitaminA": "Vitamin A. Carrots, pumpkin, apricots, liver — daily in the diet.",
+    "omega3": "Omega-3. Fish, flax seeds, walnuts — protect the retina.",
+    "walks": "Walks in fresh air. At least 1 hour a day — natural eye training.",
+    "prevention": "🏥 Prevention",
+    "doctor": "Ophthalmologist checkup. Once a year even without complaints.",
+    "noRub": "Don't rub eyes with dirty hands. Infections are a common cause of vision problems.",
+    "print": "🖨️ Print checklist",
+    "reset": "↺ Reset progress"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "updated": "Updated: May 21, 2026",
+    "p1": "1. What data is collected",
+    "p2": "2. Why data is collected",
+    "p3": "3. Who has access",
+    "p4": "4. Storage and security",
+    "p5": "5. How to delete data",
+    "p6": "6. Cookies and localStorage",
+    "p7": "7. Children's safety",
+    "p8": "8. Policy changes",
+    "p9": "9. Contacts"
+  },
+  "admin": {
+    "login": "Admin Login",
+    "apiKey": "API Key",
+    "enter": "Login",
+    "logout": "Logout",
+    "episodes": "Chapters",
+    "frames": "Frames",
+    "upload": "Upload",
+    "newEpisode": "New Chapter",
+    "search": "Search",
+    "title": "Title",
+    "description": "Description",
+    "order": "Order",
+    "published": "Published",
+    "save": "Save",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "narration": "Narration",
+    "dialogue": "Dialogue",
+    "background": "Background",
+    "mood": "Mood",
+    "game": "Game",
+    "preview": "Preview",
+    "success": "Success",
+    "error": "Error"
+  },
+  "title": {
+    "чек_лист_10_правил_здоровья_глаз_супергл": ""
+  },
+  "land_logo": {
+    "игросказка_суперглазка": ""
+  },
+  "checklist_back": {
+    "на_главную": ""
+  },
+  "checklist_content": {
+    "10_правил_здоровья_глаз": ""
+  },
+  "checklist_subtitle": {
+    "чек_лист_для_родителей_распечатайте_и_по": ""
+  },
+  "progresstext": {
+    "выполнено_0_из_10": ""
+  },
+  "checklist_card": {
+    "ежедневные_правила": "",
+    "питание_и_образ_жизни": "",
+    "профилактика": ""
+  },
+  "checklist_item": {
+    "правило_20_20_20каждые_20_минут_экрана_2": "",
+    "расстояние_от_экранаминимум_5060_см_до_м": "",
+    "хорошее_освещениенет_бликов_на_экране_до": "",
+    "моргай_чащенапоминайте_ребёнку_моргать_в": "",
+    "никаких_экранов_за_1_час_до_снасиний_све": "",
+    "витамин_аморковь_тыква_абрикосы_печень_е": "",
+    "омега_3рыба_семена_льна_грецкие_орехи_за": "",
+    "прогулки_на_свежем_воздухеминимум_1_час_": "",
+    "осмотр_у_офтальмолога1_раз_в_год_даже_пр": "",
+    "не_трите_глаза_грязными_рукамиинфекции_ч": "",
+    "правило_20_20_20": "",
+    "расстояние_от_экрана": "",
+    "хорошее_освещение": "",
+    "моргай_чаще": "",
+    "никаких_экранов_за_1_час_до_сна": "",
+    "витамин_а": "",
+    "омега_3": "",
+    "прогулки_на_свежем_воздухе": "",
+    "осмотр_у_офтальмолога": "",
+    "не_трите_глаза_грязными_руками": ""
+  },
+  "checklist_print_btn": {
+    "распечатать_чек_лист": ""
+  },
+  "resetbtn": {
+    "сбросить_прогресс": ""
+  },
+  "land_footer": {
+    "суперглазка": ""
+  },
+  "cookiebanner": {
+    "политика_конфиденциальности": ""
+  },
+  "cookieaccept": {
+    "принять": ""
+  },
+  "land_logo_pretitle": {
+    "игросказка": ""
+  },
+  "land_logo_title": {
+    "суперглазка": ""
+  },
+  "time": {
+    "days": "",
+    "hours": "",
+    "minutes": "",
+    "seconds": ""
+  },
+  "faq": {
+    "controls": {
+      "question": "",
+      "answer": "",
+      "answer2": ""
+    },
+    "sound": {
+      "question": "",
+      "answer": ""
+    },
+    "coins": {
+      "question": "",
+      "answer": ""
+    },
+    "locked": {
+      "question": "",
+      "answer": ""
+    },
+    "subtitles": {
+      "question": "",
+      "answer": ""
+    },
+    "theme": {
+      "question": "",
+      "answer": ""
+    }
+  },
+  "brand": {
+    "subtitle": ""
+  },
+  "cookie": {
+    "text": "",
+    "privacy": "",
+    "accept": ""
+  }
+}

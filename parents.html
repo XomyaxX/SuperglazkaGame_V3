@@ -26,6 +26,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/landing.css">
+<script src="js/i18n.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
@@ -262,9 +263,9 @@ if ('serviceWorker' in navigator) {
   <header class="land-parents-header">
     <a href="index.html" class="land-logo"><span class="land-logo-pretitle">Игросказка</span><span class="land-logo-title">👁️ СУПЕРГЛАЗКА</span></a>
     <div style="display:flex;gap:16px;align-items:center;">
-      <a href="blog.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Блог</a>
-      <a href="checklist.html" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Чек-лист</a>
-      <a href="index.html" class="land-parents-back">← На главную</a>
+      <a href="blog.html" data-i18n="nav.blog" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Блог</a>
+      <a href="checklist.html" data-i18n="nav.checklist" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;transition:color .2s;" onmouseover="this.style.color='#c084fc'" onmouseout="this.style.color='rgba(255,255,255,0.7)'">Чек-лист</a>
+      <a href="index.html" data-i18n="nav.home" class="land-parents-back">← На главную</a>
     </div>
   </header>
 
@@ -334,7 +335,7 @@ if ('serviceWorker' in navigator) {
 
   <!-- Footer -->
   <footer class="land-footer" style="margin-top:60px;">
-    <p>Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
+    <p data-i18n="footer.text">Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
   </footer>
 
 </div>
@@ -380,5 +381,6 @@ if (savedTheme) document.body.classList.add('theme-' + savedTheme);
       });
     })();
   </script>
+<script>I18n.init();</script>
 </body>
 </html>
