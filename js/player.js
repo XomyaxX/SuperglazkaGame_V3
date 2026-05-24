@@ -330,10 +330,10 @@ const PlayerProfile = (function() {
       }
     }
 
-    // Achievements grid
+    // Achievements compact link
     const achContainer = modal.querySelector('.profile-achievements');
-    if (achContainer && typeof Achievements !== 'undefined' && Achievements.renderGrid) {
-      Achievements.renderGrid(achContainer);
+    if (achContainer && typeof Achievements !== 'undefined' && Achievements.renderProfileLink) {
+      Achievements.renderProfileLink(achContainer);
     }
 
     modal.classList.add('visible');

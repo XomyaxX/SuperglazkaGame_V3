@@ -15,7 +15,8 @@
     "menu": "Меню",
     "close": "Закрыть",
     "home": "Главная",
-    "checklist": "Чек-лист"
+    "checklist": "Чек-лист",
+    "achievements": "Достижения"
   },
   "hero": {
     "badge": "✨ Новая глава уже доступна",
@@ -364,6 +365,10 @@
   "achievements": {
     "unlocked": "🏆 Достижение разблокировано!",
     "title": "Достижения",
+    "modalTitle": "🏆 Достижения",
+    "count": "{{current}} из {{total}}",
+    "open": "Открыть",
+    "close": "Закрыть",
     "first_step": "Первый шаг",
     "first_step_desc": "Просмотреть первый кадр",
     "pixel_hunter": "Охотник за пикселями",

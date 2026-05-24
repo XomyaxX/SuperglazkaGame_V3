@@ -82,6 +82,7 @@ if ('serviceWorker' in navigator) {
       <a href="parents.html" data-i18n="nav.parents">Родителям</a>
       <a href="checklist.html" data-i18n="nav.checklist">Чек-лист</a>
       <button id="menuSettingsBtn" aria-label="Настройки" data-i18n="nav.settings">⚙️</button>
+      <button class="achievements-menu-btn" id="achievementsMenuBtn" title="Достижения" aria-label="Достижения" data-i18n-title="nav.achievements">🏆</button>
       <button class="profile-btn" id="menuProfileBtn" title="Профиль" aria-label="Профиль" data-i18n-title="nav.profile">
         <span>👤</span>
         <span class="profile-coins-val">0</span>
@@ -99,6 +100,7 @@ if ('serviceWorker' in navigator) {
     <a href="parents.html" data-i18n="nav.parents">Родителям</a>
     <a href="checklist.html" data-i18n="nav.checklist">Чек-лист</a>
     <button id="menuSettingsBtnMobile" class="app-nav-mobile-btn" data-i18n="nav.settings">⚙️ Настройки</button>
+    <button class="achievements-menu-btn app-nav-mobile-btn" id="achievementsMenuBtnMobile" title="Достижения" aria-label="Достижения" data-i18n-title="nav.achievements">🏆 Достижения</button>
     <button class="profile-btn app-nav-mobile-btn" id="menuProfileBtnMobile" title="Профиль" aria-label="Профиль" data-i18n-title="nav.profile">
       <span>👤</span>
       <span data-i18n="nav.profile">Профиль</span>
@@ -531,6 +533,20 @@ if ('serviceWorker' in navigator) {
       <input type="email" class="profile-sub-input" id="profileSubEmail" placeholder="Твой email" data-i18n-placeholder="app.yourEmail">
       <button class="profile-sub-btn" id="profileSubBtn" data-i18n="app.subscribe">Подписаться на новые главы</button>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ACHIEVEMENTS MODAL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay achievements-modal" id="achievements-modal">
+  <div class="achievements-modal-content">
+    <button class="achievements-modal-close" id="achievementsModalClose" aria-label="Закрыть">✕</button>
+    <div class="achievements-modal-header">
+      <h2 data-i18n="achievements.modalTitle">🏆 Достижения</h2>
+      <div class="achievements-counter" id="achievementsCounter"></div>
+    </div>
+    <div class="achievements-grid" id="achievementsGrid"></div>
   </div>
 </div>
 

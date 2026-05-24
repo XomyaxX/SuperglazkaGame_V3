@@ -15,7 +15,8 @@
     "menu": "Menu",
     "close": "Close",
     "home": "Home",
-    "checklist": "Checklist"
+    "checklist": "Checklist",
+    "achievements": "Achievements"
   },
   "hero": {
     "badge": "✨ New chapter available",
@@ -382,6 +383,10 @@
   "achievements": {
     "unlocked": "🏆 Achievement unlocked!",
     "title": "Achievements",
+    "modalTitle": "🏆 Achievements",
+    "count": "{{current}} of {{total}}",
+    "open": "Open",
+    "close": "Close",
     "first_step": "First Step",
     "first_step_desc": "View the first frame",
     "pixel_hunter": "Pixel Hunter",

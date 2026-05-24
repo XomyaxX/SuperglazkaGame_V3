@@ -2062,6 +2062,23 @@ const App = (function() {
         }
       });
     }
+
+    // Achievements modal bindings
+    var achievementsMenuBtn = document.getElementById('achievementsMenuBtn');
+    var achievementsMenuBtnMobile = document.getElementById('achievementsMenuBtnMobile');
+    var achievementsModalClose = document.getElementById('achievementsModalClose');
+    if (achievementsMenuBtn && typeof Achievements !== 'undefined') {
+      achievementsMenuBtn.addEventListener('click', function() { Achievements.openModal(); });
+    }
+    if (achievementsMenuBtnMobile && typeof Achievements !== 'undefined') {
+      achievementsMenuBtnMobile.addEventListener('click', function() {
+        if (appNavMobile) appNavMobile.classList.remove('open');
+        Achievements.openModal();
+      });
+    }
+    if (achievementsModalClose && typeof Achievements !== 'undefined') {
+      achievementsModalClose.addEventListener('click', function() { Achievements.closeModal(); });
+    }
   }
 
   function showAuthModal() {

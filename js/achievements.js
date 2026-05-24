@@ -47,6 +47,7 @@
     var style = document.createElement('style');
     style.id = 'achievement-styles';
     style.textContent =
+      // Toast
       '.achievement-toast{position:fixed;top:24px;right:24px;z-index:9999;' +
       'display:flex;align-items:center;gap:14px;padding:16px 20px;' +
       'background:linear-gradient(135deg,#1a0b2e,#2d1b4e);' +
@@ -59,14 +60,43 @@
       '.achievement-toast-title{font-size:12px;font-weight:700;color:#c084fc;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;}' +
       '.achievement-toast-name{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px;}' +
       '.achievement-toast-reward{font-size:13px;font-weight:700;color:#fbbf24;}' +
-      '.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:16px;}' +
-      '.achievement-badge{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);' +
-      'border-radius:16px;padding:16px;text-align:center;transition:all .25s;opacity:.4;}' +
-      '.achievement-badge.unlocked{opacity:1;border-color:rgba(192,132,252,0.3);background:rgba(192,132,252,0.08);}' +
-      '.achievement-badge-icon{font-size:32px;margin-bottom:8px;line-height:1;}' +
-      '.achievement-badge-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px;}' +
-      '.achievement-badge-desc{font-size:11px;color:rgba(255,255,255,0.5);line-height:1.4;}' +
-      '.achievement-badge-reward{font-size:12px;font-weight:700;color:#fbbf24;margin-top:6px;}';
+      // Modal grid
+      '.achievements-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px;}' +
+      '@media (max-width: 768px){.achievements-grid{grid-template-columns:repeat(2,1fr);gap:12px;}}' +
+      // Badge card
+      '.achievement-badge{' +
+        'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+        'aspect-ratio:1/1;padding:20px;border-radius:20px;text-align:center;' +
+        'background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);' +
+        'transition:all .25s ease;opacity:.35;filter:grayscale(100%);' +
+      '}' +
+      '.achievement-badge.unlocked{' +
+        'opacity:1;filter:grayscale(0%);' +
+        'background:linear-gradient(135deg,rgba(192,132,252,0.12),rgba(147,51,234,0.06));' +
+        'border-color:rgba(192,132,252,0.35);' +
+        'box-shadow:0 4px 20px rgba(192,132,252,0.15);' +
+      '}' +
+      '.achievement-badge-icon{font-size:32px;line-height:1;margin-bottom:10px;}' +
+      '.achievement-badge.unlocked .achievement-badge-icon{font-size:48px;margin-bottom:8px;}' +
+      '.achievement-badge-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px;}' +
+      '.achievement-badge-desc{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.4;margin-bottom:6px;}' +
+      '.achievement-badge-reward{font-size:13px;font-weight:700;color:#fbbf24;}' +
+      // Menu button
+      '.achievements-menu-btn{' +
+        'background:none;border:none;font-size:22px;cursor:pointer;padding:6px 8px;' +
+        'border-radius:12px;transition:all .2s;line-height:1;' +
+      '}' +
+      '.achievements-menu-btn:hover{background:rgba(255,255,255,0.08);transform:scale(1.1);}' +
+      // Profile compact link
+      '.profile-achievements-link{' +
+        'display:flex;align-items:center;justify-content:space-between;' +
+        'padding:12px 16px;background:rgba(255,255,255,0.04);' +
+        'border:1px solid rgba(255,255,255,0.08);border-radius:14px;' +
+        'cursor:pointer;transition:all .2s;color:#fff;' +
+      '}' +
+      '.profile-achievements-link:hover{background:rgba(255,255,255,0.08);border-color:rgba(192,132,252,0.25);}' +
+      '.profile-achievements-link-text{font-size:14px;font-weight:700;}' +
+      '.profile-achievements-link-arrow{color:#c084fc;font-size:14px;font-weight:700;}';
     document.head.appendChild(style);
   }
 
@@ -121,23 +151,94 @@
     return loadLocal();
   }
 
+  function getTitle(ach) {
+    if (window.I18n && I18n.t) return I18n.t(ach.titleKey);
+    return ach.titleKey;
+  }
+  function getDesc(ach) {
+    if (window.I18n && I18n.t) return I18n.t(ach.descKey);
+    return ach.descKey;
+  }
+
   function renderGrid(container) {
     if (!container) return;
     injectStyles();
     var unlocked = loadLocal();
-    container.innerHTML = '<h3 style="font-family:Comfortaa,cursive;font-size:18px;color:#fff;margin-bottom:12px;">' + (window.I18n ? I18n.t('achievements.title') : '🏆 Достижения') + '</h3>' +
-      '<div class="achievements-grid">' +
-      ACHIEVEMENTS_LIST.map(function(a) {
-        var isUnlocked = unlocked.indexOf(a.key) !== -1;
-        return '<div class="achievement-badge ' + (isUnlocked ? 'unlocked' : '') + '">' +
-          '<div class="achievement-badge-icon">' + a.icon + '</div>' +
-          '<div class="achievement-badge-title">' + (window.I18n ? I18n.t(a.titleKey) : a.title) + '</div>' +
-          '<div class="achievement-badge-desc">' + (window.I18n ? I18n.t(a.descKey) : a.desc) + '</div>' +
-          '<div class="achievement-badge-reward">+' + a.reward + ' 🪙</div>' +
-        '</div>';
-      }).join('') +
+    container.innerHTML = ACHIEVEMENTS_LIST.map(function(a) {
+      var isUnlocked = unlocked.indexOf(a.key) !== -1;
+      return '<div class="achievement-badge ' + (isUnlocked ? 'unlocked' : '') + '">' +
+        '<div class="achievement-badge-icon">' + a.icon + '</div>' +
+        '<div class="achievement-badge-title">' + getTitle(a) + '</div>' +
+        '<div class="achievement-badge-desc">' + getDesc(a) + '</div>' +
+        '<div class="achievement-badge-reward">+' + a.reward + ' 🪙</div>' +
       '</div>';
+    }).join('');
   }
 
-  window.Achievements = { check, getUnlocked, renderGrid };
+  function renderCounter(el) {
+    if (!el) return;
+    var unlocked = loadLocal().length;
+    var total = ACHIEVEMENTS_LIST.length;
+    var text = (window.I18n && I18n.t)
+      ? I18n.t('achievements.count', { current: unlocked, total: total })
+      : unlocked + ' из ' + total;
+    el.textContent = text;
+  }
+
+  function renderProfileLink(container) {
+    if (!container) return;
+    injectStyles();
+    var unlocked = loadLocal().length;
+    var total = ACHIEVEMENTS_LIST.length;
+    var label = (window.I18n && I18n.t) ? I18n.t('achievements.title') : '🏆 Достижения';
+    var text = (window.I18n && I18n.t)
+      ? I18n.t('achievements.count', { current: unlocked, total: total })
+      : unlocked + ' из ' + total;
+    container.innerHTML = '<div class="profile-achievements-link" id="profileAchievementsLink">' +
+      '<span class="profile-achievements-link-text">' + label + ' — ' + text + '</span>' +
+      '<span class="profile-achievements-link-arrow">→</span>' +
+    '</div>';
+    var link = container.querySelector('#profileAchievementsLink');
+    if (link) {
+      link.addEventListener('click', function() {
+        openModal();
+      });
+    }
+  }
+
+  function openModal() {
+    injectStyles();
+    var modal = document.getElementById('achievements-modal');
+    var grid = document.getElementById('achievementsGrid');
+    var counter = document.getElementById('achievementsCounter');
+    if (!modal) return;
+    renderGrid(grid);
+    renderCounter(counter);
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+
+    // Close on overlay click
+    modal.addEventListener('click', onOverlayClick);
+    document.addEventListener('keydown', onKeyDown);
+  }
+
+  function closeModal() {
+    var modal = document.getElementById('achievements-modal');
+    if (!modal) return;
+    modal.classList.remove('visible');
+    document.body.style.overflow = '';
+    modal.removeEventListener('click', onOverlayClick);
+    document.removeEventListener('keydown', onKeyDown);
+  }
+
+  function onOverlayClick(e) {
+    if (e.target === document.getElementById('achievements-modal')) {
+      closeModal();
+    }
+  }
+  function onKeyDown(e) {
+    if (e.key === 'Escape') closeModal();
+  }
+
+  window.Achievements = { check, getUnlocked, renderGrid, renderProfileLink, openModal, closeModal };
 })();

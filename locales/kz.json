@@ -15,7 +15,8 @@
     "menu": "Мәзір",
     "close": "Жабу",
     "home": "Басты бет",
-    "checklist": "Тексеру тізімі"
+    "checklist": "Тексеру тізімі",
+    "achievements": "Жетістіктер"
   },
   "hero": {
     "badge": "✨ Жаңа тарау қолжетімді",
@@ -382,6 +383,10 @@
   "achievements": {
     "unlocked": "🏆 Жетістік ашылды!",
     "title": "Жетістіктер",
+    "modalTitle": "🏆 Жетістіктер",
+    "count": "{{current}} / {{total}}",
+    "open": "Ашу",
+    "close": "Жабу",
     "first_step": "Алғашқы қадам",
     "first_step_desc": "Бірінші кадрды қарау",
     "pixel_hunter": "Пиксель аңшысы",

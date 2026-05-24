@@ -15,7 +15,8 @@
     "menu": "菜单",
     "close": "关闭",
     "home": "首页",
-    "checklist": "检查清单"
+    "checklist": "检查清单",
+    "achievements": "成就"
   },
   "hero": {
     "badge": "✨ 新章节已上线",
@@ -382,6 +383,10 @@
   "achievements": {
     "unlocked": "🏆 成就解锁！",
     "title": "成就",
+    "modalTitle": "🏆 成就",
+    "count": "{{current}} / {{total}}",
+    "open": "打开",
+    "close": "关闭",
     "first_step": "第一步",
     "first_step_desc": "观看第一帧",
     "pixel_hunter": "像素猎人",
