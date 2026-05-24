@@ -1417,7 +1417,7 @@ const App = (function() {
 
   // ─── GAME INTEGRATION ───
   function startGame(gameType) {
-    AudioController.stop();
+    console.log('[App] startGame', gameType);
     document.querySelectorAll('.frame.active video').forEach(v => {
       v.pause();
       v.currentTime = 0;
@@ -1425,19 +1425,23 @@ const App = (function() {
     });
     if (gameType === 'runner') {
       showGameTransition('🏃 Мини-игра!', 'Помоги Суперглазке догнать Пикселька!', () => {
-        if (typeof startRunnerGame === 'function') startRunnerGame();
+        if (typeof startRunnerGame === 'function') { startRunnerGame(); }
+        else { console.error('[App] startRunnerGame is not a function'); }
       });
     } else if (gameType === 'gym') {
       showGameTransition('⚔️ Ваня против Ленивуса!', 'Используй три супер-атаки: Лазер, Прицел и Слёзы.', () => {
-        if (typeof startGymGame === 'function') startGymGame();
+        if (typeof startGymGame === 'function') { startGymGame(); }
+        else { console.error('[App] startGymGame is not a function'); }
       });
     } else if (gameType === 'blink') {
       showGameTransition('👁️ Моргайка!', 'Тренируем глазные мышцы: моргай, жмурься и распахивай глаза!', () => {
-        if (typeof startBlinkGame === 'function') startBlinkGame();
+        if (typeof startBlinkGame === 'function') { startBlinkGame(); }
+        else { console.error('[App] startBlinkGame is not a function'); }
       });
     } else if (gameType === 'tracker') {
       showGameTransition('🔮 Следи за шариком!', 'Следи глазами за светящимся шариком — тренируем внимание!', () => {
-        if (typeof startTrackerGame === 'function') startTrackerGame();
+        if (typeof startTrackerGame === 'function') { startTrackerGame(); }
+        else { console.error('[App] startTrackerGame is not a function'); }
       });
     }
   }
@@ -1461,8 +1465,9 @@ const App = (function() {
   }
 
   function showGameTransition(title, subtitle, onStart) {
+    console.log('[App] showGameTransition', title);
     const overlay = document.getElementById('game-transition-overlay');
-    if (!overlay) { if (onStart) onStart(); return; }
+    if (!overlay) { console.warn('[App] game-transition-overlay not found'); if (onStart) onStart(); return; }
     const tTitle = overlay.querySelector('.gt-title');
     const tSub = overlay.querySelector('.gt-sub');
     if (tTitle) tTitle.textContent = title;
@@ -1472,7 +1477,7 @@ const App = (function() {
     if (btn) {
       const newBtn = btn.cloneNode(true);
       btn.parentNode.replaceChild(newBtn, btn);
-      const start = () => { overlay.classList.remove('visible'); if (onStart) setTimeout(onStart, 300); };
+      const start = () => { console.log('[App] Transition start clicked'); overlay.classList.remove('visible'); if (onStart) setTimeout(onStart, 300); };
       newBtn.addEventListener('click', start);
       newBtn.addEventListener('touchstart', (e) => { e.preventDefault(); start(); }, {passive: false});
     }

@@ -56,8 +56,13 @@ const TrackerGame = (function() {
   function startGame() {
     if (!canvas) init();
     // Load progressive difficulty
-    if (typeof GameDifficulty !== 'undefined') {
-      diffConfig = GameDifficulty.getConfig('tracker');
+    try {
+      if (typeof GameDifficulty !== 'undefined') {
+        diffConfig = GameDifficulty.getConfig('tracker');
+      }
+    } catch (e) {
+      console.warn('[Tracker] GameDifficulty error, using defaults', e);
+      diffConfig = null;
     }
     var cfg = diffConfig || {};
     PHASE_COUNT = cfg.phaseCount || 4;
@@ -263,6 +268,7 @@ const TrackerGame = (function() {
 
 /* ─── GLOBAL API FOR app.js ─── */
 window.startTrackerGame = function() {
+  console.log('[Tracker] startTrackerGame called');
   TrackerGame.startGame();
 };
 

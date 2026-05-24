@@ -43,13 +43,19 @@
    * @param {number} [level] - optional override level
    */
   function getConfig(game, level) {
-    var lv = level || getLevel(game);
-    switch (game) {
-      case 'runner': return getRunnerConfig(lv);
-      case 'blink':  return getBlinkConfig(lv);
-      case 'gym':    return getGymConfig(lv);
-      case 'tracker':return getTrackerConfig(lv);
-      default: return {};
+    try {
+      var lv = level || getLevel(game);
+      console.log('[GameDifficulty] getConfig', game, 'level', lv);
+      switch (game) {
+        case 'runner': return getRunnerConfig(lv);
+        case 'blink':  return getBlinkConfig(lv);
+        case 'gym':    return getGymConfig(lv);
+        case 'tracker':return getTrackerConfig(lv);
+        default: return {};
+      }
+    } catch (e) {
+      console.error('[GameDifficulty] getConfig failed', game, e);
+      return {};
     }
   }
 

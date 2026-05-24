@@ -849,13 +849,19 @@ const GymGame = (function(){
   
   // ═══ PUBLIC API ═══
   window.startGymGame = function() {
+    console.log('[Gym] startGymGame called');
     window.hideOverlay('tr-overlay-gym');
     const overlay = getEl('game-overlay-gym');
     if (overlay) overlay.classList.add('visible');
 
     // Load progressive difficulty
-    if (typeof GameDifficulty !== 'undefined') {
-      diffConfig = GameDifficulty.getConfig('gym');
+    try {
+      if (typeof GameDifficulty !== 'undefined') {
+        diffConfig = GameDifficulty.getConfig('gym');
+      }
+    } catch (e) {
+      console.warn('[Gym] GameDifficulty error, using defaults', e);
+      diffConfig = null;
     }
     var cfg = diffConfig || {};
     TARGETS = {

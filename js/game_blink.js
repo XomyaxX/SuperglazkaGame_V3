@@ -102,8 +102,13 @@ const BlinkGame = (function() {
   function startGame() {
     if (!canvas) init();
     // Load progressive difficulty
-    if (typeof GameDifficulty !== 'undefined') {
-      diffConfig = GameDifficulty.getConfig('blink');
+    try {
+      if (typeof GameDifficulty !== 'undefined') {
+        diffConfig = GameDifficulty.getConfig('blink');
+      }
+    } catch (e) {
+      console.warn('[Blink] GameDifficulty error, using defaults', e);
+      diffConfig = null;
     }
     var cfg = diffConfig || {};
     TARGET_CLICKS = cfg.targetClicks || 8;
@@ -360,6 +365,7 @@ const BlinkGame = (function() {
 
 /* ─── GLOBAL API FOR app.js ─── */
 window.startBlinkGame = function() {
+  console.log('[Blink] startBlinkGame called');
   BlinkGame.startGame();
 };
 

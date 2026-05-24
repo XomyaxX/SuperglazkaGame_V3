@@ -150,8 +150,13 @@ const RunnerGame = (function(){
 
   function reset(){
     // Load progressive difficulty
-    if (typeof GameDifficulty !== 'undefined') {
-      diffConfig = GameDifficulty.getConfig('runner');
+    try {
+      if (typeof GameDifficulty !== 'undefined') {
+        diffConfig = GameDifficulty.getConfig('runner');
+      }
+    } catch (e) {
+      console.warn('[Runner] GameDifficulty error, using defaults', e);
+      diffConfig = null;
     }
     var cfg = diffConfig || {};
     resize();
@@ -714,6 +719,7 @@ const RunnerGame = (function(){
   }
 
   window.startRunnerGame = function(){
+    console.log('[Runner] startRunnerGame called');
     window.hideOverlay('tr-overlay-runner');
     const overlay = document.getElementById('game-overlay-runner');
     if (overlay) overlay.classList.add('visible');
