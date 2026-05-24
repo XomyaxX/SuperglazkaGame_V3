@@ -72,7 +72,13 @@
     document.querySelectorAll('[data-i18n]').forEach(function(el) {
       var key = el.getAttribute('data-i18n');
       var text = t(key);
-      if (text !== key) el.textContent = text;
+      if (text === key) return;
+      // Preserve child HTML if translation contains tags, otherwise use safe textContent
+      if (/<[a-z][\s\S]*>/i.test(text)) {
+        el.innerHTML = text;
+      } else {
+        el.textContent = text;
+      }
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
       var key = el.getAttribute('data-i18n-placeholder');

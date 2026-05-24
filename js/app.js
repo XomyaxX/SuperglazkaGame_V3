@@ -1508,10 +1508,13 @@ const App = (function() {
   // ─── MENU ───
   async function startEpisode(episodeId, startFrame) {
     startFrame = typeof startFrame === 'number' ? startFrame : 0;
+    console.log('[startEpisode]', episodeId, startFrame);
     var epData = episodesCache[episodeId];
     if (!epData) {
+      console.log('[startEpisode] fetching episode', episodeId);
       epData = await fetchEpisode(episodeId);
     }
+    console.log('[startEpisode] epData', epData);
     if (!epData) return;
     currentEpisode = epData;
     frames = epData.frames;

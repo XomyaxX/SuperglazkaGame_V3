@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v21';
+const CACHE_NAME = 'superglazka-v22';
 
 const STATIC_ASSETS = [
   '/',

@@ -784,7 +784,7 @@ body {
   -webkit-user-select: none;
 }
 
-#episode-viewer.active { display: flex; }
+#episode-viewer.active { display: flex; z-index: 300; }
 
 /* Profile button inside episode viewer */
 .viewer-profile-btn {
