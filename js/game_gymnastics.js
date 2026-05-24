@@ -3,6 +3,13 @@
    ═══════════════════════════════════════════════════════════════════ */
 const GymGame = (function(){
   'use strict';
+  // Fallback if app.js cached version lacks hideOverlay
+  if (typeof window.hideOverlay !== 'function') {
+    window.hideOverlay = function(id) {
+      const el = typeof id === 'string' ? document.getElementById(id) : id;
+      if (el) el.classList.remove('visible');
+    };
+  }
   
   // ═══ GAME CONSTANTS (Увеличено для детей) ═══
   let TARGETS = {
