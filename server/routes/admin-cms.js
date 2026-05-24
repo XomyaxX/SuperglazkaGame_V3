@@ -272,4 +272,70 @@ router.delete('/media/:filename', async (req, res) => {
   }
 });
 
+// ─── BLOG POSTS ───
+
+// GET /api/admin/blog
+router.get('/blog', async (req, res) => {
+  try {
+    const posts = await all('SELECT id, title, slug, excerpt, category, published, created_at FROM blog_posts ORDER BY created_at DESC');
+    res.json({ success: true, posts });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/admin/blog/:id
+router.get('/blog/:id', async (req, res) => {
+  try {
+    const post = await get('SELECT * FROM blog_posts WHERE id = ?', [req.params.id]);
+    if (!post) return res.status(404).json({ error: 'Post not found' });
+    res.json({ success: true, post });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /api/admin/blog
+router.post('/blog', async (req, res) => {
+  try {
+    const { title, slug, excerpt, content, category, image, published } = req.body;
+    const result = await run(
+      'INSERT INTO blog_posts (title, slug, excerpt, content, category, image, published) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [title || '', slug || '', excerpt || '', content || '', category || '', image || '', published ? 1 : 0]
+    );
+    res.json({ success: true, id: result.lastID });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// PUT /api/admin/blog/:id
+router.put('/blog/:id', async (req, res) => {
+  try {
+    const { title, slug, excerpt, content, category, image, published } = req.body;
+    await run(
+      'UPDATE blog_posts SET title = ?, slug = ?, excerpt = ?, content = ?, category = ?, image = ?, published = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [title || '', slug || '', excerpt || '', content || '', category || '', image || '', published ? 1 : 0, req.params.id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE /api/admin/blog/:id
+router.delete('/blog/:id', async (req, res) => {
+  try {
+    await run('DELETE FROM blog_posts WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

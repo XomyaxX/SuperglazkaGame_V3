@@ -1814,6 +1814,7 @@ const App = (function() {
       minutes: document.getElementById('cdMinutes'),
       seconds: document.getElementById('cdSeconds')
     };
+    var card = document.querySelector('.countdown-card');
     if (!els.days || !els.hours || !els.minutes || !els.seconds) return;
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
@@ -1821,10 +1822,7 @@ const App = (function() {
     function tick() {
       var diff = new Date(targetISO) - Date.now();
       if (diff <= 0) {
-        els.days.textContent = '00';
-        els.hours.textContent = '00';
-        els.minutes.textContent = '00';
-        els.seconds.textContent = '00';
+        if (card) card.style.display = 'none';
         return;
       }
       var days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -2076,7 +2074,7 @@ const App = (function() {
     initSwipe();
     BottomSheet.init();
     renderContinueButton();
-    startCountdown('2026-05-25T12:00:00');
+    startCountdown('2026-05-25T12:00:00'); // TODO: replace with dynamic next chapter date
     AudioController.onAudioStart((audio) => syncSubtitles(audio));
 
     const navArrowUp = document.getElementById('navArrowUp');

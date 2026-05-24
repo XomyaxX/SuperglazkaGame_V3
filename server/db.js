@@ -193,6 +193,23 @@ async function init() {
     )
   `);
 
+  await run(`
+    CREATE TABLE IF NOT EXISTS blog_posts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      slug TEXT UNIQUE NOT NULL,
+      excerpt TEXT,
+      content TEXT NOT NULL,
+      category TEXT,
+      image TEXT,
+      published INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await run(`CREATE INDEX IF NOT EXISTS idx_blog_published ON blog_posts(published)`);
+
   await run(`CREATE INDEX IF NOT EXISTS idx_progress_user ON progress(user_id)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_progress_guest ON progress(guest_token)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_coins_user ON coins(user_id)`);

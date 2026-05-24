@@ -122,24 +122,74 @@ if ('serviceWorker' in navigator) {
   gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: opacity .2s;
 }
+.checklist-item:hover { opacity: 0.9; }
 .checklist-item:last-child { border-bottom: none; }
 .theme-light .checklist-item { border-color: rgba(0,0,0,0.06); }
-.checklist-check {
+.checklist-item input[type="checkbox"] {
   width: 22px;
   height: 22px;
   border: 2px solid rgba(255,255,255,0.3);
   border-radius: 6px;
   flex-shrink: 0;
   margin-top: 2px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+  transition: all .2s;
 }
-.theme-light .checklist-check { border-color: rgba(0,0,0,0.25); }
+.theme-light .checklist-item input[type="checkbox"] { border-color: rgba(0,0,0,0.25); }
+.checklist-item input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #c084fc, #e879f9);
+  border-color: transparent;
+}
+.checklist-item input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
 .checklist-item span {
   font-size: 15px;
   color: rgba(255,255,255,0.8);
   line-height: 1.6;
+  transition: all .2s;
 }
 .theme-light .checklist-item span { color: rgba(0,0,0,0.8); }
+.checklist-item.checked span {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+.checklist-progress {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.6);
+}
+.theme-light .checklist-progress { color: rgba(0,0,0,0.55); }
+.checklist-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.theme-light .checklist-progress-bar { background: rgba(0,0,0,0.1); }
+.checklist-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #c084fc, #e879f9);
+  border-radius: 3px;
+  transition: width .4s var(--ease-spring);
+}
 .checklist-print-btn {
   display: block;
   margin: 32px auto 0;
@@ -157,11 +207,43 @@ if ('serviceWorker' in navigator) {
   transform: scale(1.04);
   box-shadow: 0 8px 24px rgba(192,132,252,0.3);
 }
+.checklist-reset-btn {
+  display: block;
+  margin: 12px auto 0;
+  padding: 10px 24px;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 24px;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.checklist-reset-btn:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
+}
+.theme-light .checklist-reset-btn {
+  border-color: rgba(0,0,0,0.15);
+  color: rgba(0,0,0,0.5);
+}
+.theme-light .checklist-reset-btn:hover {
+  border-color: rgba(0,0,0,0.3);
+  color: rgba(0,0,0,0.8);
+}
 @media print {
-  .checklist-header, .checklist-print-btn, .cookie-banner, .checklist-back { display: none !important; }
+  .checklist-header, .checklist-print-btn, .checklist-reset-btn, .cookie-banner, .checklist-back, .checklist-progress { display: none !important; }
   .checklist-page { background: #fff !important; }
   .checklist-card { background: #fff !important; border: 1px solid #ddd !important; }
-  .checklist-item span, .checklist-card h2 { color: #000 !important; }
+  .checklist-item span, .checklist-card h2 { color: #000 !important; text-decoration: none !important; opacity: 1 !important; }
+  .checklist-item input[type="checkbox"] {
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+    border: 1px solid #000 !important;
+    background: #fff !important;
+  }
+  .checklist-item input[type="checkbox"]:checked::after { display: none !important; }
 }
 @media (max-width: 768px) {
   .checklist-header { padding: 16px 20px; }
@@ -181,29 +263,35 @@ if ('serviceWorker' in navigator) {
     <h1>10 правил здоровья глаз</h1>
     <p class="checklist-subtitle">Чек-лист для родителей · Распечатайте и повесьте на холодильник</p>
 
+    <div class="checklist-progress" id="checklistProgress">
+      <div id="progressText">Выполнено 0 из 10</div>
+      <div class="checklist-progress-bar"><div class="checklist-progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+
     <div class="checklist-card">
       <h2>📋 Ежедневные правила</h2>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Правило 20-20-20.</strong> Каждые 20 минут экрана — 20 секунд отдыха, взгляд на 6 метров.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Расстояние от экрана.</strong> Минимум 50–60 см до монитора, 30 см до планшета.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Хорошее освещение.</strong> Нет бликов на экране, достаточно света в комнате.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Моргай чаще!</strong> Напоминайте ребёнку моргать во время работы за экраном.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Никаких экранов за 1 час до сна.</strong> Синий свет нарушает выработку мелатонина.</span></div>
+      <label class="checklist-item"><input type="checkbox" data-index="0"><span><strong>Правило 20-20-20.</strong> Каждые 20 минут экрана — 20 секунд отдыха, взгляд на 6 метров.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="1"><span><strong>Расстояние от экрана.</strong> Минимум 50–60 см до монитора, 30 см до планшета.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="2"><span><strong>Хорошее освещение.</strong> Нет бликов на экране, достаточно света в комнате.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="3"><span><strong>Моргай чаще!</strong> Напоминайте ребёнку моргать во время работы за экраном.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="4"><span><strong>Никаких экранов за 1 час до сна.</strong> Синий свет нарушает выработку мелатонина.</span></label>
     </div>
 
     <div class="checklist-card">
       <h2>🥗 Питание и образ жизни</h2>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Витамин А.</strong> Морковь, тыква, абрикосы, печень — ежедневно в рационе.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Омега-3.</strong> Рыба, семена льна, грецкие орехи — защищают сетчатку.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Прогулки на свежем воздухе.</strong> Минимум 1 час в день — естественная тренировка глаз.</span></div>
+      <label class="checklist-item"><input type="checkbox" data-index="5"><span><strong>Витамин А.</strong> Морковь, тыква, абрикосы, печень — ежедневно в рационе.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="6"><span><strong>Омега-3.</strong> Рыба, семена льна, грецкие орехи — защищают сетчатку.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="7"><span><strong>Прогулки на свежем воздухе.</strong> Минимум 1 час в день — естественная тренировка глаз.</span></label>
     </div>
 
     <div class="checklist-card">
       <h2>🏥 Профилактика</h2>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Осмотр у офтальмолога.</strong> 1 раз в год даже при отсутствии жалоб.</span></div>
-      <div class="checklist-item"><div class="checklist-check"></div><span><strong>Не трите глаза грязными руками.</strong> Инфекции — частая причина проблем со зрением.</span></div>
+      <label class="checklist-item"><input type="checkbox" data-index="8"><span><strong>Осмотр у офтальмолога.</strong> 1 раз в год даже при отсутствии жалоб.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="9"><span><strong>Не трите глаза грязными руками.</strong> Инфекции — частая причина проблем со зрением.</span></label>
     </div>
 
     <button class="checklist-print-btn" onclick="window.print()">🖨️ Распечатать чек-лист</button>
+    <button class="checklist-reset-btn" id="resetBtn">↺ Сбросить прогресс</button>
   </div>
 
   <footer class="land-footer" style="margin-top:40px;">
@@ -231,6 +319,66 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <script>
+(function() {
+  var STORAGE_KEY = 'superglazka_checklist';
+  var checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+  var progressText = document.getElementById('progressText');
+  var progressFill = document.getElementById('progressFill');
+  var resetBtn = document.getElementById('resetBtn');
+  var total = checkboxes.length;
+
+  function load() {
+    try {
+      var data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+      checkboxes.forEach(function(cb, i) {
+        cb.checked = data.indexOf(i) !== -1;
+        updateItemStyle(cb);
+      });
+    } catch(e) {}
+    updateProgress();
+  }
+
+  function save() {
+    var checked = [];
+    checkboxes.forEach(function(cb, i) {
+      if (cb.checked) checked.push(i);
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+    updateProgress();
+  }
+
+  function updateItemStyle(cb) {
+    var item = cb.closest('.checklist-item');
+    if (cb.checked) item.classList.add('checked');
+    else item.classList.remove('checked');
+  }
+
+  function updateProgress() {
+    var checked = Array.prototype.filter.call(checkboxes, function(cb) { return cb.checked; }).length;
+    progressText.textContent = 'Выполнено ' + checked + ' из ' + total;
+    progressFill.style.width = (checked / total * 100) + '%';
+  }
+
+  checkboxes.forEach(function(cb) {
+    cb.addEventListener('change', function() {
+      updateItemStyle(cb);
+      save();
+    });
+  });
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', function() {
+      checkboxes.forEach(function(cb) {
+        cb.checked = false;
+        updateItemStyle(cb);
+      });
+      save();
+    });
+  }
+
+  load();
+})();
+
 const savedTheme = localStorage.getItem('superglazka_theme');
 if (savedTheme) document.body.classList.add('theme-' + savedTheme);
 </script>

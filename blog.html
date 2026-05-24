@@ -165,6 +165,15 @@ if ('serviceWorker' in navigator) {
   border-color: #e056c8;
   color: rgba(0,0,0,0.75);
 }
+.blog-loading, .blog-error, .blog-empty {
+  text-align: center;
+  padding: 60px 24px;
+  color: rgba(255,255,255,0.6);
+  font-size: 16px;
+}
+.theme-light .blog-loading, .theme-light .blog-error, .theme-light .blog-empty {
+  color: rgba(0,0,0,0.55);
+}
 @media (max-width: 768px) {
   .blog-header { padding: 16px 20px; }
   .blog-list { padding: 0 20px; }
@@ -184,46 +193,8 @@ if ('serviceWorker' in navigator) {
     <p>Полезные советы о здоровье глаз для детей и родителей</p>
   </div>
 
-  <div class="blog-list">
-    <article class="blog-card reveal">
-      <h2>🎯 Правило 20-20-20 для детских глаз</h2>
-      <div class="blog-meta">3 минуты чтения · Совет дня</div>
-      <p><strong>Что это такое?</strong> Каждые <strong>20 минут</strong> экранного времени ребёнок должен смотреть на предмет в <strong>20 футах</strong> (≈6 метров) в течение <strong>20 секунд</strong>. Это простое правило помогает расслабить глазные мышцы и предотвратить цифровое зрительное утомление.</p>
-      <p><strong>Как приучить ребёнка?</strong></p>
-      <ul>
-        <li>Поставьте таймер на 20 минут — пусть ребёнок сам его запускает</li>
-        <li>Придумайте «супергеройскую миссию»: "Найди самый далёкий предмет в комнате и назови его цвет"</li>
-        <li>Используйте приложения с напоминаниями (например, Stretchly или аналоги)</li>
-      </ul>
-      <div class="blog-tip">💡 Совет: после каждой главы «Суперглазки» делайте 20-секундную паузу — это уже встроено в правило!</div>
-    </article>
-
-    <article class="blog-card reveal">
-      <h2>👀 5 признаков усталости глаз у ребёнка</h2>
-      <div class="blog-meta">3 минуты чтения · Здоровье</div>
-      <p>Дети часто не говорят о проблемах со зрением напрямую. Вот на что стоит обратить внимание:</p>
-      <ul>
-        <li><strong>Частое моргание и трение глаз.</strong> Если ребёнок постоянно щурится или трёт глаза — это первый сигнал усталости.</li>
-        <li><strong>Головная боль в области лба и висков.</strong> Особенно после просмотра мультфильмов или игр.</li>
-        <li><strong>Нежелание читать или рисовать.</strong> Ребёнок избегает activities, требующих зрительной концентрации.</li>
-        <li><strong>Наклон головы или прищуривание.</strong> Попытка сфокусироваться на размытом изображении.</li>
-        <li><strong>Красные глаза.</strong> Покраснение склер — признак сухости и перенапряжения.</li>
-      </ul>
-      <div class="blog-tip">⚠️ Важно: если симптомы повторяются более 3 дней подряд — запишитесь к офтальмологу.</div>
-    </article>
-
-    <article class="blog-card reveal">
-      <h2>👓 Как выбрать первые очки ребёнку</h2>
-      <div class="blog-meta">2 минуты чтения · Практика</div>
-      <p>Первые очки — важное событие. Вот как сделать его комфортным:</p>
-      <ul>
-        <li><strong>Оправа.</strong> Выбирайте лёгкую, гибкую оправу из титана или пластика с силиконовыми носоупорами. Форма — по лицу, но не слишком широкая.</li>
-        <li><strong>Линзы.</strong> Поликарбонат — ударопрочный материал, идеален для активных детей. Антибликовое покрытие обязательно.</li>
-        <li><strong>Приучение.</strong> Начинайте с 15 минут в день, постепенно увеличивая время. Хвалите ребёнка за ношение очков.</li>
-        <li><strong>Запасная пара.</strong> Дети ломают очки — имейте резервную пару или закажите спортивный ремень.</li>
-      </ul>
-      <div class="blog-tip">💡 Совет: позвольте ребёнку выбрать цвет оправы самостоятельно — так он будет охотнее их носить!</div>
-    </article>
+  <div class="blog-list" id="blogList">
+    <div class="blog-loading">Загрузка статей...</div>
   </div>
 
   <footer class="land-footer" style="margin-top:60px;">
@@ -251,6 +222,77 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <script>
+// Load blog posts dynamically
+(function() {
+  const list = document.getElementById('blogList');
+
+  function renderPosts(posts) {
+    if (!posts || posts.length === 0) {
+      list.innerHTML = '<div class="blog-empty">Пока нет статей. Загляни позже!</div>';
+      return;
+    }
+    list.innerHTML = posts.map(function(post) {
+      const date = post.created_at ? new Date(post.created_at).toLocaleDateString('ru-RU') : '';
+      const category = post.category || 'Совет дня';
+      const excerpt = post.excerpt || '';
+      const image = post.image ? '<img src="' + post.image + '" alt="' + escapeHtml(post.title) + '" style="width:100%;border-radius:12px;margin-bottom:16px;max-height:300px;object-fit:cover;">' : '';
+      return '<article class="blog-card reveal">' +
+        image +
+        '<h2>' + escapeHtml(post.title) + '</h2>' +
+        '<div class="blog-meta">' + (date ? date + ' · ' : '') + escapeHtml(category) + '</div>' +
+        '<p>' + escapeHtml(excerpt) + '</p>' +
+      '</article>';
+    }).join('');
+    // Re-init reveal animations
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  fetch('/api/blog')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        renderPosts(data.posts);
+      } else {
+        list.innerHTML = '<div class="blog-error">Не удалось загрузить статьи</div>';
+      }
+    })
+    .catch(function() {
+      // Fallback to hardcoded posts if API fails
+      renderPosts([
+        {
+          title: '🎯 Правило 20-20-20 для детских глаз',
+          excerpt: 'Каждые 20 минут экранного времени ребёнок должен смотреть на предмет в 20 футах (≈6 метров) в течение 20 секунд. Это простое правило помогает расслабить глазные мышцы и предотвратить цифровое зрительное утомление.',
+          category: 'Совет дня',
+          created_at: '2026-05-20'
+        },
+        {
+          title: '👀 5 признаков усталости глаз у ребёнка',
+          excerpt: 'Дети часто не говорят о проблемах со зрением напрямую. Частое моргание, головная боль, нежелание читать, прищуривание и красные глаза — вот на что стоит обратить внимание.',
+          category: 'Здоровье',
+          created_at: '2026-05-15'
+        },
+        {
+          title: '👓 Как выбрать первые очки ребёнку',
+          excerpt: 'Первые очки — важное событие. Выбирайте лёгкую оправу, поликарбонатные линзы, приучайте постепенно и позвольте ребёнку выбрать цвет самостоятельно.',
+          category: 'Практика',
+          created_at: '2026-05-10'
+        }
+      ]);
+    });
+})();
+
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -259,12 +301,14 @@ const observer = new IntersectionObserver((entries) => {
     }
   });
 }, { threshold: 0.1 });
+
 document.querySelectorAll('.reveal').forEach(el => {
   el.style.opacity = '0';
   el.style.transform = 'translateY(20px)';
   el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
   observer.observe(el);
 });
+
 const savedTheme = localStorage.getItem('superglazka_theme');
 if (savedTheme) document.body.classList.add('theme-' + savedTheme);
 </script>

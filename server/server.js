@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { init } = require('./db');
-const { generalLimiter } = require('./middleware/rateLimit');
+const { generalLimiter, authLimiter } = require('./middleware/rateLimit');
 const authRoutes = require('./routes/auth');
 const progressRoutes = require('./routes/progress');
 const coinsRoutes = require('./routes/coins');
@@ -14,6 +14,7 @@ const subscribeRoutes = require('./routes/subscribe');
 const adminRoutes = require('./routes/admin');
 const episodeRoutes = require('./routes/episodes');
 const adminCmsRoutes = require('./routes/admin-cms');
+const blogRoutes = require('./routes/blog');
 
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
@@ -69,12 +70,13 @@ app.get('/api/health', (req, res) => {
 });
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/coins', coinsRoutes);
 app.use('/api/subscribe', subscribeRoutes);
 app.use('/api/admin', adminRoutes, adminCmsRoutes);
 app.use('/api/episodes', episodeRoutes);
+app.use('/api/blog', blogRoutes);
 
 // 404
 app.use((req, res) => {
