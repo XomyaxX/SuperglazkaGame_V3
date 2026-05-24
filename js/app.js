@@ -2,15 +2,24 @@
    СУПЕРГЛАЗКА — Stories Pro Engine
    ═══════════════════════════════════════════════════════════ */
 
-const SPEAKER_NAMES = {
-  hrust: "Мудрый Хрусталик",
-  sovet: "Советник",
-  dev: "Девочка",
-  tolpa: "Толпа",
-  nar: "Рассказчик"
-};
+function getSpeakerName(key) {
+  var names = {
+    hrust: window.I18n ? I18n.t('characters.hrust') : 'Мудрый Хрусталик',
+    sovet: window.I18n ? I18n.t('characters.sovet') : 'Советник',
+    dev: window.I18n ? I18n.t('characters.dev') : 'Девочка',
+    tolpa: window.I18n ? I18n.t('characters.tolpa') : 'Толпа',
+    nar: window.I18n ? I18n.t('characters.nar') : 'Рассказчик'
+  };
+  return names[key] || key;
+}
 
-const GAME_NAMES = { blink: 'Моргай-зарядка', tracker: 'Трекер-взгляд' };
+function getGameName(key) {
+  var names = {
+    blink: window.I18n ? I18n.t('games.blink.name') : 'Моргай-зарядка',
+    tracker: window.I18n ? I18n.t('games.tracker.name') : 'Трекер-взгляд'
+  };
+  return names[key] || key;
+}
 const GAME_ICONS = { blink: '⚡', tracker: '👀' };
 
 /**
@@ -767,7 +776,7 @@ const BottomSheet = {
     games.forEach(g => {
       const chip = document.createElement('button');
       chip.className = 'game-chip';
-      chip.title = GAME_NAMES[g] || g;
+      chip.title = getGameName(g);
       const icon = document.createElement('span');
       icon.className = 'game-chip-icon';
       icon.textContent = GAME_ICONS[g] || '🎮';
@@ -794,7 +803,7 @@ const BottomSheet = {
       icon.className = 'bs-game-chip-icon';
       icon.textContent = GAME_ICONS[g] || '🎮';
       const name = document.createElement('span');
-      name.textContent = GAME_NAMES[g] || g;
+      name.textContent = getGameName(g);
       chip.appendChild(icon);
       chip.appendChild(name);
       chip.addEventListener('click', () => App.startGame(g));

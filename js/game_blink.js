@@ -61,7 +61,7 @@ const BlinkGame = (function() {
       if (targetPos >= ROUND3_ZONE.min && targetPos <= ROUND3_ZONE.max) {
         nextRound();
       } else {
-        setHint('Промах! Попробуй ещё раз');
+        setHint(window.I18n ? I18n.t('games.blink.miss') : 'Промах! Попробуй ещё раз');
       }
     }
   }
@@ -84,7 +84,7 @@ const BlinkGame = (function() {
       if (targetPos >= ROUND3_ZONE.min && targetPos <= ROUND3_ZONE.max) {
         nextRound();
       } else {
-        setHint('Промах! Попробуй ещё раз');
+        setHint(window.I18n ? I18n.t('games.blink.miss') : 'Промах! Попробуй ещё раз');
       }
     }
   }
@@ -118,9 +118,9 @@ const BlinkGame = (function() {
     roundStartTime = performance.now();
 
     updateUI();
-    if (round === 1) setHint('Кликай по экрану, чтобы моргать! 8 раз за 5 секунд!');
-    else if (round === 2) setHint('Зажми кнопку мыши / тапни и держи 3 секунды!');
-    else if (round === 3) setHint('Кликни, когда шкала в зелёной зоне!');
+    if (round === 1) setHint(window.I18n ? I18n.t('games.blink.hintRound1') : 'Кликай по экрану, чтобы моргать! 8 раз за 5 секунд!');
+    else if (round === 2) setHint(window.I18n ? I18n.t('games.blink.hintRound2') : 'Зажми кнопку мыши / тапни и держи 3 секунды!');
+    else if (round === 3) setHint(window.I18n ? I18n.t('games.blink.hintRound3') : 'Кликни, когда шкала в зелёной зоне!');
   }
 
   function nextRound() {
@@ -167,7 +167,7 @@ const BlinkGame = (function() {
       const elapsed = now - roundStartTime;
       if (elapsed >= ROUND1_TIME) {
         if (clicks >= TARGET_CLICKS) nextRound();
-        else { setHint('Время вышло! Попробуй снова.'); clicks = 0; roundStartTime = now; }
+        else { setHint(window.I18n ? I18n.t('games.blink.timeUp') : 'Время вышло! Попробуй снова.'); clicks = 0; roundStartTime = now; }
       }
       updateUI();
     } else if (state === 'squeeze') {
@@ -176,7 +176,7 @@ const BlinkGame = (function() {
         if (holdTime >= ROUND2_HOLD) nextRound();
       } else {
         if (holdTime > 0 && holdTime < ROUND2_HOLD) {
-          setHint('Отпустил слишком рано! Начинаем заново.');
+          setHint(window.I18n ? I18n.t('games.blink.releaseEarly') : 'Отпустил слишком рано! Начинаем заново.');
           holdTime = 0;
         }
       }

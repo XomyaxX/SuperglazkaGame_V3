@@ -7,14 +7,14 @@
 
   var STORAGE_KEY = 'superglazka_achievements';
   var ACHIEVEMENTS_LIST = [
-    { key: 'first_step', title: 'Первый шаг', desc: 'Просмотреть первый кадр', icon: '🦶', type: 'frame', value: '1', reward: 10 },
-    { key: 'pixel_hunter', title: 'Охотник за пикселями', desc: 'Пройти "Погоню за Пиксельком"', icon: '🏃', type: 'game', value: 'runner', reward: 50 },
-    { key: 'eye_gymnast', title: 'Гимнаст глаз', desc: 'Пройти гимнастику 3 раза', icon: '👁️', type: 'game_count', value: 'gym', count: 3, reward: 100 },
-    { key: 'blinker', title: 'Мигалка', desc: 'Пройти "Моргайку"', icon: '✨', type: 'game', value: 'blink', reward: 50 },
-    { key: 'tracker', title: 'Трекер', desc: 'Пройти "Следи за шариком"', icon: '🔮', type: 'game', value: 'tracker', reward: 50 },
-    { key: 'bookworm', title: 'Глазастик', desc: 'Пройти одну главу', icon: '📖', type: 'episode', value: '1', reward: 100 },
-    { key: 'librarian', title: 'Библиофил', desc: 'Пройти все главы', icon: '📚', type: 'episode_all', reward: 200 },
-    { key: 'rich', title: 'Богач', desc: 'Накопить 500 монет', icon: '💰', type: 'coins', value: '500', reward: 100 }
+    { key: 'first_step', titleKey: 'achievements.first_step', descKey: 'achievements.first_step_desc', icon: '🦶', type: 'frame', value: '1', reward: 10 },
+    { key: 'pixel_hunter', titleKey: 'achievements.pixel_hunter', descKey: 'achievements.pixel_hunter_desc', icon: '🏃', type: 'game', value: 'runner', reward: 50 },
+    { key: 'eye_gymnast', titleKey: 'achievements.eye_gymnast', descKey: 'achievements.eye_gymnast_desc', icon: '👁️', type: 'game_count', value: 'gym', count: 3, reward: 100 },
+    { key: 'blinker', titleKey: 'achievements.blinker', descKey: 'achievements.blinker_desc', icon: '✨', type: 'game', value: 'blink', reward: 50 },
+    { key: 'tracker', titleKey: 'achievements.tracker', descKey: 'achievements.tracker_desc', icon: '🔮', type: 'game', value: 'tracker', reward: 50 },
+    { key: 'bookworm', titleKey: 'achievements.bookworm', descKey: 'achievements.bookworm_desc', icon: '📖', type: 'episode', value: '1', reward: 100 },
+    { key: 'librarian', titleKey: 'achievements.librarian', descKey: 'achievements.librarian_desc', icon: '📚', type: 'episode_all', reward: 200 },
+    { key: 'rich', titleKey: 'achievements.rich', descKey: 'achievements.rich_desc', icon: '💰', type: 'coins', value: '500', reward: 100 }
   ];
 
   function loadLocal() {
@@ -125,14 +125,14 @@
     if (!container) return;
     injectStyles();
     var unlocked = loadLocal();
-    container.innerHTML = '<h3 style="font-family:Comfortaa,cursive;font-size:18px;color:#fff;margin-bottom:12px;">🏆 Достижения</h3>' +
+    container.innerHTML = '<h3 style="font-family:Comfortaa,cursive;font-size:18px;color:#fff;margin-bottom:12px;">' + (window.I18n ? I18n.t('achievements.title') : '🏆 Достижения') + '</h3>' +
       '<div class="achievements-grid">' +
       ACHIEVEMENTS_LIST.map(function(a) {
         var isUnlocked = unlocked.indexOf(a.key) !== -1;
         return '<div class="achievement-badge ' + (isUnlocked ? 'unlocked' : '') + '">' +
           '<div class="achievement-badge-icon">' + a.icon + '</div>' +
-          '<div class="achievement-badge-title">' + a.title + '</div>' +
-          '<div class="achievement-badge-desc">' + a.desc + '</div>' +
+          '<div class="achievement-badge-title">' + (window.I18n ? I18n.t(a.titleKey) : a.title) + '</div>' +
+          '<div class="achievement-badge-desc">' + (window.I18n ? I18n.t(a.descKey) : a.desc) + '</div>' +
           '<div class="achievement-badge-reward">+' + a.reward + ' 🪙</div>' +
         '</div>';
       }).join('') +

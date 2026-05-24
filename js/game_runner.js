@@ -183,7 +183,7 @@ const RunnerGame = (function(){
   function updateUI(){
     const timeEl = document.getElementById('runner-time');
     const livesEl = document.getElementById('runner-lives');
-    if (timeEl) timeEl.textContent = 'Ур. ' + level;
+    if (timeEl) timeEl.textContent = (window.I18n ? I18n.t('games.runner.level') : 'Ур.') + ' ' + level;
     if (livesEl) livesEl.textContent = '❤️'.repeat(lives) + '🖤'.repeat(3-lives) + (shieldTimer > 0 ? ' 🛡️' : '') + (speedBoostTimer > 0 ? ' ⭐' : '');
   }
 
@@ -610,12 +610,12 @@ const RunnerGame = (function(){
             
             // Update status to "Поражение"
             const statusEl = document.getElementById('runner-stats-status');
-            if (statusEl) statusEl.textContent = 'Попробуй ещё раз!';
+            if (statusEl) statusEl.textContent = window.I18n ? I18n.t('games.runner.gameOver') : 'Попробуй ещё раз!';
             
             // Change button to restart
             const btn = document.querySelector('#runner-stats-overlay .tr-btn');
             if (btn) {
-              btn.textContent = '🔄 Попробовать снова';
+              btn.textContent = window.I18n ? I18n.t('games.runner.retry') : '🔄 Попробовать снова';
               btn.onclick = function() {
                 window.hideOverlay('runner-stats-overlay');
                 reset();
@@ -733,7 +733,7 @@ const RunnerGame = (function(){
     
     // Fill data
     const timeEl = document.getElementById('runner-stats-time');
-    if (timeEl) timeEl.textContent = `⏱️ Время: ${timeStr}`;
+    if (timeEl) timeEl.textContent = '⏱️ ' + (window.I18n ? I18n.t('games.runner.time') : 'Время: ') + timeStr;
     
     const livesEl = document.getElementById('runner-stats-lives');
     if (livesEl) livesEl.textContent = `${runnerStats.livesRemaining}/3`;
@@ -743,12 +743,12 @@ const RunnerGame = (function(){
     
     // Reset status text for victory
     const statusEl = document.getElementById('runner-stats-status');
-    if (statusEl) statusEl.textContent = 'Победа!';
+    if (statusEl) statusEl.textContent = window.I18n ? I18n.t('games.runner.win') : 'Победа!';
     
     // Reset button for victory (go to registration)
     const btn = document.querySelector('#runner-stats-overlay .tr-btn');
     if (btn) {
-      btn.textContent = 'Продолжить ➜';
+      btn.textContent = window.I18n ? I18n.t('games.runner.continue') : 'Продолжить ➜';
       btn.onclick = window.showRunnerRegistration;
     }
     
@@ -763,7 +763,7 @@ const RunnerGame = (function(){
     
     const scoreEl = document.getElementById('runner-total-score');
     if (scoreEl) {
-      scoreEl.textContent = '🏆 Оценка: ' + '⭐'.repeat(runnerStats.stars);
+      scoreEl.textContent = (window.I18n ? I18n.t('games.stats.rating') : '🏆 Оценка: ') + '⭐'.repeat(runnerStats.stars);
     }
     
     overlay.classList.add('visible');
@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nickname: nickname,
         email: email,
         runnerStats: runnerStats,
-        achievements: ['Поймал Пикселька!', 'Защитник стола'],
+        achievements: [window.I18n ? I18n.t('games.runner.ach1') : 'Поймал Пикселька!', window.I18n ? I18n.t('games.runner.ach2') : 'Защитник стола'],
         registeredAt: new Date().toISOString()
       };
       
@@ -850,16 +850,16 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.textContent = '🎉';
         const title = document.createElement('div');
         title.className = 'reg-success-title';
-        title.textContent = 'Добро пожаловать, ' + nickname + '!';
+        title.textContent = (window.I18n ? I18n.t('auth.welcome') : 'Добро пожаловать, ') + nickname + '!';
         const text = document.createElement('div');
         text.className = 'reg-success-text';
-        text.appendChild(document.createTextNode('Твой прогресс сохранён!'));
+        text.appendChild(document.createTextNode(window.I18n ? I18n.t('auth.progressSaved') : 'Твой прогресс сохранён!'));
         text.appendChild(document.createElement('br'));
-        text.appendChild(document.createTextNode('Теперь ты часть команды Суперглазки!'));
+        text.appendChild(document.createTextNode(window.I18n ? I18n.t('auth.teamMember') : 'Теперь ты часть команды Суперглазки!'));
         const btn = document.createElement('button');
         btn.className = 'tr-btn';
         btn.style.cssText = 'margin-top: 24px; width: 100%;';
-        btn.textContent = 'Продолжить приключение ➜';
+        btn.textContent = window.I18n ? I18n.t('app.continueAdventure') : 'Продолжить приключение ➜';
         btn.addEventListener('click', finishRunnerRegistration);
         success.appendChild(icon);
         success.appendChild(title);

@@ -14,8 +14,8 @@
     "start": "▶ Start",
     "menu": "Menu",
     "close": "Close",
-    "home": "",
-    "checklist": ""
+    "home": "Home",
+    "checklist": "Checklist"
   },
   "hero": {
     "badge": "✨ New chapter available",
@@ -118,7 +118,12 @@
       "name": "Lenivus",
       "role": "Main villain",
       "desc": "The Great Evil threatening to consume Videal. His weakness — active and healthy eyes!"
-    }
+    },
+    "hrust": "Wise Crystal",
+    "sovet": "Advisor",
+    "dev": "Girl",
+    "tolpa": "Crowd",
+    "nar": "Narrator"
   },
   "profileLanding": {
     "title": "🎮 Your Game Profile",
@@ -149,7 +154,7 @@
     "accept": "Accept"
   },
   "app": {
-    "back": "Back",
+    "back": "◀ Back",
     "settings": "Settings",
     "profile": "Profile",
     "cinema": "Cinema",
@@ -162,17 +167,17 @@
     "framesTab": "Frames",
     "uploadTab": "Upload",
     "narrator": "Narrator",
-    "subtitles": "Subtitles",
+    "subtitles": "💬 Subtitles",
     "fontSize": "Font size",
     "highContrast": "High contrast",
-    "reduceMotion": "Reduce animation",
+    "reduceMotion": "Reduce motion",
     "textSize": "Text size",
     "darkTheme": "Dark theme",
     "bgMusic": "Background music",
     "volume": "Volume",
-    "audio": "Audio",
-    "accessibility": "Accessibility",
-    "interface": "Interface",
+    "audio": "🎵 Audio",
+    "accessibility": "♿ Accessibility",
+    "interface": "🖥️ Interface",
     "faqItems": {
       "howToPlay": "How to play?",
       "saveProgress": "How to save progress?",
@@ -186,33 +191,33 @@
       "subtitle": "Train your eyes and help Superglazka!",
       "start": "▶ Start"
     },
-    "continueAdventure": "",
-    "continue": "",
-    "nextChapterSoon": "",
-    "comingSoon": "",
-    "showSubtitles": "",
-    "subtitleFontSize": "",
-    "help": "",
-    "showFullText": "",
-    "miniGames": "",
-    "miniGame": "",
-    "tapToPlay": "",
-    "play": "",
-    "next": "",
-    "getReady": "",
-    "playGame": "",
-    "fight": "",
-    "skip": "",
-    "great": "",
-    "youDidIt": "",
-    "greatJob": "",
-    "chapters": "",
-    "account": "",
-    "notifications": "",
-    "yourEmail": "",
-    "subscribe": "",
-    "wellDone": "",
-    "nextFrame": ""
+    "continueAdventure": "Continue adventure",
+    "continue": "Continue",
+    "nextChapterSoon": "Next chapter soon",
+    "comingSoon": "Coming soon!",
+    "showSubtitles": "Show subtitles",
+    "subtitleFontSize": "Subtitle font size",
+    "help": "❓ Help",
+    "showFullText": "Show full text",
+    "miniGames": "🎮 Mini-games",
+    "miniGame": "Mini-game!",
+    "tapToPlay": "Tap to play",
+    "play": "Play",
+    "next": "Next ▶",
+    "getReady": "Get ready for the challenge...",
+    "playGame": "Play! 🚀",
+    "fight": "Fight! 🚀",
+    "skip": "Skip ▸",
+    "great": "Great!",
+    "youDidIt": "You did it!\nContinued in the comic...",
+    "greatJob": "🎉 Great job!",
+    "chapters": "📖 Chapters",
+    "account": "🔐 Account",
+    "notifications": "🔔 Notifications",
+    "yourEmail": "Your email",
+    "subscribe": "Subscribe to new chapters",
+    "wellDone": "Well done!",
+    "nextFrame": "Next frame..."
   },
   "games": {
     "runner": {
@@ -223,11 +228,16 @@
       "win": "Victory!",
       "stats": "Statistics",
       "continue": "Continue",
-      "intro": "",
-      "completed": ""
+      "intro": "Help Superglazka catch Pixelko on the table! Dodge the dishes.",
+      "completed": "🏃 Chase completed!",
+      "level": "Lv.",
+      "retry": "🔄 Try again",
+      "ach1": "Caught Pixelko!",
+      "ach2": "Table Defender",
+      "time": "Time: "
     },
     "gym": {
-      "title": "Battle with Lenivus",
+      "title": "Vanya vs Lenivus!",
       "phaseLaser": "Phase 1: Laser",
       "phaseAim": "Phase 2: Aim",
       "phaseTears": "Phase 3: Tears",
@@ -238,12 +248,22 @@
       "win": "Victory!",
       "stats": "Statistics",
       "continue": "Continue",
-      "intro": "",
-      "bossName": "",
-      "rays": "",
-      "ray": "",
-      "scope": "",
-      "tears": ""
+      "intro": "Help Vanya defeat Lenivus! Use three super-attacks: Laser, Aim and Tears.",
+      "bossName": "👁️ LENIVUS",
+      "rays": "Rays",
+      "ray": "⚡ Sun Ray",
+      "scope": "🎯 Precise Aim",
+      "tears": "💧 Tear Waterfall",
+      "laserInstruction": "Hold the button for {{sec}} seconds, then release!",
+      "charging": "CHARGING...",
+      "undercharge": "Undercharge!",
+      "hit": "Hit!",
+      "aimInstruction": "Guide the scope to the red circle and hold for {{sec}} sec!",
+      "tearInstruction": "Quickly tap {{count}} times to create a waterfall!",
+      "blinkBtn": "BLINK!",
+      "tapsToWaterfall": "taps to waterfall",
+      "ach1": "First battle with Lenivus",
+      "ach2": "Defender of Eye World"
     },
     "blink": {
       "title": "Eye Gymnastics",
@@ -253,38 +273,54 @@
       "blink": "Blink!",
       "squeeze": "Squeeze!",
       "wide": "Open wide!",
-      "win": "Great!",
+      "win": "Eyes are fine!\n+100 🪙",
       "stats": "Statistics",
       "continue": "Continue",
-      "round": "",
-      "time": "",
-      "hint": ""
+      "round": "Round",
+      "time": "Time",
+      "hint": "Click on the screen to blink!",
+      "name": "Blink-charge",
+      "miss": "Miss! Try again",
+      "timeUp": "Time's up! Try again.",
+      "releaseEarly": "Released too early! Starting over.",
+      "hintRound1": "Click on the screen to blink! 8 times in 5 seconds!",
+      "hintRound2": "Hold mouse button / tap and hold for 3 seconds!",
+      "hintRound3": "Click when the bar is in the green zone!"
     },
     "tracker": {
       "title": "Follow the Ball",
       "follow": "Follow with your eyes!",
-      "win": "Done!",
+      "win": "Eyes rested!\n+100 🪙",
       "stats": "Statistics",
       "continue": "Continue",
-      "phase": "",
-      "hint": ""
+      "phase": "Phase",
+      "hint": "Follow the ball with your eyes 👀",
+      "name": "Tracker-gaze",
+      "hintUpDown": "Follow the ball up and down 👆👇",
+      "hintLeftRight": "Follow the ball left and right 👈👉",
+      "hintClockwise": "Follow the ball clockwise ⭕",
+      "hintCounterClockwise": "Follow the ball counter-clockwise 🔄",
+      "getReady": "Get ready..."
     },
     "stats": {
-      "lives": "",
-      "livesLeft": "",
-      "bonuses": "",
-      "collected": "",
-      "result": "",
-      "distance": "",
-      "status": "",
-      "victory": "",
-      "rating": "",
-      "hits": "",
-      "accuracy": "",
-      "avgTime": "",
-      "waterfalls": "",
-      "totalBlinks": "",
-      "totalScore": ""
+      "lives": "❤️ Lives",
+      "livesLeft": "Lives left:",
+      "bonuses": "💎 Bonuses",
+      "collected": "Collected:",
+      "result": "🎯 Result",
+      "distance": "Distance:",
+      "status": "Status:",
+      "victory": "Victory!",
+      "rating": "🏆 Rating: ⭐⭐⭐",
+      "hits": "Hits:",
+      "accuracy": "Accuracy:",
+      "avgTime": "Average aiming time:",
+      "waterfalls": "Waterfalls:",
+      "totalBlinks": "Total blinks:",
+      "totalScore": "🏆 Total score: 0",
+      "left": "Left: ",
+      "time": "Time: ",
+      "totalScoreShort": "Total score: "
     }
   },
   "profile": {
@@ -321,24 +357,27 @@
     "emptyFields": "Fill in all fields!",
     "enterNickname": "Enter a nickname!",
     "enterEmailPassword": "Enter email and password!",
-    "joinTeam": "",
-    "joinBenefits": "",
-    "nicknamePlaceholder": "",
-    "parentEmailPlaceholder": "",
-    "parentsAllowed": "",
-    "registerBtn": "",
-    "skipRegistration": "",
-    "joinBenefitsGym": "",
-    "fullAccount": "",
-    "guestDesc": "",
-    "yourNickname": "",
-    "play": "",
-    "parentEmail": "",
-    "phoneOptional": "",
-    "passwordMin6": "",
-    "haveAccount": "",
-    "loginBtn": "",
-    "noAccount": ""
+    "joinTeam": "🌟 Join the team!",
+    "joinBenefits": "Sign up to: save your progress, get victory rewards, unlock the next comic series, compete with others",
+    "nicknamePlaceholder": "Choose a nickname",
+    "parentEmailPlaceholder": "Parent's email",
+    "parentsAllowed": "Parents allowed to play",
+    "registerBtn": "🚀 Register",
+    "skipRegistration": "Continue without registration →",
+    "joinBenefitsGym": "Sign up to: save your progress, get training rewards, unlock the next comic series, compete with others",
+    "fullAccount": "Full account",
+    "guestDesc": "Enter a nickname and start playing. Progress will be saved, but coins can't be spent yet.",
+    "yourNickname": "Your nickname",
+    "play": "🚀 Play!",
+    "parentEmail": "Parent's email",
+    "phoneOptional": "Phone (optional)",
+    "passwordMin6": "Password (min 6 characters)",
+    "haveAccount": "Already have an account?",
+    "loginBtn": "🔑 Login",
+    "noAccount": "No account?",
+    "welcome": "Welcome, ",
+    "progressSaved": "Your progress is saved!",
+    "teamMember": "Now you are part of the Superglazka team!"
   },
   "achievements": {
     "unlocked": "🏆 Achievement unlocked!",
@@ -478,111 +517,53 @@
     "success": "Success",
     "error": "Error"
   },
-  "title": {
-    "чек_лист_10_правил_здоровья_глаз_супергл": ""
-  },
-  "land_logo": {
-    "игросказка_суперглазка": ""
-  },
-  "checklist_back": {
-    "на_главную": ""
-  },
-  "checklist_content": {
-    "10_правил_здоровья_глаз": ""
-  },
-  "checklist_subtitle": {
-    "чек_лист_для_родителей_распечатайте_и_по": ""
-  },
-  "progresstext": {
-    "выполнено_0_из_10": ""
-  },
-  "checklist_card": {
-    "ежедневные_правила": "",
-    "питание_и_образ_жизни": "",
-    "профилактика": ""
-  },
-  "checklist_item": {
-    "правило_20_20_20каждые_20_минут_экрана_2": "",
-    "расстояние_от_экранаминимум_5060_см_до_м": "",
-    "хорошее_освещениенет_бликов_на_экране_до": "",
-    "моргай_чащенапоминайте_ребёнку_моргать_в": "",
-    "никаких_экранов_за_1_час_до_снасиний_све": "",
-    "витамин_аморковь_тыква_абрикосы_печень_е": "",
-    "омега_3рыба_семена_льна_грецкие_орехи_за": "",
-    "прогулки_на_свежем_воздухеминимум_1_час_": "",
-    "осмотр_у_офтальмолога1_раз_в_год_даже_пр": "",
-    "не_трите_глаза_грязными_рукамиинфекции_ч": "",
-    "правило_20_20_20": "",
-    "расстояние_от_экрана": "",
-    "хорошее_освещение": "",
-    "моргай_чаще": "",
-    "никаких_экранов_за_1_час_до_сна": "",
-    "витамин_а": "",
-    "омега_3": "",
-    "прогулки_на_свежем_воздухе": "",
-    "осмотр_у_офтальмолога": "",
-    "не_трите_глаза_грязными_руками": ""
-  },
-  "checklist_print_btn": {
-    "распечатать_чек_лист": ""
-  },
-  "resetbtn": {
-    "сбросить_прогресс": ""
-  },
-  "land_footer": {
-    "суперглазка": ""
-  },
-  "cookiebanner": {
-    "политика_конфиденциальности": ""
-  },
-  "cookieaccept": {
-    "принять": ""
-  },
-  "land_logo_pretitle": {
-    "игросказка": ""
-  },
-  "land_logo_title": {
-    "суперглазка": ""
-  },
   "time": {
-    "days": "",
-    "hours": "",
-    "minutes": "",
-    "seconds": ""
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds"
   },
   "faq": {
     "controls": {
-      "question": "",
-      "answer": "",
-      "answer2": ""
+      "question": "How to control?",
+      "answer": "On computer: use up/down arrows or Space key to go to the next frame. Esc key hides/shows the interface.",
+      "answer2": "On phone: swipe up/down to switch frames. Tap the screen to pause the video."
     },
     "sound": {
-      "question": "",
-      "answer": ""
+      "question": "What to do if sound doesn't work?",
+      "answer": "1. Check that the required audio tracks are enabled in settings. 2. On iOS, sound only turns on after the user's first touch — this is a Safari limitation. 3. Check the device volume and whether silent mode is on. 4. Reload the page — sometimes the browser blocks autoplay."
     },
     "coins": {
-      "question": "",
-      "answer": ""
+      "question": "How to earn coins?",
+      "answer": "Coins are awarded for completing frames and mini-games. The better the game result (more stars), the more coins. You can also get bonus coins for replaying a chapter."
     },
     "locked": {
-      "question": "",
-      "answer": ""
+      "question": "Why is the chapter locked?",
+      "answer": "Chapters open sequentially. To unlock the next chapter, you need to finish watching the previous one. Progress is saved automatically."
     },
     "subtitles": {
-      "question": "",
-      "answer": ""
+      "question": "How to turn on subtitles?",
+      "answer": "Open settings → 'Subtitles' section → toggle the switch. You can also choose font size: small, medium or large."
     },
     "theme": {
-      "question": "",
-      "answer": ""
+      "question": "How to change theme?",
+      "answer": "In settings → 'Interface' section → 'Dark theme' toggle. The choice is saved and works on both pages."
     }
   },
   "brand": {
-    "subtitle": ""
+    "subtitle": "Game Tale"
   },
   "cookie": {
-    "text": "",
-    "privacy": "",
-    "accept": ""
+    "text": "We use localStorage to save progress and settings.",
+    "privacy": "Privacy Policy",
+    "accept": "Accept"
+  },
+  "player": {
+    "defaultNickname": "Player",
+    "guestText": "You are playing as a guest. Progress is saved, but coins cannot be spent yet.",
+    "createAccount": "🔐 Create full account",
+    "login": "🔑 Already have an account? Login",
+    "enterLogin": "🔑 Login / Register",
+    "logout": "🚪 Logout"
   }
 }

@@ -11,7 +11,7 @@ const PlayerProfile = (function() {
   /** @returns {Object} Default empty profile */
   function getDefaultProfile() {
     return {
-      nickname: 'Игрок',
+      nickname: window.I18n ? I18n.t('player.defaultNickname') : 'Игрок',
       coins: 0,
       episodes: {
         1: { completed: false, framesSeen: 0, maxFrame: -1 },
@@ -168,7 +168,7 @@ const PlayerProfile = (function() {
 
   function setNickname(name) {
     const p = load();
-    p.nickname = (name || 'Игрок').trim().substring(0, 20);
+    p.nickname = (name || (window.I18n ? I18n.t('player.defaultNickname') : 'Игрок')).trim().substring(0, 20);
     save(p);
     renderBadge();
   }
@@ -250,7 +250,7 @@ const PlayerProfile = (function() {
         const row = document.createElement('div');
         row.className = 'profile-row';
         const left = document.createElement('span');
-        left.textContent = 'Глава ' + id;
+        left.textContent = (window.I18n ? I18n.t('episodes.ep1.num') : 'Глава') + ' ' + id;
         const right = document.createElement('span');
         right.textContent = data.completed ? '✅' : '🔒';
         row.appendChild(left);
@@ -262,7 +262,12 @@ const PlayerProfile = (function() {
     // Games stats
     const gamesList = modal.querySelector('.profile-games');
     if (gamesList) {
-      const names = { blink: 'Моргайка', tracker: 'Следи за шариком', runner: 'Погоня', gym: 'Ваня vs Ленивус' };
+      var names = {
+        blink: window.I18n ? I18n.t('games.blink.title') : 'Моргайка',
+        tracker: window.I18n ? I18n.t('games.tracker.title') : 'Следи за шариком',
+        runner: window.I18n ? I18n.t('games.runner.title') : 'Погоня',
+        gym: window.I18n ? I18n.t('games.gym.title') : 'Ваня vs Ленивус'
+      };
       gamesList.textContent = '';
       Object.entries(p.games).forEach(([name, data]) => {
         const row = document.createElement('div');
@@ -270,7 +275,7 @@ const PlayerProfile = (function() {
         const left = document.createElement('span');
         left.textContent = names[name] || name;
         const right = document.createElement('span');
-        right.textContent = 'Игр: ' + data.played + ' | Рекорд: ' + data.bestScore;
+        right.textContent = (window.I18n ? I18n.t('profileLanding.playedTimes', {count: data.played}) : 'Игр: ' + data.played) + ' | ' + (window.I18n ? I18n.t('profileLanding.bestScore', {score: data.bestScore}) : 'Рекорд: ' + data.bestScore);
         row.appendChild(left);
         row.appendChild(right);
         gamesList.appendChild(row);
@@ -285,19 +290,19 @@ const PlayerProfile = (function() {
         if (Auth.isGuest && Auth.isGuest()) {
           const text = document.createElement('div');
           text.className = 'profile-account-text';
-          text.textContent = 'Ты играешь как гость. Прогресс сохраняется, но монетки пока нельзя тратить.';
+          text.textContent = window.I18n ? I18n.t('player.guestText') : 'Ты играешь как гость. Прогресс сохраняется, но монетки пока нельзя тратить.';
           accountBlock.appendChild(text);
 
           const regBtn = document.createElement('button');
           regBtn.className = 'profile-account-btn';
           regBtn.id = 'profileRegBtn';
-          regBtn.textContent = '🔐 Создать полный аккаунт';
+          regBtn.textContent = window.I18n ? I18n.t('player.createAccount') : '🔐 Создать полный аккаунт';
           accountBlock.appendChild(regBtn);
 
           const loginBtn = document.createElement('button');
           loginBtn.className = 'profile-account-btn';
           loginBtn.id = 'profileLoginBtn';
-          loginBtn.textContent = '🔑 Уже есть аккаунт? Войти';
+          loginBtn.textContent = window.I18n ? I18n.t('player.login') : '🔑 Уже есть аккаунт? Войти';
           accountBlock.appendChild(loginBtn);
         } else {
           const emailText = document.createElement('div');
@@ -308,19 +313,19 @@ const PlayerProfile = (function() {
           const logoutBtn = document.createElement('button');
           logoutBtn.className = 'profile-account-btn';
           logoutBtn.id = 'profileLogoutBtn';
-          logoutBtn.textContent = '🚪 Выйти';
+          logoutBtn.textContent = window.I18n ? I18n.t('player.logout') : '🚪 Выйти';
           accountBlock.appendChild(logoutBtn);
         }
       } else {
         const text = document.createElement('div');
         text.className = 'profile-account-text';
-        text.textContent = 'Войди или создай аккаунт, чтобы сохранить прогресс.';
+        text.textContent = window.I18n ? I18n.t('profile.guestText') : 'Войди или создай аккаунт, чтобы сохранить прогресс.';
         accountBlock.appendChild(text);
 
         const loginBtn = document.createElement('button');
         loginBtn.className = 'profile-account-btn';
         loginBtn.id = 'profileLoginBtn';
-        loginBtn.textContent = '🔑 Войти / Зарегистрироваться';
+        loginBtn.textContent = window.I18n ? I18n.t('player.enterLogin') : '🔑 Войти / Зарегистрироваться';
         accountBlock.appendChild(loginBtn);
       }
     }

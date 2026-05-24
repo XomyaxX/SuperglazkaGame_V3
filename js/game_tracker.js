@@ -17,10 +17,15 @@ const TrackerGame = (function() {
   let ballX = 0, ballY = 0;
 
   const HINTS = [
-    'Следи за шариком вверх и вниз 👆👇',
-    'Следи за шариком влево и вправо 👈👉',
-    'Следи за шариком по кругу по часовой стрелке ⭕',
-    'Следи за шариком против часовой стрелки 🔄'
+    function getTrackerHint(idx) {
+    var hints = [
+      window.I18n ? I18n.t('games.tracker.hintUpDown') : 'Следи за шариком вверх и вниз 👆👇',
+      window.I18n ? I18n.t('games.tracker.hintLeftRight') : 'Следи за шариком влево и вправо 👈👉',
+      window.I18n ? I18n.t('games.tracker.hintClockwise') : 'Следи за шариком по кругу по часовой стрелке ⭕',
+      window.I18n ? I18n.t('games.tracker.hintCounterClockwise') : 'Следи за шариком против часовой стрелки 🔄'
+    ];
+    return hints[idx] || (window.I18n ? I18n.t('games.tracker.getReady') : 'Готовься...');
+  }
   ];
 
   function getEl(id) { return document.getElementById(id); }
@@ -79,8 +84,8 @@ const TrackerGame = (function() {
     const hintEl = getEl('tracker-hint');
     if (phaseEl) phaseEl.textContent = (phase + 1) + '/' + PHASE_COUNT;
     if (hintEl) {
-      if (state === 'pause') hintEl.textContent = HINTS[phase] || 'Готовься...';
-      else if (state === 'phase') hintEl.textContent = 'Следи глазами за шариком 👀';
+      if (state === 'pause') hintEl.textContent = getTrackerHint(phase);
+      else if (state === 'phase') hintEl.textContent = window.I18n ? I18n.t('games.tracker.hint') : 'Следи глазами за шариком 👀';
     }
     const progressEl = getEl('tracker-progress');
     if (progressEl) {

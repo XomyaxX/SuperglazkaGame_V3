@@ -150,20 +150,20 @@
       var isDone = i < status.streak;
       var dayReward = REWARDS[i] || 50;
       daysHtml += '<div class="daily-day ' + (isDone ? 'done' : '') + '">' +
-        '<div class="daily-day-num">День ' + dayNum + '</div>' +
+        '<div class="daily-day-num">' + (window.I18n ? I18n.t('daily.day') : 'День') + ' ' + dayNum + '</div>' +
         '<div class="daily-day-coin">' + dayReward + '🪙</div>' +
       '</div>';
     }
 
     modal.innerHTML = '<div class="daily-panel" style="position:relative;">' +
       '<button class="daily-close" id="dailyClose">✕</button>' +
-      '<div class="daily-title">🎁 Ежедневная награда</div>' +
-      '<div class="daily-sub">Заходи каждый день и получай монеты!</div>' +
-      '<div class="daily-streak">🔥 Streak: ' + status.streak + ' дней</div>' +
+      '<div class="daily-title">' + (window.I18n ? I18n.t('daily.title') : '🎁 Ежедневная награда') + '</div>' +
+      '<div class="daily-sub">' + (window.I18n ? I18n.t('daily.subtitle') : 'Заходи каждый день и получай монеты!') + '</div>' +
+      '<div class="daily-streak">🔥 ' + (window.I18n ? I18n.t('daily.streak', {count: status.streak}) : 'Streak: ' + status.streak + ' дней') + '</div>' +
       '<div class="daily-calendar">' + daysHtml + '</div>' +
       (status.claimedToday
-        ? '<div class="daily-claimed">✅ Вы уже забрали награду сегодня. Приходи завтра!</div>'
-        : '<button class="daily-btn" id="dailyClaimBtn">Забрать ' + status.reward + ' 🪙</button>'
+        ? '<div class="daily-claimed">' + (window.I18n ? I18n.t('daily.claimed') : '✅ Вы уже забрали награду сегодня. Приходи завтра!') + '</div>'
+        : '<button class="daily-btn" id="dailyClaimBtn">' + (window.I18n ? I18n.t('daily.claim', {amount: status.reward}) : 'Забрать ' + status.reward + ' 🪙') + '</button>'
       ) +
     '</div>';
 
@@ -186,7 +186,7 @@
       claimBtn.addEventListener('click', function() {
         var result = claim();
         if (result) {
-          claimBtn.outerHTML = '<div class="daily-claimed">🎉 Получено ' + result.reward + ' монет! Streak: ' + result.streak + '</div>';
+          claimBtn.outerHTML = '<div class="daily-claimed">' + (window.I18n ? I18n.t('daily.received', {amount: result.reward, streak: result.streak}) : '🎉 Получено ' + result.reward + ' монет! Streak: ' + result.streak) + '</div>';
           // Re-render calendar
           showModal();
           document.getElementById('dailyRewardModal').classList.add('visible');

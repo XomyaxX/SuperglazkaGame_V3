@@ -184,25 +184,25 @@ const GymGame = (function(){
 
     const instruction = document.createElement('div');
     instruction.className = 'phase-instruction';
-    instruction.textContent = '⚡ Зажми кнопку на ' + (CHARGE_TIME.LASER / 1000) + ' секунды, потом отпусти!';
+    instruction.textContent = '⚡ ' + (window.I18n ? I18n.t('games.gym.laserInstruction', {sec: CHARGE_TIME.LASER / 1000}) : 'Зажми кнопку на ' + (CHARGE_TIME.LASER / 1000) + ' секунды, потом отпусти!');
     container.appendChild(instruction);
 
     const btn = document.createElement('button');
     btn.className = 'phase-btn-new' + (isCharging ? ' charging' : '');
     btn.id = 'laser-btn';
     const btnSpan = document.createElement('span');
-    btnSpan.textContent = isCharging ? '🔥 ЗАРЯЖАЮ...' : '⚡ СОЛНЕЧНЫЙ ЛУЧ';
+    btnSpan.textContent = isCharging ? '🔥 ' + (window.I18n ? I18n.t('games.gym.charging') : 'ЗАРЯЖАЮ...') : '⚡ ' + (window.I18n ? I18n.t('games.gym.ray') : 'СОЛНЕЧНЫЙ ЛУЧ');
     btn.appendChild(btnSpan);
     container.appendChild(btn);
 
     const hitsDiv = document.createElement('div');
     hitsDiv.style.cssText = 'text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;';
-    hitsDiv.textContent = 'Попаданий: ' + laserHits + ' / ' + TARGETS.LASER;
+    hitsDiv.textContent = (window.I18n ? I18n.t('games.stats.hits') : 'Попаданий: ') + laserHits + ' / ' + TARGETS.LASER;
     container.appendChild(hitsDiv);
 
     const leftDiv = document.createElement('div');
     leftDiv.style.cssText = 'text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);';
-    leftDiv.textContent = 'Осталось: ' + (TARGETS.LASER - laserHits);
+    leftDiv.textContent = (window.I18n ? I18n.t('games.stats.left') : 'Осталось: ') + (TARGETS.LASER - laserHits);
     container.appendChild(leftDiv);
 
     if (!btn) return;
@@ -221,7 +221,7 @@ const GymGame = (function(){
         btnEl.classList.add('charging');
         btnEl.textContent = '';
         const span = document.createElement('span');
-        span.textContent = '🔥 ЗАРЯЖАЮ...';
+        span.textContent = '🔥 ' + (window.I18n ? I18n.t('games.gym.charging') : 'ЗАРЯЖАЮ...');
         btnEl.appendChild(span);
       }
       
@@ -255,7 +255,7 @@ const GymGame = (function(){
         // Too early - miss
         const btn = getEl('laser-btn');
         if (btn) {
-          btn.textContent = '⚠️ Недозаряд!';
+          btn.textContent = '⚠️ ' + (window.I18n ? I18n.t('games.gym.undercharge') : 'Недозаряд!');
           btn.style.background = '#64748b';
           setTimeout(updateUI, 1000);
         }
@@ -288,7 +288,7 @@ const GymGame = (function(){
         const btn = getEl('laser-btn');
         if (btn) {
           btn.disabled = true;
-          btn.textContent = '✅ Попадание!';
+          btn.textContent = '✅ ' + (window.I18n ? I18n.t('games.gym.hit') : 'Попадание!');
           btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
         }
         
@@ -312,7 +312,7 @@ const GymGame = (function(){
 
     const instruction = document.createElement('div');
     instruction.className = 'phase-instruction';
-    instruction.textContent = '🎯 Веди прицел к красному кружку и держи ' + (CHARGE_TIME.AIM / 1000) + ' сек!';
+    instruction.textContent = '🎯 ' + (window.I18n ? I18n.t('games.gym.aimInstruction', {sec: CHARGE_TIME.AIM / 1000}) : 'Веди прицел к красному кружку и держи ' + (CHARGE_TIME.AIM / 1000) + ' сек!');
     container.appendChild(instruction);
 
     const area = document.createElement('div');
@@ -344,12 +344,12 @@ const GymGame = (function(){
 
     const hitsDiv = document.createElement('div');
     hitsDiv.style.cssText = 'text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;';
-    hitsDiv.textContent = 'Попаданий: ' + aimHits + ' / ' + TARGETS.AIM;
+    hitsDiv.textContent = (window.I18n ? I18n.t('games.stats.hits') : 'Попаданий: ') + aimHits + ' / ' + TARGETS.AIM;
     container.appendChild(hitsDiv);
 
     const leftDiv = document.createElement('div');
     leftDiv.style.cssText = 'text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);';
-    leftDiv.textContent = 'Осталось: ' + (TARGETS.AIM - aimHits);
+    leftDiv.textContent = (window.I18n ? I18n.t('games.stats.left') : 'Осталось: ') + (TARGETS.AIM - aimHits);
     container.appendChild(leftDiv);
 
     if (!area || !cursor || !target) return;
@@ -487,7 +487,7 @@ const GymGame = (function(){
 
     const instruction = document.createElement('div');
     instruction.className = 'phase-instruction';
-    instruction.textContent = '💧 Быстро тапай ' + CHARGE_TIME.TEAR + ' раз чтобы создать водопад!';
+    instruction.textContent = '💧 ' + (window.I18n ? I18n.t('games.gym.tearInstruction', {count: CHARGE_TIME.TEAR}) : 'Быстро тапай ' + CHARGE_TIME.TEAR + ' раз чтобы создать водопад!');
     container.appendChild(instruction);
 
     const row = document.createElement('div');
@@ -520,19 +520,19 @@ const GymGame = (function(){
     btnIcon.style.fontSize = '20px';
     btnIcon.textContent = '💧';
     const btnText = document.createElement('span');
-    btnText.textContent = 'МОРГНУТЬ!';
+    btnText.textContent = window.I18n ? I18n.t('games.gym.blinkBtn') : 'МОРГНУТЬ!';
     btn.appendChild(btnIcon);
     btn.appendChild(btnText);
     container.appendChild(btn);
 
     const cyclesDiv = document.createElement('div');
     cyclesDiv.style.cssText = 'text-align: center; margin-top: 16px; font-size: 15px; color: rgba(255,255,255,0.8); font-weight: 700;';
-    cyclesDiv.textContent = 'Водопадов: ' + tearCycles + ' / ' + TARGETS.TEARS;
+    cyclesDiv.textContent = (window.I18n ? I18n.t('games.stats.waterfalls') : 'Водопадов: ') + tearCycles + ' / ' + TARGETS.TEARS;
     container.appendChild(cyclesDiv);
 
     const tapsDiv = document.createElement('div');
     tapsDiv.style.cssText = 'text-align: center; margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.5);';
-    tapsDiv.textContent = (CHARGE_TIME.TEAR - tearCharge) + ' тапов до водопада';
+    tapsDiv.textContent = (CHARGE_TIME.TEAR - tearCharge) + ' ' + (window.I18n ? I18n.t('games.gym.tapsToWaterfall') : 'тапов до водопада');
     container.appendChild(tapsDiv);
 
     if (!btn) return;
@@ -560,7 +560,7 @@ const GymGame = (function(){
         // Update counter text
         const counter = btn.nextElementSibling.nextElementSibling;
         if (counter) {
-          counter.textContent = `${CHARGE_TIME.TEAR - tearCharge} тапов до водопада`;
+          counter.textContent = (CHARGE_TIME.TEAR - tearCharge) + ' ' + (window.I18n ? I18n.t('games.gym.tapsToWaterfall') : 'тапов до водопада');
         }
       }
     };
@@ -711,7 +711,7 @@ const GymGame = (function(){
     };
     
     const timeEl = getEl('stats-time');
-    if (timeEl) timeEl.textContent = `⏱️ Время: ${formatTime(gameStats.totalTime)}`;
+    if (timeEl) timeEl.textContent = '⏱️ ' + (window.I18n ? I18n.t('games.stats.time') : 'Время: ') + formatTime(gameStats.totalTime);
     
     const p1Hits = getEl('stats-p1-hits');
     if (p1Hits) p1Hits.textContent = `${gameStats.phase1.hits}/${TARGETS.LASER}`;
@@ -727,7 +727,7 @@ const GymGame = (function(){
       const avgTime = gameStats.phase2.hits > 0 
         ? (gameStats.phase2.timeOnTarget / gameStats.phase2.hits / 1000).toFixed(1)
         : '0';
-      p2Time.textContent = `${avgTime}с`;
+      p2Time.textContent = avgTime + (window.I18n ? I18n.t('time.seconds') : 'с');
     }
     
     const p3Hits = getEl('stats-p3-hits');
@@ -737,7 +737,7 @@ const GymGame = (function(){
     if (p3Blinks) p3Blinks.textContent = totalBlinks;
     
     const scoreEl = getEl('stats-score');
-    if (scoreEl) scoreEl.textContent = `🏆 Общий счёт: ${gameStats.totalScore}`;
+    if (scoreEl) scoreEl.textContent = '🏆 ' + (window.I18n ? I18n.t('games.stats.totalScoreShort') : 'Общий счёт: ') + gameStats.totalScore;
   }
   
   window.showRegistration = function() {
@@ -780,7 +780,7 @@ const GymGame = (function(){
           stats: gameStats,
           completedSeries: [1],
           totalPlayTime: gameStats.totalTime,
-          achievements: ['Первый бой с Ленивусом', 'Защитник Мира Глазки'],
+          achievements: [window.I18n ? I18n.t('games.gym.ach1') : 'Первый бой с Ленивусом', window.I18n ? I18n.t('games.gym.ach2') : 'Защитник Мира Глазки'],
           registeredAt: new Date().toISOString()
         };
         
@@ -797,16 +797,16 @@ const GymGame = (function(){
           icon.textContent = '🎉';
           const title = document.createElement('div');
           title.className = 'reg-success-title';
-          title.textContent = 'Добро пожаловать, ' + nickname + '!';
+          title.textContent = (window.I18n ? I18n.t('auth.welcome') : 'Добро пожаловать, ') + nickname + '!';
           const text = document.createElement('div');
           text.className = 'reg-success-text';
-          text.appendChild(document.createTextNode('Твой прогресс сохранён!'));
+          text.appendChild(document.createTextNode(window.I18n ? I18n.t('auth.progressSaved') : 'Твой прогресс сохранён!'));
           text.appendChild(document.createElement('br'));
-          text.appendChild(document.createTextNode('Теперь ты часть команды Суперглазки!'));
+          text.appendChild(document.createTextNode(window.I18n ? I18n.t('auth.teamMember') : 'Теперь ты часть команды Суперглазки!'));
           const btn = document.createElement('button');
           btn.className = 'tr-btn';
           btn.style.cssText = 'margin-top: 24px; width: 100%;';
-          btn.textContent = 'Продолжить приключение ➜';
+          btn.textContent = window.I18n ? I18n.t('app.continueAdventure') : 'Продолжить приключение ➜';
           btn.addEventListener('click', finishRegistration);
           success.appendChild(icon);
           success.appendChild(title);
