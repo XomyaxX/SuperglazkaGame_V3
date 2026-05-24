@@ -15,6 +15,8 @@ const adminRoutes = require('./routes/admin');
 const episodeRoutes = require('./routes/episodes');
 const adminCmsRoutes = require('./routes/admin-cms');
 const blogRoutes = require('./routes/blog');
+const achievementsRoutes = require('./routes/achievements');
+const dailyRoutes = require('./routes/daily');
 
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:8080';
@@ -77,6 +79,8 @@ app.use('/api/subscribe', subscribeRoutes);
 app.use('/api/admin', adminRoutes, adminCmsRoutes);
 app.use('/api/episodes', episodeRoutes);
 app.use('/api/blog', blogRoutes);
+app.use('/api/achievements', achievementsRoutes);
+app.use('/api/daily', dailyRoutes);
 
 // 404
 app.use((req, res) => {

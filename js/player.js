@@ -66,6 +66,10 @@ const PlayerProfile = (function() {
     if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
       Auth.addCoins(amount).catch(function() {});
     }
+    // Check coin-based achievements
+    if (typeof Achievements !== 'undefined' && Achievements.check) {
+      Achievements.check('coins', null, p.coins);
+    }
     return p.coins;
   }
 
@@ -96,6 +100,14 @@ const PlayerProfile = (function() {
     if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
       Auth.saveProgress(epId, p.episodes[epId].maxFrame, true).catch(function() {});
     }
+    if (typeof Achievements !== 'undefined' && Achievements.check) {
+      var completedCount = Object.values(p.episodes).filter(function(e) { return e.completed; }).length;
+      Achievements.check('episode', null, completedCount);
+      var totalEpisodes = Object.keys(p.episodes).length;
+      if (completedCount >= totalEpisodes && totalEpisodes > 0) {
+        Achievements.check('episode_all', null, completedCount);
+      }
+    }
   }
 
   /** @param {string|number} epId - Episode identifier @param {number} frameIdx - Zero-based frame index */
@@ -108,6 +120,10 @@ const PlayerProfile = (function() {
     save(p);
     if (typeof Auth !== 'undefined' && Auth.isLoggedIn && Auth.isLoggedIn()) {
       Auth.saveProgress(epId, frameIdx, p.episodes[epId].completed).catch(function() {});
+    }
+    if (typeof Achievements !== 'undefined' && Achievements.check) {
+      var totalFrames = Object.values(p.episodes).reduce(function(sum, ep) { return sum + (ep.maxFrame + 1); }, 0);
+      Achievements.check('frame', null, totalFrames);
     }
   }
 
@@ -138,6 +154,11 @@ const PlayerProfile = (function() {
       p.games[name].bestScore = score;
     }
     save(p);
+    if (typeof Achievements !== 'undefined' && Achievements.check) {
+      Achievements.check('game', name);
+      var playedCount = p.games[name] ? p.games[name].played : 0;
+      Achievements.check('game_count', name, playedCount);
+    }
     renderBadge();
   }
 
@@ -302,6 +323,12 @@ const PlayerProfile = (function() {
         loginBtn.textContent = '🔑 Войти / Зарегистрироваться';
         accountBlock.appendChild(loginBtn);
       }
+    }
+
+    // Achievements grid
+    const achContainer = modal.querySelector('.profile-achievements');
+    if (achContainer && typeof Achievements !== 'undefined' && Achievements.renderGrid) {
+      Achievements.renderGrid(achContainer);
     }
 
     modal.classList.add('visible');

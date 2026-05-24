@@ -2162,6 +2162,11 @@ const App = (function() {
       launchGame(directGame);
     }
 
+    // Daily reward check
+    if (typeof DailyReward !== 'undefined' && DailyReward.init) {
+      DailyReward.init();
+    }
+
     var appNavToggle = document.getElementById('appNavToggle');
     var appNavMobile = document.getElementById('appNavMobile');
     var appNavClose = document.getElementById('appNavClose');

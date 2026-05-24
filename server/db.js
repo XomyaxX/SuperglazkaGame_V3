@@ -210,6 +210,66 @@ async function init() {
 
   await run(`CREATE INDEX IF NOT EXISTS idx_blog_published ON blog_posts(published)`);
 
+  await run(`
+    CREATE TABLE IF NOT EXISTS achievements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      key TEXT UNIQUE NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      icon TEXT,
+      condition_type TEXT NOT NULL,
+      condition_value TEXT,
+      reward_coins INTEGER DEFAULT 0
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS user_achievements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      guest_token TEXT,
+      achievement_id INTEGER NOT NULL,
+      unlocked_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (achievement_id) REFERENCES achievements(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS daily_rewards (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      guest_token TEXT,
+      date TEXT NOT NULL,
+      streak INTEGER DEFAULT 1,
+      claimed INTEGER DEFAULT 1,
+      UNIQUE(user_id, date),
+      UNIQUE(guest_token, date)
+    )
+  `);
+
+  // Seed default achievements if empty
+  const achCount = await get('SELECT COUNT(*) as cnt FROM achievements');
+  if (!achCount || achCount.cnt === 0) {
+    const defaults = [
+      ['first_step', 'Первый шаг', 'Просмотреть первый кадр комикса', '🦶', 'frame', '1', 10],
+      ['pixel_hunter', 'Охотник за пикселями', 'Пройти игру "Погоня за Пиксельком"', '🏃', 'game', 'runner', 50],
+      ['eye_gymnast', 'Гимнаст глаз', 'Пройти гимнастику для глаз 3 раза', '👁️', 'game_count', 'gym:3', 100],
+      ['blinker', 'Мигалка', 'Пройти игру "Моргайка"', '✨', 'game', 'blink', 50],
+      ['tracker', 'Трекер', 'Пройти игру "Следи за шариком"', '🔮', 'game', 'tracker', 50],
+      ['bookworm', 'Глазастик', 'Пройти одну главу комикса', '📖', 'episode', '1', 100],
+      ['librarian', 'Библиофил', 'Пройти все главы комикса', '📚', 'episode_all', '', 200],
+      ['rich', 'Богач', 'Накопить 500 монет', '💰', 'coins', '500', 100]
+    ];
+    for (const a of defaults) {
+      await run(
+        'INSERT INTO achievements (key, title, description, icon, condition_type, condition_value, reward_coins) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        a
+      );
+    }
+    console.log('Seeded default achievements');
+  }
+
   await run(`CREATE INDEX IF NOT EXISTS idx_progress_user ON progress(user_id)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_progress_guest ON progress(guest_token)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_coins_user ON coins(user_id)`);
