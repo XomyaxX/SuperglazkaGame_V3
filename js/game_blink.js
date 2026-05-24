@@ -17,10 +17,13 @@ const BlinkGame = (function() {
   let lastTime = 0;
   let roundStartTime = 0;
 
-  const TARGET_CLICKS = 8;
-  const ROUND1_TIME = 5000;
-  const ROUND2_HOLD = 3000;
-  const ROUND3_ZONE = { min: 40, max: 60 };
+  let TARGET_CLICKS = 8;
+  let ROUND1_TIME = 5000;
+  let ROUND2_HOLD = 3000;
+  let ROUND3_ZONE = { min: 40, max: 60 };
+  let ROUND3_SPEED = 0.06;
+  let MAX_ROUNDS = 3;
+  let diffConfig = null;
 
   function getEl(id) { return document.getElementById(id); }
 
@@ -98,8 +101,18 @@ const BlinkGame = (function() {
 
   function startGame() {
     if (!canvas) init();
+    // Load progressive difficulty
+    if (typeof GameDifficulty !== 'undefined') {
+      diffConfig = GameDifficulty.getConfig('blink');
+    }
+    var cfg = diffConfig || {};
+    TARGET_CLICKS = cfg.targetClicks || 8;
+    ROUND1_TIME = cfg.round1Time || 5000;
+    ROUND2_HOLD = cfg.round2Hold || 3000;
+    ROUND3_ZONE = cfg.round3Zone || { min: 40, max: 60 };
+    ROUND3_SPEED = cfg.round3Speed || 0.06;
+    MAX_ROUNDS = cfg.maxRounds || 3;
     document.getElementById('game-overlay-blink').classList.add('visible');
-    // Небольшая задержка, чтобы браузер успел выполнить layout
     setTimeout(() => {
       round = 1;
       startRound();
@@ -109,7 +122,11 @@ const BlinkGame = (function() {
   }
 
   function startRound() {
-    state = round === 1 ? 'blink' : round === 2 ? 'squeeze' : 'wide';
+    if (round <= MAX_ROUNDS) {
+      state = round === 1 ? 'blink' : round === 2 ? 'squeeze' : 'wide';
+    } else {
+      state = 'wide'; // extra rounds default to wide mode
+    }
     clicks = 0;
     holdTime = 0;
     isHolding = false;
@@ -118,13 +135,13 @@ const BlinkGame = (function() {
     roundStartTime = performance.now();
 
     updateUI();
-    if (round === 1) setHint(window.I18n ? I18n.t('games.blink.hintRound1') : 'Кликай по экрану, чтобы моргать! 8 раз за 5 секунд!');
-    else if (round === 2) setHint(window.I18n ? I18n.t('games.blink.hintRound2') : 'Зажми кнопку мыши / тапни и держи 3 секунды!');
-    else if (round === 3) setHint(window.I18n ? I18n.t('games.blink.hintRound3') : 'Кликни, когда шкала в зелёной зоне!');
+    if (round === 1) setHint((window.I18n ? I18n.t('games.blink.hintRound1') : 'Кликай по экрану, чтобы моргать! ') + TARGET_CLICKS + (window.I18n ? I18n.t('games.blink.timesSuffix') : ' раз!'));
+    else if (round === 2) setHint(window.I18n ? I18n.t('games.blink.hintRound2') : 'Зажми кнопку мыши / тапни и держи!');
+    else setHint(window.I18n ? I18n.t('games.blink.hintRound3') : 'Кликни, когда шкала в зелёной зоне!');
   }
 
   function nextRound() {
-    if (round < 3) {
+    if (round < MAX_ROUNDS) {
       round++;
       startRound();
     } else {
@@ -140,8 +157,10 @@ const BlinkGame = (function() {
   function updateUI() {
     const roundEl = getEl('blink-round');
     const timerEl = getEl('blink-timer');
-    if (roundEl) roundEl.textContent = round + '/3';
+    const diffEl = getEl('blink-difficulty');
+    if (roundEl) roundEl.textContent = round + '/' + MAX_ROUNDS;
     if (timerEl) timerEl.textContent = state === 'blink' ? Math.ceil((ROUND1_TIME - (performance.now() - roundStartTime)) / 1000) : '-';
+    if (diffEl) diffEl.textContent = (diffConfig && diffConfig.level) ? diffConfig.level : 1;
   }
 
   function loop(now) {
@@ -184,7 +203,7 @@ const BlinkGame = (function() {
       const bar = getEl('blink-progress');
       if (bar) bar.style.width = progress + '%';
     } else if (state === 'wide') {
-      targetPos += targetDir * dt * 0.06;
+      targetPos += targetDir * dt * ROUND3_SPEED;
       if (targetPos >= 100) { targetPos = 100; targetDir = -1; }
       if (targetPos <= 0) { targetPos = 0; targetDir = 1; }
     }
@@ -324,6 +343,9 @@ const BlinkGame = (function() {
     if (typeof PlayerProfile !== 'undefined') {
       PlayerProfile.addCoins(100);
       PlayerProfile.completeGame('blink', 100);
+    }
+    if (typeof GameDifficulty !== 'undefined') {
+      GameDifficulty.increaseLevel('blink');
     }
   }
 

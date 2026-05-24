@@ -5,17 +5,24 @@ const GymGame = (function(){
   'use strict';
   
   // ═══ GAME CONSTANTS (Увеличено для детей) ═══
-  const TARGETS = {
-    LASER: 8,    // Было 5
-    AIM: 5,      // Было 3
-    TEARS: 4     // Было 3
+  let TARGETS = {
+    LASER: 8,
+    AIM: 5,
+    TEARS: 4
   };
   
-  const CHARGE_TIME = {
-    LASER: 2000,    // 2 сек зарядки (было ~1 сек)
-    AIM: 1500,      // 1.5 сек наведения (было 0.8 сек)
-    TEAR: 5         // 5 тапов на водопад (было ~3)
+  let CHARGE_TIME = {
+    LASER: 2000,
+    AIM: 1500,
+    TEAR: 5
   };
+
+  let diffConfig = null;
+  let LASER_THRESHOLD = 90;
+  let AIM_HITBOX = 22;
+  let AIM_DECAY = 25;
+  let AIM_TRANSITION = '0.8s ease';
+  let COOLDOWNS = { laser: 800, aim: 1000, tears: 1200 };
   
   // ═══ STATE ═══
   let phase = 0;
@@ -249,7 +256,7 @@ const GymGame = (function(){
       
       gameStats.phase1.attempts++;
       
-      if (laserCharge >= 90) {
+      if (laserCharge >= LASER_THRESHOLD) {
         fireLaser();
       } else {
         // Too early - miss
@@ -298,7 +305,7 @@ const GymGame = (function(){
           } else {
             updateUI();
           }
-        }, 800);
+        }, COOLDOWNS.laser || 800);
       }, 300);
     }, 300);
   }
@@ -322,7 +329,7 @@ const GymGame = (function(){
 
     const target = document.createElement('div');
     target.id = 'aim-target';
-    target.style.cssText = 'position: absolute; width: 70px; height: 70px; border: 4px solid #ef4444; border-radius: 50%; background: rgba(239,68,68,0.2); transform: translate(-50%,-50%); transition: all 0.8s ease; box-shadow: 0 0 25px rgba(239,68,68,0.5); display: flex; align-items: center; justify-content: center; font-size: 24px;';
+    target.style.cssText = 'position: absolute; width: 70px; height: 70px; border: 4px solid #ef4444; border-radius: 50%; background: rgba(239,68,68,0.2); transform: translate(-50%,-50%); transition: all ' + AIM_TRANSITION + '; box-shadow: 0 0 25px rgba(239,68,68,0.5); display: flex; align-items: center; justify-content: center; font-size: 24px;';
     target.textContent = '🎯';
     area.appendChild(target);
 
@@ -404,7 +411,7 @@ const GymGame = (function(){
       const dy = aimCursor.y - targetPos.y;
       const distance = Math.sqrt(dx*dx + dy*dy);
       
-      if (distance < 22) {
+      if (distance < AIM_HITBOX) {
         if (targetEnterTime === 0) targetEnterTime = Date.now();
         aimHoldTime += 16;
         timeOnTarget += 16;
@@ -422,7 +429,7 @@ const GymGame = (function(){
           if (progress) progress.style.width = '0%';
         }
       } else {
-        aimHoldTime = Math.max(0, aimHoldTime - 25);
+        aimHoldTime = Math.max(0, aimHoldTime - AIM_DECAY);
         targetEnterTime = 0;
         if (progress) progress.style.width = (aimHoldTime / CHARGE_TIME.AIM * 100) + '%';
         if (cursor) {
@@ -471,7 +478,7 @@ const GymGame = (function(){
             }
             moveAimTarget(getEl('aim-target'));
           }
-        }, 1000);
+        }, COOLDOWNS.aim || 1000);
       }, 400);
     }, 300);
   }
@@ -608,6 +615,9 @@ const GymGame = (function(){
     if (raysEl) {
       raysEl.textContent = '☀️'.repeat(rays) + '⚪'.repeat(3 - rays);
     }
+    
+    const diffEl = getEl('gym-difficulty');
+    if (diffEl) diffEl.textContent = (diffConfig && diffConfig.level) ? diffConfig.level : 1;
   }
   
   function completePhase() {
@@ -656,6 +666,11 @@ const GymGame = (function(){
   function showVictory() {
     gameStats.totalTime = Date.now() - gameStartTime;
     gameStats.phase3.blinks = totalBlinks;
+    
+    // Increase difficulty on victory
+    if (typeof GameDifficulty !== 'undefined') {
+      GameDifficulty.increaseLevel('gym');
+    }
     
     // Calculate scores
     calculateScores();
@@ -837,10 +852,31 @@ const GymGame = (function(){
     window.hideOverlay('tr-overlay-gym');
     const overlay = getEl('game-overlay-gym');
     if (overlay) overlay.classList.add('visible');
+
+    // Load progressive difficulty
+    if (typeof GameDifficulty !== 'undefined') {
+      diffConfig = GameDifficulty.getConfig('gym');
+    }
+    var cfg = diffConfig || {};
+    TARGETS = {
+      LASER: (cfg.targets && cfg.targets.laser) || 8,
+      AIM: (cfg.targets && cfg.targets.aim) || 5,
+      TEARS: (cfg.targets && cfg.targets.tears) || 4
+    };
+    CHARGE_TIME = {
+      LASER: (cfg.chargeTime && cfg.chargeTime.laser) || 2000,
+      AIM: (cfg.chargeTime && cfg.chargeTime.aim) || 1500,
+      TEAR: (cfg.chargeTime && cfg.chargeTime.tear) || 5
+    };
+    LASER_THRESHOLD = cfg.laserThreshold || 90;
+    AIM_HITBOX = cfg.aimHitbox || 22;
+    AIM_DECAY = cfg.aimDecay || 25;
+    AIM_TRANSITION = cfg.aimTransition ? (cfg.aimTransition + 's ease') : '0.8s ease';
+    COOLDOWNS = cfg.cooldowns || { laser: 800, aim: 1000, tears: 1200 };
     
     // Reset all state
     phase = 0;
-    bossHp = 100;
+    bossHp = cfg.bossHp || 100;
     rays = 0;
     isTransitioning = false;
     

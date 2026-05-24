@@ -20,7 +20,7 @@ const RunnerGame = (function(){
   let lives = 3;
   let time = 0;
   let dist = 0;
-  const targetDist = 2000;
+  let targetDist = 2000;
   let obstacles = [];
   let particles = [];
   let bonuses = [];
@@ -28,7 +28,8 @@ const RunnerGame = (function(){
   let jump = 0;
   let jumpCount = 0; // для двойного прыжка
   let jumpVel = 0;
-  const gravity = 0.6;
+  let gravity = 0.6;
+  let diffConfig = null;
   let groundY = 400;
   let playerY = 0;
   let speed = 3; // НАЧАЛЬНАЯ СКОРОСТЬ УМЕНЬШЕНА (было 5)
@@ -148,30 +149,37 @@ const RunnerGame = (function(){
   }
 
   function reset(){
+    // Load progressive difficulty
+    if (typeof GameDifficulty !== 'undefined') {
+      diffConfig = GameDifficulty.getConfig('runner');
+    }
+    var cfg = diffConfig || {};
     resize();
-    lives = 3;
+    lives = cfg.lives || 3;
     time = 0;
     dist = 0;
     obstacles = [];
     particles = [];
     bonuses = [];
-    nextObs = 100; // УВЕЛИЧЕННЫЙ ИНТЕРВАЛ (было 60)
+    nextObs = 100;
     jump = 0;
     jumpCount = 0;
     jumpVel = 0;
-    speed = 3; // МЕДЛЕННЕЕ
+    speed = cfg.speedBase || 3;
     speedBoost = 1;
     speedBoostTimer = 0;
     shieldTimer = 0;
     bgOffset = 0;
-    level = 1;
+    level = cfg.level || 1;
     warning = null;
     gameState = 'running';
+    targetDist = cfg.targetDist || 2000;
+    gravity = cfg.gravity || 0.6;
     
     // Reset stats
     runnerStats.startTime = Date.now();
     runnerStats.endTime = 0;
-    runnerStats.livesRemaining = 3;
+    runnerStats.livesRemaining = lives;
     runnerStats.bonusesCollected = 0;
     runnerStats.totalTime = 0;
     runnerStats.stars = 3;
@@ -183,12 +191,14 @@ const RunnerGame = (function(){
   function updateUI(){
     const timeEl = document.getElementById('runner-time');
     const livesEl = document.getElementById('runner-lives');
+    const diffEl = document.getElementById('runner-difficulty');
     if (timeEl) timeEl.textContent = (window.I18n ? I18n.t('games.runner.level') : 'Ур.') + ' ' + level;
-    if (livesEl) livesEl.textContent = '❤️'.repeat(lives) + '🖤'.repeat(3-lives) + (shieldTimer > 0 ? ' 🛡️' : '') + (speedBoostTimer > 0 ? ' ⭐' : '');
+    if (livesEl) livesEl.textContent = '❤️'.repeat(lives) + '🖤'.repeat(Math.max(0,3-lives)) + (shieldTimer > 0 ? ' 🛡️' : '') + (speedBoostTimer > 0 ? ' ⭐' : '');
+    if (diffEl) diffEl.textContent = (diffConfig && diffConfig.level) ? diffConfig.level : 1;
   }
 
   function spawnObstacle(){
-    const types = ['can','cup','vase','sugar'];
+    var types = (diffConfig && diffConfig.obstacleTypes) ? diffConfig.obstacleTypes : ['can','cup','vase','sugar'];
     const type = types[Math.floor(Math.random() * types.length)];
     let w = 32, h = 40;
     let color = '#94a3b8';
@@ -521,8 +531,10 @@ const RunnerGame = (function(){
       } else {
         spawnObstacle();
       }
-      // УВЕЛИЧЕННЫЙ ИНТЕРВАЛ: 90-150 кадров
-      nextObs = 90 + Math.floor(Math.random() * 60);
+      // Dynamic spawn interval based on difficulty
+      var intervalBase = (diffConfig && diffConfig.spawnIntervalBase) ? diffConfig.spawnIntervalBase : 90;
+      var intervalVar = (diffConfig && diffConfig.spawnIntervalVar) ? diffConfig.spawnIntervalVar : 60;
+      nextObs = intervalBase + Math.floor(Math.random() * intervalVar);
     }
     
     // Level up check
@@ -659,9 +671,11 @@ const RunnerGame = (function(){
     // Advance
     dist += currentSpeed;
     time++;
-    // ОГРАНИЧЕНИЕ МАКСИМАЛЬНОЙ СКОРОСТИ
-    if (speed < 6) {
-      speed += 0.001; // МЕДЛЕННЫЙ ПРИРОСТ (было 0.002)
+    // Progressive speed cap from difficulty config
+    var speedCap = (diffConfig && diffConfig.speedCap) ? diffConfig.speedCap : 6;
+    var speedInc = (diffConfig && diffConfig.speedIncrement) ? diffConfig.speedIncrement : 0.001;
+    if (speed < speedCap) {
+      speed += speedInc;
     }
     updateUI();
     
@@ -685,6 +699,11 @@ const RunnerGame = (function(){
       
       // Store stats globally for registration
       window.lastRunnerStats = {...runnerStats};
+      
+      // Increase difficulty level on victory
+      if (typeof GameDifficulty !== 'undefined') {
+        GameDifficulty.increaseLevel('runner');
+      }
       
       setTimeout(function() {
         window.hideOverlay('game-overlay-runner');
