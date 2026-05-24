@@ -1,6 +1,6 @@
 /**
  * i18n — lightweight internationalization for Superglazka
- * Supports: ru (default), en, kz
+ * Supports: ru (default), en, kz, zh
  */
 (function() {
   'use strict';
@@ -18,6 +18,7 @@
     var code = nav.slice(0, 2).toLowerCase();
     if (code === 'en') return 'en';
     if (code === 'kk' || code === 'kz') return 'kz';
+    if (code === 'zh') return 'zh';
     return 'ru';
   }
 
@@ -59,9 +60,11 @@
     localStorage.setItem(STORAGE_KEY, lang);
     applyToDOM();
     document.documentElement.lang = lang === 'kz' ? 'kk' : lang;
-    // Update lang switcher UI
-    document.querySelectorAll('.lang-btn').forEach(function(btn) {
-      btn.classList.toggle('active', btn.dataset.lang === lang);
+    // Update all lang switcher menus
+    document.querySelectorAll('.lang-switcher').forEach(function(sw) {
+      sw.querySelectorAll('.lang-option').forEach(function(opt) {
+        opt.classList.toggle('active', opt.dataset.lang === lang);
+      });
     });
   }
 
@@ -131,19 +134,49 @@
   function getLang() { return currentLang; }
   function isLoaded() { return loaded; }
 
+  var LANG_NAMES = { ru: 'Русский', en: 'English', kz: 'Қазақша', zh: '中文' };
+
   function renderSwitcher(container) {
     if (!container) return;
-    container.innerHTML = '<button class="lang-btn" data-lang="ru" title="Русский">RU</button>' +
-      '<button class="lang-btn" data-lang="en" title="English">EN</button>' +
-      '<button class="lang-btn" data-lang="kz" title="Қазақша">KZ</button>';
-    container.querySelectorAll('.lang-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        setLang(btn.dataset.lang);
+    var id = 'langMenu_' + Math.random().toString(36).slice(2, 8);
+    container.innerHTML =
+      '<button class="lang-switcher-trigger" aria-haspopup="true" aria-expanded="false" title="🌐 Language">🌐</button>' +
+      '<div class="lang-switcher-menu" id="' + id + '" role="menu">' +
+        '<button class="lang-option' + (currentLang === 'ru' ? ' active' : '') + '" data-lang="ru" role="menuitem">🇷🇺 Русский</button>' +
+        '<button class="lang-option' + (currentLang === 'en' ? ' active' : '') + '" data-lang="en" role="menuitem">🇬🇧 English</button>' +
+        '<button class="lang-option' + (currentLang === 'kz' ? ' active' : '') + '" data-lang="kz" role="menuitem">🇰🇿 Қазақша</button>' +
+        '<button class="lang-option' + (currentLang === 'zh' ? ' active' : '') + '" data-lang="zh" role="menuitem">🇨🇳 中文</button>' +
+      '</div>';
+
+    var trigger = container.querySelector('.lang-switcher-trigger');
+    var menu = container.querySelector('.lang-switcher-menu');
+
+    function toggleMenu(show) {
+      var isOpen = show !== undefined ? show : !menu.classList.contains('open');
+      menu.classList.toggle('open', isOpen);
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      toggleMenu();
+    });
+
+    container.querySelectorAll('.lang-option').forEach(function(opt) {
+      opt.addEventListener('click', function(e) {
+        e.stopPropagation();
+        setLang(opt.dataset.lang);
+        toggleMenu(false);
       });
     });
-    // Mark active
-    var active = container.querySelector('[data-lang="' + currentLang + '"]');
-    if (active) active.classList.add('active');
+
+    // Close on outside click
+    function outsideClick(e) {
+      if (!container.contains(e.target)) toggleMenu(false);
+    }
+    document.addEventListener('click', outsideClick);
+    // Store cleanup on container for potential reuse
+    container._langCleanup = function() { document.removeEventListener('click', outsideClick); };
   }
 
   window.I18n = { init, t, setLang, getLang, applyToDOM, isLoaded, onReady, renderSwitcher };

@@ -1,0 +1,588 @@
+{
+  "meta": {
+    "siteName": "超级眼睛",
+    "siteDesc": "关于眼睛健康的互动漫画"
+  },
+  "nav": {
+    "about": "关于漫画",
+    "features": "特点",
+    "games": "游戏",
+    "chapters": "章节",
+    "characters": "英雄",
+    "parents": "给家长",
+    "blog": "博客",
+    "start": "▶ 开始",
+    "menu": "菜单",
+    "close": "关闭",
+    "home": "首页",
+    "checklist": "检查清单"
+  },
+  "hero": {
+    "badge": "✨ 新章节已上线",
+    "title": "超级眼睛",
+    "subtitle": "关于眼睛健康的互动漫画。与女超人一起拯救维迪亚尔星球！",
+    "ctaPrimary": "▶ 开始冒险",
+    "ctaSecondary": "了解更多",
+    "scroll": "向下滚动"
+  },
+  "about": {
+    "title": "关于漫画",
+    "subtitle": "在眼睛健康的魔法世界里，视力是最强的超能力",
+    "p1": "",
+    "p2": "",
+    "p3": ""
+  },
+  "features": {
+    "title": "特点",
+    "subtitle": "是什么让《超级眼睛》成为儿童独特项目",
+    "comic": {
+      "title": "互动漫画",
+      "desc": "每一帧都是带对话、配音和视频插入的全屏面板。像刷故事一样滑动！"
+    },
+    "games": {
+      "title": "迷你游戏",
+      "desc": "与英雄一起训练眼睛：跑酷、体操、眨眼和与懒惰魔王战斗！"
+    },
+    "voice": {
+      "title": "配音",
+      "desc": "每帧专业的音频旁白。像听广播剧一样听故事！"
+    },
+    "video": {
+      "title": "视频",
+      "desc": "AI生成的视频片段让漫画帧栩栩如生，沉浸其中。"
+    }
+  },
+  "gamesSection": {
+    "title": "迷你游戏",
+    "subtitle": "边玩边训练眼睛——每个游戏培养有用技能",
+    "runner": {
+      "title": "追赶像素精灵",
+      "desc": "跑、跳、收集奖励。训练快速反应和注意力集中。"
+    },
+    "gym": {
+      "title": "与懒惰魔王战斗",
+      "desc": "使用三种眼睛超级攻击：激光、瞄准和眼泪。击败魔王！"
+    },
+    "blink": {
+      "title": "眼睛体操",
+      "desc": "眨眼、眯眼、睁大眼睛。强化眼部肌肉。"
+    },
+    "tracker": {
+      "title": "跟随小球",
+      "desc": "用目光跟随移动的小球。培养眼睛平滑运动。"
+    },
+    "play": "▶ 玩",
+    "chooseGame": "🎮 选择游戏",
+    "backToList": "← 返回列表"
+  },
+  "episodes": {
+    "title": "章节",
+    "subtitle": "选择章节，沉浸于故事",
+    "read": "▶ 阅读",
+    "locked": "🔒",
+    "ep1": {
+      "num": "第一章",
+      "name": "女英雄诞生",
+      "desc": ""
+    },
+    "ep2": {
+      "num": "第二章",
+      "name": "我是谁？",
+      "desc": ""
+    },
+    "ep3": {
+      "num": "第三章",
+      "name": "伟大战斗",
+      "desc": ""
+    }
+  },
+  "characters": {
+    "title": "英雄",
+    "subtitle": "认识漫画的主要角色",
+    "superglazka": {
+      "name": "超级眼睛",
+      "role": "女主角",
+      "desc": ""
+    },
+    "vanya": {
+      "name": "万尼亚",
+      "role": "忠实朋友",
+      "desc": ""
+    },
+    "wiseCrystal": {
+      "name": "智慧水晶",
+      "role": "维迪亚尔统治者",
+      "desc": ""
+    },
+    "lenivus": {
+      "name": "懒惰魔王",
+      "role": "主要反派",
+      "desc": ""
+    }
+  },
+  "profileLanding": {
+    "title": "🎮 你的游戏档案",
+    "subtitle": "保存进度，收集金币，与朋友竞争",
+    "guestTitle": "加入团队！",
+    "guestSub": "注册以保存进度、获得胜利奖励并参加比赛。",
+    "nicknamePlaceholder": "想个昵称",
+    "play": "🚀 玩！",
+    "login": "🔑 登录",
+    "haveAccount": "已有账号？登录",
+    "noAccount": "没有账号？快速开始",
+    "coins": "🪙",
+    "notPlayed": "尚未玩过",
+    "playedTimes": "玩过：{{count}} 次",
+    "bestScore": "🏆 {{score}}"
+  },
+  "cta": {
+    "title": "准备好冒险了吗？",
+    "subtitle": "立即开始阅读漫画",
+    "button": "▶ 开始阅读"
+  },
+  "footer": {
+    "text": "用心守护儿童视力 ❤️ · 超级眼睛 · 2025"
+  },
+  "cookieBanner": {
+    "text": "我们使用 localStorage 保存进度和设置。",
+    "privacy": "隐私政策",
+    "accept": "接受"
+  },
+  "app": {
+    "back": "返回",
+    "settings": "设置",
+    "profile": "个人资料",
+    "cinema": "影院模式",
+    "faq": "帮助",
+    "continueReading": "继续阅读",
+    "newChapter": "距离新章节",
+    "soon": "即将推出！",
+    "books": "书籍",
+    "chaptersTab": "章节",
+    "framesTab": "帧",
+    "uploadTab": "上传",
+    "narrator": "旁白",
+    "subtitles": "字幕",
+    "fontSize": "字体大小",
+    "highContrast": "高对比度",
+    "reduceMotion": "减少动画",
+    "textSize": "文字大小",
+    "darkTheme": "深色主题",
+    "bgMusic": "背景音乐",
+    "volume": "音量",
+    "audio": "音频",
+    "accessibility": "无障碍",
+    "interface": "界面",
+    "faqItems": {
+      "howToPlay": "",
+      "saveProgress": "",
+      "gamesHelp": "",
+      "eyeHealth": "",
+      "forParents": "",
+      "contacts": ""
+    },
+    "gameTransition": {
+      "title": "",
+      "subtitle": "",
+      "start": ""
+    },
+    "continueAdventure": "继续冒险",
+    "continue": "继续",
+    "nextChapterSoon": "距离新章节",
+    "comingSoon": "即将推出！",
+    "showSubtitles": "显示字幕",
+    "subtitleFontSize": "字幕字体大小",
+    "help": "❓ 帮助",
+    "showFullText": "显示全文",
+    "miniGames": "🎮 迷你游戏",
+    "miniGame": "迷你游戏！",
+    "tapToPlay": "点击开始游戏",
+    "play": "玩",
+    "next": "下一页 ▶",
+    "getReady": "准备好接受挑战...",
+    "playGame": "玩！🚀",
+    "fight": "战斗！🚀",
+    "skip": "跳过 ▸",
+    "great": "太棒了！",
+    "youDidIt": "你做到了！\n漫画后续...",
+    "greatJob": "🎉 干得好！",
+    "chapters": "📖 章节",
+    "account": "🔐 账号",
+    "notifications": "🔔 通知",
+    "yourEmail": "你的邮箱",
+    "subscribe": "订阅新章节",
+    "wellDone": "干得好！",
+    "nextFrame": "下一帧..."
+  },
+  "games": {
+    "runner": {
+      "title": "追赶像素精灵",
+      "start": "开始",
+      "jump": "跳！",
+      "gameOver": "游戏结束",
+      "win": "胜利！",
+      "stats": "统计",
+      "continue": "继续",
+      "intro": "帮助超级眼睛在桌子上抓住像素精灵！躲避餐具。",
+      "completed": "🏃 追赶完成！"
+    },
+    "gym": {
+      "title": "万尼亚对抗懒惰魔王！",
+      "phaseLaser": "第一阶段：激光",
+      "phaseAim": "第二阶段：瞄准",
+      "phaseTears": "第三阶段：眼泪",
+      "charge": "充电！",
+      "release": "释放！",
+      "aim": "瞄准！",
+      "tap": "按！",
+      "win": "胜利！",
+      "stats": "统计",
+      "continue": "继续",
+      "intro": "帮助万尼亚击败懒惰魔王！使用三种超级攻击：激光、瞄准和眼泪。",
+      "bossName": "👁️ 懒惰魔王",
+      "rays": "光线",
+      "ray": "⚡ 太阳光线",
+      "scope": "🎯 精确瞄准",
+      "tears": "💧 泪之瀑布"
+    },
+    "blink": {
+      "title": "眼睛体操",
+      "round1": "第一轮：眨眼",
+      "round2": "第二轮：眯眼",
+      "round3": "第三轮：睁大",
+      "blink": "眨眼！",
+      "squeeze": "按！",
+      "wide": "睁大！",
+      "win": "太棒了！",
+      "stats": "统计",
+      "continue": "继续",
+      "round": "轮",
+      "time": "时间",
+      "hint": "点击屏幕眨眼！"
+    },
+    "tracker": {
+      "title": "跟随小球",
+      "follow": "用目光跟随！",
+      "win": "完成！",
+      "stats": "统计",
+      "continue": "继续",
+      "phase": "阶段",
+      "hint": "用眼睛跟随小球 👀"
+    },
+    "stats": {
+      "lives": "❤️ 生命",
+      "livesLeft": "剩余生命：",
+      "bonuses": "💎 奖励",
+      "collected": "已收集：",
+      "result": "🎯 结果",
+      "distance": "距离：",
+      "status": "状态：",
+      "victory": "胜利！",
+      "rating": "🏆 评分：⭐⭐⭐",
+      "hits": "命中：",
+      "accuracy": "准确度：",
+      "avgTime": "平均瞄准时间：",
+      "waterfalls": "瀑布：",
+      "totalBlinks": "总眨眼数：",
+      "totalScore": "🏆 总分：0"
+    }
+  },
+  "profile": {
+    "title": "个人资料",
+    "nickname": "昵称",
+    "coins": "金币",
+    "episodes": "📖 章节",
+    "games": "🎮 迷你游戏",
+    "achievements": "🏆 成就",
+    "account": "🔐 账号",
+    "guestText": "你以访客身份游戏。进度会保存，但金币暂时无法使用。",
+    "createAccount": "🔐 创建完整账号",
+    "loginBtn": "🔑 已有账号？登录",
+    "enterLogin": "🔑 登录 / 注册",
+    "email": "邮箱",
+    "logout": "🚪 退出",
+    "notifications": "🔔 通知",
+    "subscribePlaceholder": "你的邮箱",
+    "subscribeBtn": "订阅新章节"
+  },
+  "auth": {
+    "login": "登录",
+    "register": "注册",
+    "guest": "访客",
+    "email": "邮箱",
+    "password": "密码",
+    "nickname": "昵称",
+    "enter": "登录",
+    "create": "创建",
+    "quickStart": "快速开始",
+    "or": "或",
+    "loginError": "邮箱或密码错误",
+    "registerError": "注册错误",
+    "emptyFields": "请填写所有字段！",
+    "enterNickname": "请输入昵称！",
+    "enterEmailPassword": "请输入邮箱和密码！",
+    "joinTeam": "🌟 加入团队！",
+    "joinBenefits": "注册以：保存进度、获得胜利奖励、开启下一系列漫画、参加比赛",
+    "nicknamePlaceholder": "想个昵称",
+    "parentEmailPlaceholder": "家长邮箱",
+    "parentsAllowed": "家长允许游戏",
+    "registerBtn": "🚀 注册",
+    "skipRegistration": "继续无需注册 →",
+    "joinBenefitsGym": "注册以：保存进度、获得训练奖励、开启下一系列漫画、参加比赛",
+    "fullAccount": "完整账号",
+    "guestDesc": "输入昵称开始游戏。进度会保存，但金币暂时无法使用。",
+    "yourNickname": "你的昵称",
+    "play": "🚀 玩！",
+    "parentEmail": "家长邮箱",
+    "phoneOptional": "电话（可选）",
+    "passwordMin6": "密码（至少6个字符）",
+    "haveAccount": "已有账号？",
+    "loginBtn": "🔑 登录",
+    "noAccount": "没有账号？"
+  },
+  "achievements": {
+    "unlocked": "🏆 成就解锁！",
+    "title": "成就",
+    "first_step": "第一步",
+    "first_step_desc": "观看第一帧",
+    "pixel_hunter": "像素猎人",
+    "pixel_hunter_desc": "完成「追赶像素精灵」",
+    "eye_gymnast": "眼睛体操运动员",
+    "eye_gymnast_desc": "完成体操3次",
+    "blinker": "眨眼者",
+    "blinker_desc": "完成「眨眼游戏」",
+    "tracker": "追踪者",
+    "tracker_desc": "完成「跟随小球」",
+    "bookworm": "书虫",
+    "bookworm_desc": "完成一章",
+    "librarian": "图书馆员",
+    "librarian_desc": "完成所有章节",
+    "rich": "富翁",
+    "rich_desc": "积累500金币"
+  },
+  "daily": {
+    "title": "🎁 每日奖励",
+    "subtitle": "每天登录领取金币！",
+    "streak": "🔥 连续：{{count}} 天",
+    "day": "天",
+    "claim": "领取 {{amount}} 🪙",
+    "claimed": "✅ 你今天已经领取了奖励。明天再来！",
+    "received": "🎉 获得 {{amount}} 金币！连续：{{streak}}"
+  },
+  "parents": {
+    "title": "给家长",
+    "subtitle": "关于孩子眼睛健康的一切重要信息",
+    "benefits": {
+      "title": "🎯 项目益处",
+      "attention": "注意力发展",
+      "attentionDesc": "游戏练习训练孩子的随意注意力。",
+      "hygiene": "视力卫生",
+      "hygieneDesc": "漫画以有趣的方式向孩子们介绍眼睛健康规则。",
+      "fatigue": "预防疲劳",
+      "fatigueDesc": "练习缓解屏幕使用后的紧张。",
+      "muscles": "强化肌肉",
+      "musclesDesc": "调节练习强化眼部肌肉。"
+    },
+    "time": {
+      "title": "⏱️ 时间建议",
+      "chapterTime": "一章——10-15分钟。",
+      "break": "章节后休息20分钟。",
+      "maxChapters": "每天不超过2章。",
+      "lighting": "良好的照明。"
+    },
+    "explain": {
+      "title": "💬 如何向孩子解释",
+      "p1": "「超级眼睛教你的眼睛像超级英雄一样强大！」",
+      "p2": "「练习帮助眼睛在平板和手机后休息。」",
+      "p3": "「每次你训练，你的眼睛变得更快更聪明。」",
+      "p4": "「这就像一个健身房，但是给眼睛的——练习得越多，看得越清楚。」"
+    },
+    "checklist": {
+      "title": "📋 家长检查清单",
+      "distance": "孩子坐在屏幕前不少于30厘米。",
+      "rule202020": "20分钟屏幕后——20秒休息。",
+      "noGlare": "房间光线充足，没有眩光。",
+      "blink": "孩子在做练习时眨眼。",
+      "noScreenBeforeBed": "睡前1小时最少屏幕时间。"
+    },
+    "contact": {
+      "title": "📧 反馈",
+      "text": "有问题、建议或意见？我们总是很高兴听到您的想法。",
+      "email": "写信至 hello@superglazka.ru",
+      "socials": "或在社交媒体上找到我们："
+    }
+  },
+  "blog": {
+    "title": "超级眼睛博客",
+    "subtitle": "关于儿童眼睛健康的有用建议",
+    "loading": "加载文章...",
+    "empty": "暂无文章。稍后再来！",
+    "error": "无法加载文章"
+  },
+  "checklistPage": {
+    "title": "10条眼睛健康规则",
+    "subtitle": "家长检查清单 · 打印并贴在冰箱上",
+    "progress": "已完成 {{done}} / {{total}}",
+    "dailyRules": "📋 每日规则",
+    "rule202020": "20-20-20规则。每20分钟屏幕时间——20秒休息，看向6米外。",
+    "distance": "与屏幕的距离。显示器至少50-60厘米，平板30厘米。",
+    "lighting": "良好的照明。屏幕上没有眩光，房间光线充足。",
+    "blink": "多眨眼！提醒孩子在使用屏幕时眨眼。",
+    "noScreenBeforeBed": "睡前1小时不看屏幕。蓝光干扰褪黑素分泌。",
+    "nutrition": "🥗 营养与生活方式",
+    "vitaminA": "维生素A。胡萝卜、南瓜、杏、肝脏——每天食用。",
+    "omega3": "Omega-3。鱼、亚麻籽、核桃——保护视网膜。",
+    "walks": "户外散步。每天至少1小时——眼睛的自然训练。",
+    "prevention": "🏥 预防",
+    "doctor": "眼科检查。即使没有投诉，每年1次。",
+    "noRub": "不要用脏手揉眼睛。感染是视力问题的常见原因。",
+    "print": "🖨️ 打印检查清单",
+    "reset": "↺ 重置进度"
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "updated": "更新日期：2026年5月21日",
+    "p1": "1. 收集哪些数据",
+    "p2": "2. 为什么收集数据",
+    "p3": "3. 谁可以访问",
+    "p4": "4. 存储与安全",
+    "p5": "5. 如何删除数据",
+    "p6": "6. Cookie 和 localStorage",
+    "p7": "7. 儿童安全",
+    "p8": "8. 政策变更",
+    "p9": "9. 联系方式"
+  },
+  "admin": {
+    "login": "管理员登录",
+    "apiKey": "API密钥",
+    "enter": "登录",
+    "logout": "退出",
+    "episodes": "章节",
+    "frames": "帧",
+    "upload": "上传",
+    "newEpisode": "新章节",
+    "search": "搜索",
+    "title": "标题",
+    "description": "描述",
+    "order": "顺序",
+    "published": "已发布",
+    "save": "保存",
+    "delete": "删除",
+    "duplicate": "复制",
+    "narration": "旁白",
+    "dialogue": "对话",
+    "background": "背景",
+    "mood": "情绪",
+    "game": "游戏",
+    "preview": "预览",
+    "success": "成功",
+    "error": "错误"
+  },
+  "title": {
+    "чек_лист_10_правил_здоровья_глаз_супергл": ""
+  },
+  "land_logo": {
+    "игросказка_суперглазка": ""
+  },
+  "checklist_back": {
+    "на_главную": ""
+  },
+  "checklist_content": {
+    "10_правил_здоровья_глаз": ""
+  },
+  "checklist_subtitle": {
+    "чек_лист_для_родителей_распечатайте_и_по": ""
+  },
+  "progresstext": {
+    "выполнено_0_из_10": ""
+  },
+  "checklist_card": {
+    "ежедневные_правила": "",
+    "питание_и_образ_жизни": "",
+    "профилактика": ""
+  },
+  "checklist_item": {
+    "правило_20_20_20каждые_20_минут_экрана_2": "",
+    "расстояние_от_экранаминимум_5060_см_до_м": "",
+    "хорошее_освещениенет_бликов_на_экране_до": "",
+    "моргай_чащенапоминайте_ребёнку_моргать_в": "",
+    "никаких_экранов_за_1_час_до_снасиний_све": "",
+    "витамин_аморковь_тыква_абрикосы_печень_е": "",
+    "омега_3рыба_семена_льна_грецкие_орехи_за": "",
+    "прогулки_на_свежем_воздухеминимум_1_час_": "",
+    "осмотр_у_офтальмолога1_раз_в_год_даже_пр": "",
+    "не_трите_глаза_грязными_рукамиинфекции_ч": "",
+    "правило_20_20_20": "",
+    "расстояние_от_экрана": "",
+    "хорошее_освещение": "",
+    "моргай_чаще": "",
+    "никаких_экранов_за_1_час_до_сна": "",
+    "витамин_а": "",
+    "омега_3": "",
+    "прогулки_на_свежем_воздухе": "",
+    "осмотр_у_офтальмолога": "",
+    "не_трите_глаза_грязными_руками": ""
+  },
+  "checklist_print_btn": {
+    "распечатать_чек_лист": ""
+  },
+  "resetbtn": {
+    "сбросить_прогресс": ""
+  },
+  "land_footer": {
+    "суперглазка": ""
+  },
+  "cookiebanner": {
+    "политика_конфиденциальности": ""
+  },
+  "cookieaccept": {
+    "принять": ""
+  },
+  "land_logo_pretitle": {
+    "игросказка": ""
+  },
+  "land_logo_title": {
+    "суперглазка": ""
+  },
+  "time": {
+    "days": "天",
+    "hours": "小时",
+    "minutes": "分钟",
+    "seconds": "秒"
+  },
+  "faq": {
+    "controls": {
+      "question": "如何操作？",
+      "answer": "在电脑上：使用上下箭头或空格键切换到下一帧。Esc键隐藏/显示界面。",
+      "answer2": "在手机上：向上/向下滑动切换帧。点击屏幕暂停视频。"
+    },
+    "sound": {
+      "question": "如果声音不工作怎么办？",
+      "answer": "1. 检查设置中是否启用了所需的音频轨道。2. 在 iOS 上，声音仅在用户首次触摸屏幕后才会打开——这是 Safari 的限制。3. 检查设备音量以及是否开启了静音模式。4. 重新加载页面——有时浏览器会阻止自动播放。"
+    },
+    "coins": {
+      "question": "如何赚取金币？",
+      "answer": "金币在完成帧和迷你游戏后发放。游戏结果越好（星星越多），金币越多。还可以通过重复通关章节获得奖励金币。"
+    },
+    "locked": {
+      "question": "为什么章节被锁定？",
+      "answer": "章节依次开放。要解锁下一章，需要看完前一章。进度自动保存。"
+    },
+    "subtitles": {
+      "question": "如何开启字幕？",
+      "answer": "打开设置 → 「字幕」部分 → 切换开关。还可以选择字体大小：小、中或大。"
+    },
+    "theme": {
+      "question": "如何更换主题？",
+      "answer": "在设置中 → 「界面」部分 → 「深色主题」开关。选择会保存并在两个页面上生效。"
+    }
+  },
+  "brand": {
+    "subtitle": "游戏童话"
+  },
+  "cookie": {
+    "text": "",
+    "privacy": "",
+    "accept": ""
+  }
+}
