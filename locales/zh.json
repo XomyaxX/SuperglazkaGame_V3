@@ -9,6 +9,7 @@
     "games": "游戏",
     "chapters": "章节",
     "characters": "英雄",
+    "artifacts": "神器",
     "parents": "给家长",
     "blog": "博客",
     "start": "▶ 开始",
@@ -125,6 +126,34 @@
     "dev": "女孩",
     "tolpa": "人群",
     "nar": "旁白"
+  },
+  "artifacts": {
+    "title": "🎒 神器",
+    "sub": "在冒险中帮助你的物品",
+    "shield": {
+      "name": "护盾眼镜",
+      "desc": "保护免受像素的有害光线"
+    },
+    "drops": {
+      "name": "药水滴剂",
+      "desc": "在关卡之间恢复眼睛力量"
+    },
+    "lens": {
+      "name": "放大镜",
+      "desc": "在射击训练中放大目标"
+    },
+    "binoculars": {
+      "name": "侦察望远镜",
+      "desc": "让你在追逐中窥视障碍物后面"
+    },
+    "carrot": {
+      "name": "胡萝卜加速器",
+      "desc": "短时间内提供速度加成"
+    },
+    "flashlight": {
+      "name": "探照手电筒",
+      "desc": "照亮黑暗中的隐藏物体"
+    }
   },
   "profileLanding": {
     "title": "🎮 你的游戏档案",

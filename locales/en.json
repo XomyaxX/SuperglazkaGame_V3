@@ -9,6 +9,7 @@
     "games": "Games",
     "chapters": "Chapters",
     "characters": "Characters",
+    "artifacts": "Artifacts",
     "parents": "For Parents",
     "blog": "Blog",
     "start": "▶ Start",
@@ -125,6 +126,34 @@
     "dev": "Girl",
     "tolpa": "Crowd",
     "nar": "Narrator"
+  },
+  "artifacts": {
+    "title": "🎒 Artifacts",
+    "sub": "Items that will help you in your adventures",
+    "shield": {
+      "name": "Shield Glasses",
+      "desc": "Protect against Pixel's harmful rays"
+    },
+    "drops": {
+      "name": "Elixir Drops",
+      "desc": "Restore eye strength between levels"
+    },
+    "lens": {
+      "name": "Magnifying Lens",
+      "desc": "Enlarges targets in arrow trainer games"
+    },
+    "binoculars": {
+      "name": "Scout Binoculars",
+      "desc": "Lets you peek behind obstacles during chases"
+    },
+    "carrot": {
+      "name": "Carrot Booster",
+      "desc": "Gives a short speed bonus"
+    },
+    "flashlight": {
+      "name": "Searchlight Flashlight",
+      "desc": "Illuminates hidden objects in the dark"
+    }
   },
   "profileLanding": {
     "title": "🎮 Your Game Profile",
