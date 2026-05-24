@@ -17,7 +17,9 @@
     "close": "关闭",
     "home": "首页",
     "checklist": "检查清单",
-    "achievements": "成就"
+    "achievements": "成就",
+    "profile": "个人资料",
+    "settings": "设置"
   },
   "hero": {
     "badge": "✨ 新章节已上线",
@@ -313,9 +315,10 @@
       "miss": "没击中！再试一次",
       "timeUp": "时间到！再试一次。",
       "releaseEarly": "放得太早了！重新开始。",
-      "hintRound1": "点击屏幕眨眼！5秒内8次！",
+      "hintRound1": "点击屏幕眨眼！",
       "hintRound2": "按住鼠标按钮 / 点击并保持3秒！",
-      "hintRound3": "当进度条在绿色区域时点击！"
+      "hintRound3": "当进度条在绿色区域时点击！",
+      "timesSuffix": "次！"
     },
     "tracker": {
       "title": "跟随小球",

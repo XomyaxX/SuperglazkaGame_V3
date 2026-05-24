@@ -17,7 +17,9 @@
     "close": "Close",
     "home": "Home",
     "checklist": "Checklist",
-    "achievements": "Achievements"
+    "achievements": "Achievements",
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "hero": {
     "badge": "✨ New chapter available",
@@ -313,9 +315,10 @@
       "miss": "Miss! Try again",
       "timeUp": "Time's up! Try again.",
       "releaseEarly": "Released too early! Starting over.",
-      "hintRound1": "Click on the screen to blink! 8 times in 5 seconds!",
+      "hintRound1": "Click on the screen to blink! ",
       "hintRound2": "Hold mouse button / tap and hold for 3 seconds!",
-      "hintRound3": "Click when the bar is in the green zone!"
+      "hintRound3": "Click when the bar is in the green zone!",
+      "timesSuffix": " times!"
     },
     "tracker": {
       "title": "Follow the Ball",
