@@ -851,6 +851,13 @@ function renderEditor() {
   setupDropzones();
   setupDragAndDrop();
   setupBatchDropzone();
+
+  // Restore selected frame after re-render so save doesn't kick user back to episode tab
+  if (selectedFrame) {
+    const framesTab = document.querySelectorAll('.tab')[1];
+    if (framesTab) switchTab(framesTab, 'frames');
+    selectFrame(selectedFrame.id);
+  }
 }
 
 function switchTab(btn, name) {
