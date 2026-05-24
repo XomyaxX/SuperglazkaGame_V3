@@ -1362,7 +1362,7 @@ body {
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: 350;
   display: none;
   flex-direction: column;
   align-items: center;
