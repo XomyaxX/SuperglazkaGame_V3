@@ -22,8 +22,7 @@ const TrackerGame = (function() {
   let lastTime = 0;
   let ballX = 0, ballY = 0;
 
-  const HINTS = [
-    function getTrackerHint(idx) {
+  function getTrackerHint(idx) {
     var hints = [
       window.I18n ? I18n.t('games.tracker.hintUpDown') : 'Следи за шариком вверх и вниз 👆👇',
       window.I18n ? I18n.t('games.tracker.hintLeftRight') : 'Следи за шариком влево и вправо 👈👉',
@@ -32,7 +31,6 @@ const TrackerGame = (function() {
     ];
     return hints[idx] || (window.I18n ? I18n.t('games.tracker.getReady') : 'Готовься...');
   }
-  ];
 
   function getEl(id) { return document.getElementById(id); }
 
