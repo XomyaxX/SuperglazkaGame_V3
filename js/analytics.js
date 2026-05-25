@@ -2,7 +2,7 @@
 (function() {
   'use strict';
 
-  const GA4_ID = 'G-XXXXXXXXXX'; // TODO: replace with real GA4 Stream ID
+  const GA4_ID = 'G-RGNEEV29CZ'; // GA4 Stream ID
   const YM_ID = '12345678';      // TODO: replace with real Yandex Metrika ID
 
   // Google Analytics 4
