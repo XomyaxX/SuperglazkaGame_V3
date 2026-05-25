@@ -50,10 +50,10 @@
 - [x] Schema.org — Organization, WebSite, Article, FAQPage
 - [x] hreflang — 4 языка (ru, en, kz, zh)
 - [x] FAQ страница с микроразметкой
-- [ ] Core Web Vitals — цель: LCP < 2.5s, CLS < 0.1, FID < 100ms
-- [ ] WebP конвертация для hero/cover изображений
-- [ ] Nginx gzip + expires заголовки
-- [ ] Яндекс.Метрика + Google Analytics 4
+- [x] Core Web Vitals — LCP оптимизирован (preload WebP, убран lazy-loading с hero), CLS = 0.005
+- [x] WebP конвертация — 34 файла, picture srcset на landing + blog + app
+- [x] Nginx gzip + expires заголовки + .webp кеширование
+- [x] Яндекс.Метрика (109403755) + Google Analytics 4 (G-RGNEEV29CZ) — развёрнуты
 - [ ] Яндекс.Вебмастер + Google Search Console
 - [ ] Видео sitemap (после запуска YouTube)
 
@@ -161,4 +161,4 @@
 - [ ] Снять первый ролс (15 сек)
 - [ ] Настроить VK Рекламу (тестовая кампания)
 - [ ] Добавить сайт в Яндекс.Вебмастер и Search Console
-- [ ] Установить Метрику и Analytics
+- [x] Установить Метрику и Analytics
