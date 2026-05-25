@@ -10,7 +10,13 @@ Interactive educational comic about eye health for kids. Frontend is vanilla JS 
 | **Domain** | `vidial-media.ru` |
 | **Project path on server** | `/opt/superglazka` |
 | **Git repo** | `https://github.com/XomyaxX/SuperglazkaGame_V3.git` |
-| **SSH key (local)** | `~/.ssh/id_ed25519_kimi` |
+| **SSH key (local)** | `ssh root@83.217.203.41` 
+| **SSH user** | `root` |
+| **SSH host** | `83.217.203.41` |
+| **SSH password** | `rA3US@@R5Kg4e6` |
+| **Server setup script** | `wget https://st.timeweb.com/cloud-static/scripts/serial_tools.sh; bash ./serial_tools.sh` |
+
+> **Security note:** Password auth is temporary. Set up SSH keys (`ssh-copy-id`) and disable password login for production safety.
 
 ### Deployment workflow
 1. Commit & push locally: `git push origin main`
