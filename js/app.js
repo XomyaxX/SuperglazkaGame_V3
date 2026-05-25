@@ -23,6 +23,23 @@ function getGameName(key) {
 const GAME_ICONS = { blink: '⚡', tracker: '👀' };
 
 /**
+ * Try loading WebP version of an image, fallback to original on error.
+ * @param {HTMLImageElement} img
+ * @param {string} src — original src (usually .png)
+ */
+function loadWebP(img, src) {
+  if (!src || !src.toLowerCase().endsWith('.png')) {
+    img.src = src;
+    return;
+  }
+  var webpSrc = src.slice(0, -4) + '.webp';
+  var testImg = new Image();
+  testImg.onload = function() { img.src = webpSrc; };
+  testImg.onerror = function() { img.src = src; };
+  testImg.src = webpSrc;
+}
+
+/**
  * Escape special HTML characters in a plain-text string.
  * @param {string} text
  * @returns {string} Escaped HTML string
@@ -1068,9 +1085,9 @@ const App = (function() {
     if (frameData.videoSrc) {
       const img = document.createElement('img');
       img.className = 'frame-preview';
-      img.src = frameData.bgImage || '';
       img.alt = '';
       videoLayer.appendChild(img);
+      loadWebP(img, frameData.bgImage || '');
 
       const info = document.createElement('div');
       info.className = 'frame-preview-info';
@@ -1588,7 +1605,7 @@ const App = (function() {
           episode = await fetchEpisode(pos.episodeId);
         }
         if (episode && episode.frames[pos.frameIdx] && episode.frames[pos.frameIdx].bgImage) {
-          previewImg.src = episode.frames[pos.frameIdx].bgImage;
+          loadWebP(previewImg, episode.frames[pos.frameIdx].bgImage);
           previewImg.style.display = 'block';
         } else {
           previewImg.style.display = 'none';
@@ -1760,9 +1777,10 @@ const App = (function() {
         var coverImg = document.createElement('img');
         coverImg.className = 'episode-mini-cover';
         coverImg.alt = '';
-        coverImg.src = cached && cached.cover_image
+        var coverSrc = cached && cached.cover_image
           ? cached.cover_image
           : 'assets/episodes/episode-' + String(ep.id).padStart(2, '0') + '/cover.png';
+        loadWebP(coverImg, coverSrc);
         coverImg.onerror = function() { coverImg.style.display = 'none'; };
 
         var numEl = document.createElement('div');
