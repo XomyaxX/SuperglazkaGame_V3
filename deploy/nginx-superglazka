@@ -39,7 +39,7 @@ server {
     }
 
     # Images, fonts, media — long cache because they rarely change
-    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webm|mp3|ogg|wav)$ {
+    location ~* \.(png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|mp4|webm|mp3|ogg|wav|webp)$ {
         expires 6M;
         access_log off;
         add_header Cache-Control "public, immutable";
