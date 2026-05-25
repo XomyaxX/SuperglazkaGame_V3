@@ -113,9 +113,9 @@ const ThemeManager = {
 const AppSettings = {
   defaults: {
     volume: 80,
-    narrationVolume: 80,
-    bgMusicVolume: 50,
-    subtitles: true,
+    narrationVolume: 50,
+    bgMusicVolume: 20,
+    subtitles: false,
     subtitleFontSize: 'medium',
     highContrast: false,
     reduceMotion: false,

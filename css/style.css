@@ -2706,9 +2706,10 @@ body {
 .bs-volume-row.compact {
   gap: 8px;
   margin-top: 0;
-  flex: 1;
+  flex-shrink: 0;
   justify-content: flex-end;
-  max-width: 200px;
+  width: 170px;
+  max-width: 170px;
 }
 
 .bs-volume-row .vol-icon {
@@ -2795,8 +2796,9 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
+  overflow: hidden;
 }
 .settings-row-icon {
   width: 32px;
@@ -2819,6 +2821,9 @@ body {
   font-size: 13px;
   font-weight: 700;
   color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Font size buttons */
