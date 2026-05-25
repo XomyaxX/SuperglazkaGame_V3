@@ -540,6 +540,30 @@
       "education": "Education"
     }
   },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Answers to the most popular questions about Superglazka, eye health and games",
+    "q1": "What is Superglazka?",
+    "a1": "Superglazka is a free interactive educational comic about eye health for children aged 5–12. The child immerses in the story of planet Videal, plays mini-games and learns how to take care of vision.",
+    "q2": "What age is Superglazka suitable for?",
+    "a2": "The comic is designed for children from 5 to 12 years old. Younger readers can listen to narration, while older ones can read dialogues and complete tasks independently.",
+    "q3": "Is Superglazka free?",
+    "a3": "Yes, the basic version of the comic and all mini-games are completely free. Additional episodes and cosmetic items are available by subscription.",
+    "q4": "How to play Superglazka?",
+    "a4": "Open vidial-media.ru in a browser on your computer, tablet or phone. Press 'Start' and dive into the story. To save progress, simply register or log in as a guest.",
+    "q5": "What is the 20-20-20 rule?",
+    "a5": "It is a simple rule for preventing eye fatigue: every 20 minutes of near work, look at an object 20 feet (≈6 meters) away for 20 seconds. It helps relax the eye muscles.",
+    "q6": "What games are in Superglazka?",
+    "a6": "The project features several mini-games: blink training, eye gymnastics, obstacle running and quest search. Each game teaches useful habits through fun interaction.",
+    "q7": "How to prevent myopia in a child?",
+    "a7": "Key measures: follow the 20-20-20 rule, walk outdoors for at least 1.5 hours a day, play sports (badminton, swimming), ensure proper lighting when reading and have regular eye check-ups.",
+    "q8": "Does Superglazka work on a phone?",
+    "a8": "Yes, the site is fully adapted for smartphones and tablets. You can install it as a PWA app via the browser menu 'Add to Home Screen'.",
+    "q9": "Where to find eye health tips?",
+    "a9": "All useful materials are collected in the Blog section on the website, as well as in the parents' checklist. There you will find the 20-20-20 rule, eye gymnastics, nutrition and daily routine tips.",
+    "q10": "How to contact the authors of Superglazka?",
+    "a10": "Write to us through the feedback form on the website or in the official VK and Telegram communities. We are always happy to receive feedback, suggestions and ideas!"
+  },
   "checklistPage": {
     "title": "10 Eye Health Rules",
     "subtitle": "Checklist for parents · Print and hang on the fridge",

@@ -8,6 +8,11 @@
 <meta name="description" content="Статья в блоге Суперглазки — полезные советы для детей и родителей.">
 <title>Статья — Суперглазка</title>
 <link rel="canonical" href="https://vidial-media.ru/blog-post.html">
+<link rel="alternate" hreflang="ru" href="https://vidial-media.ru/blog-post.html">
+<link rel="alternate" hreflang="en" href="https://vidial-media.ru/blog-post.html?lang=en">
+<link rel="alternate" hreflang="kz" href="https://vidial-media.ru/blog-post.html?lang=kz">
+<link rel="alternate" hreflang="zh" href="https://vidial-media.ru/blog-post.html?lang=zh">
+<link rel="alternate" hreflang="x-default" href="https://vidial-media.ru/blog-post.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
 <link rel="apple-touch-icon" href="icons/icon-180x180.png">
@@ -303,10 +308,31 @@ if ('serviceWorker' in navigator) {
     try { return new Date(iso).toLocaleDateString('ru-RU'); } catch(e) { return iso; }
   }
 
+  function renderSchema(post) {
+    var existing = document.getElementById('schema-article');
+    if (existing) existing.remove();
+    var script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'schema-article';
+    script.textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: post.title,
+      description: post.excerpt || '',
+      image: post.image ? 'https://vidial-media.ru/' + post.image : 'https://vidial-media.ru/assets/shared/characters/superglazka.png',
+      datePublished: post.created_at,
+      author: { '@type': 'Organization', name: 'Суперглазка', '@id': 'https://vidial-media.ru/#organization' },
+      publisher: { '@type': 'Organization', name: 'Суперглазка', logo: { '@type': 'ImageObject', url: 'https://vidial-media.ru/assets/shared/characters/superglazka.png' } },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://vidial-media.ru/blog-post.html?slug=' + post.slug }
+    });
+    document.head.appendChild(script);
+  }
+
   function renderPost(post) {
     document.title = post.title + ' — Блог Суперглазки';
     var metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', post.excerpt || '');
+    renderSchema(post);
 
     var img = post.image ? '<img class="blog-article-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '">' : '';
     container.innerHTML = '<article class="blog-article">' +

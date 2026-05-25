@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0618">
+<meta name="description" content="Ответы на частые вопросы о Суперглазке: комикс, игры, здоровье глаз, профилактика близорукости у детей.">
+<title>FAQ — Частые вопросы — Суперглазка</title>
+<link rel="canonical" href="https://vidial-media.ru/faq.html">
+<link rel="alternate" hreflang="ru" href="https://vidial-media.ru/faq.html">
+<link rel="alternate" hreflang="en" href="https://vidial-media.ru/faq.html?lang=en">
+<link rel="alternate" hreflang="kz" href="https://vidial-media.ru/faq.html?lang=kz">
+<link rel="alternate" hreflang="zh" href="https://vidial-media.ru/faq.html?lang=zh">
+<link rel="alternate" hreflang="x-default" href="https://vidial-media.ru/faq.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="FAQ — Частые вопросы — Суперглазка">
+<meta property="og:description" content="Ответы на вопросы о комиксе Суперглазка, здоровье глаз и профилактике близорукости у детей.">
+<meta property="og:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://vidial-media.ru/faq.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FAQ — Частые вопросы — Суперглазка">
+<meta name="twitter:description" content="Ответы на вопросы о комиксе Суперглазка, здоровье глаз и профилактике близорукости у детей.">
+<meta name="twitter:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+<script src="js/i18n.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(r => console.log('SW registered:', r.scope))
+    .catch(e => console.log('SW failed:', e));
+}
+</script>
+<style>
+.faq-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0618 0%, #1a0b2e 40%, #0f0718 100%);
+  padding-bottom: 80px;
+}
+.theme-light .faq-page {
+  background: linear-gradient(180deg, #f3e8ff 0%, #ffe4f0 40%, #f8eeff 100%);
+}
+.faq-header {
+  padding: 24px max(24px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq-header .land-logo {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-light .faq-header .land-logo { color: #3d1a5c; }
+.faq-back {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.faq-back:hover { color: #c084fc; }
+.theme-light .faq-back { color: rgba(0,0,0,0.6); }
+.theme-light .faq-back:hover { color: #e056c8; }
+.faq-hero {
+  text-align: center;
+  padding: 40px 24px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.faq-hero h1 {
+  font-family: 'Comfortaa', cursive;
+  font-size: clamp(28px, 5vw, 42px);
+  color: #fff;
+  margin-bottom: 12px;
+}
+.theme-light .faq-hero h1 { color: #3d1a5c; }
+.faq-hero p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.6;
+}
+.theme-light .faq-hero p { color: rgba(0,0,0,0.6); }
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.faq-item {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all .25s;
+}
+.theme-light .faq-item {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.06);
+}
+.faq-q {
+  padding: 20px 24px;
+  font-family: 'Comfortaa', cursive;
+  font-size: 16px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+}
+.theme-light .faq-q { color: #3d1a5c; }
+.faq-q::after {
+  content: '+';
+  font-size: 22px;
+  color: #c084fc;
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.theme-light .faq-q::after { color: #e056c8; }
+.faq-item.open .faq-q::after { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease;
+}
+.faq-a-inner {
+  padding: 0 24px 20px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.75;
+}
+.theme-light .faq-a-inner { color: rgba(0,0,0,0.75); }
+.faq-a-inner strong { color: #c084fc; }
+.theme-light .faq-a-inner strong { color: #e056c8; }
+@media (max-width: 768px) {
+  .faq-header { padding: 16px 20px; }
+  .faq-list { padding: 0 20px; }
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Что такое Суперглазка?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Суперглазка — это бесплатный интерактивный образовательный комикс о здоровье глаз для детей 5–12 лет. Ребёнок погружается в историю планеты Видеаль, проходит мини-игры и узнаёт, как заботиться о зрении."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Для какого возраста подходит Суперглазка?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Комикс создан для детей от 5 до 12 лет. Младшие читатели могут слушать озвучку, а старшие — самостоятельно читать диалоги и выполнять задания."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Суперглазка бесплатная?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да, базовая версия комикса и все мини-игры абсолютно бесплатны. Дополнительные эпизоды и косметические предметы доступны по подписке."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как играть в Суперглазку?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Откройте сайт vidial-media.ru в браузере на компьютере, планшете или телефоне. Нажмите 'Начать' — и погружайтесь в историю. Для сохранения прогресса достаточно зарегистрироваться или войти как гость."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Что такое правило 20-20-20?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Это простое правило профилактики усталости глаз: каждые 20 минут работы вблизи смотрите на объект в 20 футах (≈6 метров) в течение 20 секунд. Оно помогает расслабить глазные мышцы."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Какие игры есть в Суперглазке?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "В проекте несколько мини-игр: тренировка моргания, гимнастика для глаз, бег с препятствиями и квест-поиск. Каждая игра учит полезным привычкам через весёлое взаимодействие."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как предотвратить близорукость у ребёнка?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ключевые меры: соблюдение правила 20-20-20, прогулки на свежем воздухе минимум 1,5 часа в день, занятия спортом (бадминтон, плавание), правильное освещение при чтении и регулярные осмотры у офтальмолога."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Работает ли Суперглазка на телефоне?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да, сайт полностью адаптирован для смартфонов и планшетов. Вы можете установить его как PWA-приложение через меню браузера 'Добавить на главный экран'."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Где найти советы по здоровью глаз?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Все полезные материалы собраны в разделе Блог на сайте, а также в чек-листе для родителей. Там вы найдёте правило 20-20-20, гимнастику для глаз, советы по питанию и режиму дня."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как связаться с авторами Суперглазки?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Пишите нам через форму обратной связи на сайте или в официальные сообщества VK и Telegram. Мы всегда рады отзывам, предложениям и идеям!"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="faq-page">
+  <header class="faq-header">
+    <a href="index.html" class="land-logo"><span class="land-logo-pretitle">Игросказка</span><span class="land-logo-title">👁️ СУПЕРГЛАЗКА</span></a>
+    <a href="index.html" data-i18n="nav.home" class="faq-back">← На главную</a>
+  </header>
+
+  <div class="faq-hero">
+    <h1 data-i18n="faq.title">Частые вопросы</h1>
+    <p data-i18n="faq.subtitle">Ответы на самые популярные вопросы о Суперглазке, здоровье глаз и играх</p>
+  </div>
+
+  <div class="faq-list" id="faqList">
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q1">Что такое Суперглазка?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a1">Суперглазка — это бесплатный интерактивный образовательный комикс о здоровье глаз для детей 5–12 лет. Ребёнок погружается в историю планеты Видеаль, проходит мини-игры и узнаёт, как заботиться о зрении.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q2">Для какого возраста подходит Суперглазка?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a2">Комикс создан для детей от 5 до 12 лет. Младшие читатели могут слушать озвучку, а старшие — самостоятельно читать диалоги и выполнять задания.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q3">Суперглазка бесплатная?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a3">Да, базовая версия комикса и все мини-игры абсолютно бесплатны. Дополнительные эпизоды и косметические предметы доступны по подписке.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q4">Как играть в Суперглазку?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a4">Откройте сайт vidial-media.ru в браузере на компьютере, планшете или телефоне. Нажмите 'Начать' — и погружайтесь в историю. Для сохранения прогресса достаточно зарегистрироваться или войти как гость.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q5">Что такое правило 20-20-20?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a5">Это простое правило профилактики усталости глаз: каждые 20 минут работы вблизи смотрите на объект в 20 футах (≈6 метров) в течение 20 секунд. Оно помогает расслабить глазные мышцы.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q6">Какие игры есть в Суперглазке?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a6">В проекте несколько мини-игр: тренировка моргания, гимнастика для глаз, бег с препятствиями и квест-поиск. Каждая игра учит полезным привычкам через весёлое взаимодействие.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q7">Как предотвратить близорукость у ребёнка?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a7">Ключевые меры: соблюдение правила 20-20-20, прогулки на свежем воздухе минимум 1,5 часа в день, занятия спортом (бадминтон, плавание), правильное освещение при чтении и регулярные осмотры у офтальмолога.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q8">Работает ли Суперглазка на телефоне?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a8">Да, сайт полностью адаптирован для смартфонов и планшетов. Вы можете установить его как PWA-приложение через меню браузера 'Добавить на главный экран'.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q9">Где найти советы по здоровью глаз?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a9">Все полезные материалы собраны в разделе Блог на сайте, а также в чек-листе для родителей. Там вы найдёте правило 20-20-20, гимнастику для глаз, советы по питанию и режиму дня.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" data-i18n="faq.q10">Как связаться с авторами Суперглазки?</div>
+      <div class="faq-a"><div class="faq-a-inner" data-i18n="faq.a10">Пишите нам через форму обратной связи на сайте или в официальные сообщества VK и Telegram. Мы всегда рады отзывам, предложениям и идеям!</div></div>
+    </div>
+  </div>
+
+  <footer class="land-footer" style="margin-top:60px;">
+    <p data-i18n="footer.text">Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
+  </footer>
+</div>
+
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-banner-text">
+    <span data-i18n="cookieBanner.text">Мы используем localStorage для сохранения прогресса и настроек.</span>
+    <a href="privacy.html" data-i18n="cookieBanner.privacy">Политика конфиденциальности</a>
+  </div>
+  <button class="cookie-banner-btn" id="cookieAccept" data-i18n="cookieBanner.accept">Принять</button>
+</div>
+<script>
+  (function() {
+    if (!localStorage.getItem('cookie_consent')) {
+      document.getElementById('cookieBanner').classList.add('visible');
+    }
+    document.getElementById('cookieAccept').addEventListener('click', function() {
+      localStorage.setItem('cookie_consent', 'true');
+      document.getElementById('cookieBanner').classList.remove('visible');
+    });
+  })();
+</script>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(function(item) {
+  item.querySelector('.faq-q').addEventListener('click', function() {
+    var a = item.querySelector('.faq-a');
+    if (item.classList.contains('open')) {
+      item.classList.remove('open');
+      a.style.maxHeight = '0';
+    } else {
+      item.classList.add('open');
+      a.style.maxHeight = a.scrollHeight + 'px';
+    }
+  });
+});
+
+const savedTheme = localStorage.getItem('superglazka_theme');
+if (savedTheme) document.body.classList.add('theme-' + savedTheme);
+</script>
+<script>I18n.init();</script>
+
+</body>
+</html>

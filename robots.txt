@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://superglazka.ru/sitemap.xml
+Sitemap: https://vidial-media.ru/sitemap.xml
