@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v29';
+const CACHE_NAME = 'superglazka-v30';
 
 const STATIC_ASSETS = [
   '/',
@@ -28,6 +28,7 @@ const STATIC_ASSETS = [
   '/js/auth.js',
   '/js/i18n.js',
   '/js/blog-data.js',
+  '/js/analytics.js',
   '/locales/ru.json',
   '/locales/en.json',
   '/locales/kz.json',
