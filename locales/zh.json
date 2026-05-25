@@ -123,11 +123,40 @@
       "role": "主要反派",
       "desc": "威胁吞噬维迪亚尔的大恶。它的弱点是活跃健康的眼睛！"
     },
-    "hrust": "智慧水晶",
+    "hrust": {
+      "name": "智慧水晶"
+    },
     "sovet": "顾问",
-    "dev": "女孩",
-    "tolpa": "人群",
-    "nar": "旁白"
+    "dev": {
+      "name": "女孩"
+    },
+    "tolpa": {
+      "name": "人群"
+    },
+    "nar": {
+      "name": "旁白"
+    },
+    "sov": {
+      "role": "Воин Видеаля"
+    },
+    "queenSofia": {
+      "role": "Хранительница знаний"
+    },
+    "professor": {
+      "role": "Учёный и изобретатель"
+    },
+    "lenivusTrue": {
+      "role": "Истинный облик"
+    },
+    "pixelko": {
+      "role": "Паук-искуситель"
+    },
+    "darkness": {
+      "role": "Древнее зло"
+    },
+    "heroesTab": "🦸 Герои",
+    "villainsTab": "👿 Злодеи",
+    "cardHint": "Нажми, чтобы узнать больше →"
   },
   "artifacts": {
     "title": "🎒 神器",
@@ -249,7 +278,20 @@
     "yourEmail": "你的邮箱",
     "subscribe": "订阅新章节",
     "wellDone": "干得好！",
-    "nextFrame": "下一帧..."
+    "nextFrame": "下一帧...",
+    "language": "🌐 Язык",
+    "languageLabel": "Language / Тіл / Язык",
+    "fontSizeSmall": "А-",
+    "fontSizeMedium": "А",
+    "fontSizeLarge": "А+",
+    "noGames": "Нет доступных игр на этом кадре",
+    "frame": "Кадр",
+    "videoUnavailable": "Видео недоступно",
+    "chapterComplete": "Глава завершена! Скоро продолжение...",
+    "chapter": "Глава",
+    "book": "Книга",
+    "ep": "Эп.",
+    "totalProgress": "Общий прогресс: {{seen}} из {{total}} кадров"
   },
   "games": {
     "runner": {
@@ -266,7 +308,8 @@
       "retry": "🔄 再试一次",
       "ach1": "抓住了像素精灵！",
       "ach2": "桌子守护者",
-      "time": "时间："
+      "time": "时间：",
+      "hint": "👆 ТАП = прыжок · Два тапа = двойной прыжок"
     },
     "gym": {
       "title": "万尼亚对抗懒惰魔王！",
@@ -295,7 +338,10 @@
       "blinkBtn": "眨眼！",
       "tapsToWaterfall": "次点击到瀑布",
       "ach1": "与懒惰魔王的首次战斗",
-      "ach2": "眼睛世界的守护者"
+      "ach2": "眼睛世界的守护者",
+      "laserName": "⚡ Солнечный Луч",
+      "aimName": "🎯 Точный Прицел",
+      "tearName": "💧 Слезный Водопад"
     },
     "blink": {
       "title": "眼睛体操",
@@ -353,7 +399,9 @@
       "totalScore": "🏆 总分：0",
       "left": "剩余：",
       "time": "时间：",
-      "totalScoreShort": "总分："
+      "totalScoreShort": "总分：",
+      "greatJob": "🎉 Отличная работа!",
+      "avgAimTime": "Среднее время наведения:"
     }
   },
   "profile": {
@@ -410,7 +458,10 @@
     "noAccount": "没有账号？",
     "welcome": "欢迎，",
     "progressSaved": "你的进度已保存！",
-    "teamMember": "现在你已成为超级眼睛团队的一员！"
+    "teamMember": "现在你已成为超级眼睛团队的一员！",
+    "passwordMin": "Пароль (минимум 6 символов)",
+    "loginLink": "Войти",
+    "parentAllowed": "Родители разрешили играть"
   },
   "achievements": {
     "unlocked": "🏆 成就解锁！",

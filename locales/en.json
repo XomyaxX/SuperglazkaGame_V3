@@ -123,11 +123,40 @@
       "role": "Main villain",
       "desc": "The Great Evil threatening to consume Videal. His weakness — active and healthy eyes!"
     },
-    "hrust": "Wise Crystal",
+    "hrust": {
+      "name": "Wise Crystal"
+    },
     "sovet": "Advisor",
-    "dev": "Girl",
-    "tolpa": "Crowd",
-    "nar": "Narrator"
+    "dev": {
+      "name": "Girl"
+    },
+    "tolpa": {
+      "name": "Crowd"
+    },
+    "nar": {
+      "name": "Narrator"
+    },
+    "sov": {
+      "role": "Warrior of Videal"
+    },
+    "queenSofia": {
+      "role": "Keeper of Knowledge"
+    },
+    "professor": {
+      "role": "Scientist and Inventor"
+    },
+    "lenivusTrue": {
+      "role": "True Form"
+    },
+    "pixelko": {
+      "role": "Temptation Spider"
+    },
+    "darkness": {
+      "role": "Ancient Evil"
+    },
+    "heroesTab": "🦸 Heroes",
+    "villainsTab": "👿 Villains",
+    "cardHint": "Tap to learn more →"
   },
   "artifacts": {
     "title": "🎒 Artifacts",
@@ -249,7 +278,20 @@
     "yourEmail": "Your email",
     "subscribe": "Subscribe to new chapters",
     "wellDone": "Well done!",
-    "nextFrame": "Next frame..."
+    "nextFrame": "Next frame...",
+    "language": "🌐 Language",
+    "languageLabel": "Language / Тіл / Язык",
+    "fontSizeSmall": "A-",
+    "fontSizeMedium": "A",
+    "fontSizeLarge": "A+",
+    "noGames": "No games available on this frame",
+    "frame": "Frame",
+    "videoUnavailable": "Video unavailable",
+    "chapterComplete": "Chapter complete! Coming soon...",
+    "chapter": "Chapter",
+    "book": "Book",
+    "ep": "Ep.",
+    "totalProgress": "Total progress: {{seen}} of {{total}} frames"
   },
   "games": {
     "runner": {
@@ -266,7 +308,8 @@
       "retry": "🔄 Try again",
       "ach1": "Caught Pixelko!",
       "ach2": "Table Defender",
-      "time": "Time: "
+      "time": "Time: ",
+      "hint": "👆 TAP = jump · Double tap = double jump"
     },
     "gym": {
       "title": "Vanya vs Lenivus!",
@@ -295,7 +338,10 @@
       "blinkBtn": "BLINK!",
       "tapsToWaterfall": "taps to waterfall",
       "ach1": "First battle with Lenivus",
-      "ach2": "Defender of Eye World"
+      "ach2": "Defender of Eye World",
+      "laserName": "⚡ Solar Ray",
+      "aimName": "🎯 Precise Aim",
+      "tearName": "💧 Tear Waterfall"
     },
     "blink": {
       "title": "Eye Gymnastics",
@@ -353,7 +399,9 @@
       "totalScore": "🏆 Total score: 0",
       "left": "Left: ",
       "time": "Time: ",
-      "totalScoreShort": "Total score: "
+      "totalScoreShort": "Total score: ",
+      "greatJob": "🎉 Great job!",
+      "avgAimTime": "Average aim time:"
     }
   },
   "profile": {
@@ -410,7 +458,10 @@
     "noAccount": "No account?",
     "welcome": "Welcome, ",
     "progressSaved": "Your progress is saved!",
-    "teamMember": "Now you are part of the Superglazka team!"
+    "teamMember": "Now you are part of the Superglazka team!",
+    "passwordMin": "Password (min 6 chars)",
+    "loginLink": "Log in",
+    "parentAllowed": "Parents allowed to play"
   },
   "achievements": {
     "unlocked": "🏆 Achievement unlocked!",

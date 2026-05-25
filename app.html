@@ -169,12 +169,12 @@ if ('serviceWorker' in navigator) {
     <div class="settings-panel">
       <!-- Language -->
       <div class="settings-section">
-        <div class="settings-section-title">🌐 Язык</div>
+        <div class="settings-section-title" data-i18n="app.language">🌐 Язык</div>
         <div class="settings-row">
           <div class="settings-row-info">
             <div class="settings-row-icon">🌐</div>
             <div class="settings-row-meta">
-              <div class="settings-row-name">Language / Тіл / Язык</div>
+              <div class="settings-row-name" data-i18n="app.languageLabel">Language / Тіл / Язык</div>
             </div>
           </div>
           <div class="lang-switcher" id="langSwitcherApp" style="margin-left:auto;"></div>
@@ -232,9 +232,9 @@ if ('serviceWorker' in navigator) {
             </div>
           </div>
           <div class="font-size-group" id="subtitleFontSizeGroup">
-            <button class="font-size-btn" data-size="small">А-</button>
-            <button class="font-size-btn active" data-size="medium">А</button>
-            <button class="font-size-btn" data-size="large">А+</button>
+            <button class="font-size-btn" data-size="small" data-i18n="app.fontSizeSmall">А-</button>
+            <button class="font-size-btn active" data-size="medium" data-i18n="app.fontSizeMedium">А</button>
+            <button class="font-size-btn" data-size="large" data-i18n="app.fontSizeLarge">А+</button>
           </div>
         </div>
       </div>
@@ -367,10 +367,10 @@ if ('serviceWorker' in navigator) {
       <div class="bs-game-island" id="bsGameIsland" style="display:none;">
         <div class="bs-game-island-icon">🎮</div>
         <div class="bs-game-island-text">
-          <div class="bs-game-island-title">Мини-игра!</div>
-          <div class="bs-game-island-sub">Нажми, чтобы сыграть</div>
+          <div class="bs-game-island-title" data-i18n="app.miniGame">Мини-игра!</div>
+          <div class="bs-game-island-sub" data-i18n="app.tapToPlay">Нажми, чтобы сыграть</div>
         </div>
-        <button class="bs-game-island-btn">Играть</button>
+        <button class="bs-game-island-btn" data-i18n="app.play">Играть</button>
       </div>
 
       <div class="bs-nav">
@@ -409,19 +409,19 @@ if ('serviceWorker' in navigator) {
 
 <div class="overlay" id="game-overlay-runner">
   <div class="game-header">
-    <div class="score-pill"><span class="score-lbl">Уровень</span><span class="score-val" id="runner-time">1</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.runner.level">Уровень</span><span class="score-val" id="runner-time">1</span></div>
     <div class="score-pill"><span class="score-lbl">⚡</span><span class="score-val" id="runner-difficulty">1</span></div>
     <div class="lives-val" id="runner-lives">❤️❤️❤️</div>
   </div>
   <canvas id="runner-canvas" width="360" height="480"></canvas>
   <div class="runner-controls">
-    <div class="runner-hint">👆 ТАП = прыжок · Два тапа = двойной прыжок</div>
+    <div class="runner-hint" data-i18n="games.runner.hint">👆 ТАП = прыжок · Два тапа = двойной прыжок</div>
     <div class="runner-stats">
       <div class="runner-stat"><div class="runner-stat-val">💚</div><div class="runner-stat-lbl">+жизнь</div></div>
       <div class="runner-stat"><div class="runner-stat-val">⭐</div><div class="runner-stat-lbl">медленно</div></div>
       <div class="runner-stat"><div class="runner-stat-val">🛡️</div><div class="runner-stat-lbl">щит</div></div>
     </div>
-    <button onclick="closeRunner(true)" style="background:none;border:1px solid rgba(255,255,255,.2);border-radius:30px;color:rgba(255,255,255,.5);padding:10px 28px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Пропустить</button>
+    <button onclick="closeRunner(true)" style="background:none;border:1px solid rgba(255,255,255,.2);border-radius:30px;color:rgba(255,255,255,.5);padding:10px 28px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer" data-i18n="app.skip">Пропустить</button>
   </div>
 </div>
 
@@ -433,7 +433,7 @@ if ('serviceWorker' in navigator) {
     <span class="win-star" id="runner-star-3">⭐</span>
   </div>
   <div class="stats-card">
-    <div class="stats-time" id="runner-stats-time">⏱️ Время: 0:00</div>
+    <div class="stats-time" id="runner-stats-time" data-i18n="games.stats.timeLabel">⏱️ Время: 0:00</div>
     <div class="stats-section"><h3 data-i18n="games.stats.lives">❤️ Жизни</h3><div class="stat-row"><span data-i18n="games.stats.livesLeft">Осталось жизней:</span><span class="stat-value" id="runner-stats-lives">3/3</span></div></div>
     <div class="stats-section"><h3 data-i18n="games.stats.bonuses">💎 Бонусы</h3><div class="stat-row"><span data-i18n="games.stats.collected">Собрано:</span><span class="stat-value" id="runner-stats-bonuses">0</span></div></div>
     <div class="stats-section"><h3 data-i18n="games.stats.result">🎯 Результат</h3><div class="stat-row"><span data-i18n="games.stats.distance">Дистанция:</span><span class="stat-value">2000м</span></div><div class="stat-row"><span data-i18n="games.stats.status">Статус:</span><span class="stat-value" id="runner-stats-status" data-i18n="games.stats.victory">Победа!</span></div></div>
@@ -447,12 +447,12 @@ if ('serviceWorker' in navigator) {
   <div class="reg-card">
     <div class="reg-description">Зарегистрируйся, чтобы:<br>✨ Сохранить свой прогресс<br>🏅 Получать награды за победы<br>📖 Открыть следующую серию комикса<br>🎮 Участвовать в соревнованиях</div>
     <form class="reg-form" id="runner-reg-form">
-      <input type="text" class="reg-input" id="runner-reg-nickname" placeholder="Придумай никнейм" required maxlength="20">
-      <input type="email" class="reg-input" id="runner-reg-email" placeholder="Email родителя" required>
-      <label class="reg-checkbox"><input type="checkbox" id="runner-reg-confirm" required><span>Родители разрешили играть</span></label>
-      <button type="submit" class="tr-btn" style="width:100%;">🚀 Зарегистрироваться</button>
+      <input type="text" class="reg-input" id="runner-reg-nickname" placeholder="Придумай никнейм" required maxlength="20" data-i18n-placeholder="profileLanding.nicknamePlaceholder">
+      <input type="email" class="reg-input" id="runner-reg-email" placeholder="Email родителя" required data-i18n-placeholder="auth.parentEmail">
+      <label class="reg-checkbox"><input type="checkbox" id="runner-reg-confirm" required><span data-i18n="auth.parentAllowed">Родители разрешили играть</span></label>
+      <button type="submit" class="tr-btn" style="width:100%;" data-i18n="auth.registerBtn">🚀 Зарегистрироваться</button>
     </form>
-    <button class="reg-skip" onclick="skipRunnerRegistration()">Продолжить без регистрации →</button>
+    <button class="reg-skip" onclick="skipRunnerRegistration()" data-i18n="auth.skipRegistration">Продолжить без регистрации →</button>
   </div>
 </div>
 
@@ -491,15 +491,15 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <div class="overlay" id="stats-overlay">
-  <div class="stats-title">🎉 Отличная работа!</div>
+  <div class="stats-title" data-i18n="games.stats.greatJob">🎉 Отличная работа!</div>
   <div class="stats-card">
-    <div class="stats-time" id="stats-time">⏱️ Время: 0:00</div>
-    <div class="stats-section"><h3>⚡ Солнечный Луч</h3><div class="stat-row"><span>Попаданий:</span><span class="stat-value" id="stats-p1-hits">0/8</span></div><div class="stat-row"><span>Точность:</span><span class="stat-value" id="stats-p1-acc">0%</span></div></div>
-    <div class="stats-section"><h3>🎯 Точный Прицел</h3><div class="stat-row"><span>Попаданий:</span><span class="stat-value" id="stats-p2-hits">0/5</span></div><div class="stat-row"><span>Среднее время наведения:</span><span class="stat-value" id="stats-p2-time">0с</span></div></div>
-    <div class="stats-section"><h3>💧 Слезный Водопад</h3><div class="stat-row"><span>Водопадов:</span><span class="stat-value" id="stats-p3-hits">0/4</span></div><div class="stat-row"><span>Всего морганий:</span><span class="stat-value" id="stats-p3-blinks">0</span></div></div>
-    <div class="total-score" id="stats-score">🏆 Общий счёт: 0</div>
+    <div class="stats-time" id="stats-time" data-i18n="games.stats.timeLabel">⏱️ Время: 0:00</div>
+    <div class="stats-section"><h3 data-i18n="games.gym.laserName">⚡ Солнечный Луч</h3><div class="stat-row"><span data-i18n="games.stats.hits">Попаданий:</span><span class="stat-value" id="stats-p1-hits">0/8</span></div><div class="stat-row"><span data-i18n="games.stats.accuracy">Точность:</span><span class="stat-value" id="stats-p1-acc">0%</span></div></div>
+    <div class="stats-section"><h3 data-i18n="games.gym.aimName">🎯 Точный Прицел</h3><div class="stat-row"><span data-i18n="games.stats.hits">Попаданий:</span><span class="stat-value" id="stats-p2-hits">0/5</span></div><div class="stat-row"><span data-i18n="games.stats.avgAimTime">Среднее время наведения:</span><span class="stat-value" id="stats-p2-time">0с</span></div></div>
+    <div class="stats-section"><h3 data-i18n="games.gym.tearName">💧 Слезный Водопад</h3><div class="stat-row"><span data-i18n="games.stats.waterfalls">Водопадов:</span><span class="stat-value" id="stats-p3-hits">0/4</span></div><div class="stat-row"><span data-i18n="games.stats.totalBlinks">Всего морганий:</span><span class="stat-value" id="stats-p3-blinks">0</span></div></div>
+    <div class="total-score" id="stats-score" data-i18n="games.stats.totalScore">🏆 Общий счёт: 0</div>
   </div>
-  <button class="tr-btn" onclick="showRegistration()" style="margin-top:20px;">Продолжить ➜</button>
+  <button class="tr-btn" onclick="showRegistration()" style="margin-top:20px;" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
 <div class="overlay" id="registration-overlay">
@@ -507,12 +507,12 @@ if ('serviceWorker' in navigator) {
   <div class="reg-card">
     <div class="reg-description">Зарегистрируйся, чтобы:<br>✨ Сохранить свой прогресс<br>🏅 Получать награды за тренировки<br>📖 Открыть следующую серию комикса<br>🎮 Участвовать в соревнованиях</div>
     <form class="reg-form" id="reg-form">
-      <input type="text" class="reg-input" id="reg-nickname" placeholder="Придумай никнейм" required maxlength="20">
-      <input type="email" class="reg-input" id="reg-email" placeholder="Email родителя" required>
-      <label class="reg-checkbox"><input type="checkbox" id="reg-confirm" required><span>Родители разрешили играть</span></label>
-      <button type="submit" class="tr-btn" style="width:100%;">🚀 Зарегистрироваться</button>
+      <input type="text" class="reg-input" id="reg-nickname" placeholder="Придумай никнейм" required maxlength="20" data-i18n-placeholder="profileLanding.nicknamePlaceholder">
+      <input type="email" class="reg-input" id="reg-email" placeholder="Email родителя" required data-i18n-placeholder="auth.parentEmail">
+      <label class="reg-checkbox"><input type="checkbox" id="reg-confirm" required><span data-i18n="auth.parentAllowed">Родители разрешили играть</span></label>
+      <button type="submit" class="tr-btn" style="width:100%;" data-i18n="auth.registerBtn">🚀 Зарегистрироваться</button>
     </form>
-    <button class="reg-skip" onclick="skipRegistration()">Продолжить без регистрации →</button>
+    <button class="reg-skip" onclick="skipRegistration()" data-i18n="auth.skipRegistration">Продолжить без регистрации →</button>
   </div>
 </div>
 
@@ -577,17 +577,17 @@ if ('serviceWorker' in navigator) {
 
     <!-- Register form -->
     <div class="auth-panel" id="authPanelRegister">
-      <input type="text" class="auth-input" id="authRegNickname" placeholder="Никнейм" maxlength="20">
-      <input type="email" class="auth-input" id="authRegEmail" placeholder="Email">
-      <input type="tel" class="auth-input" id="authRegPhone" placeholder="Телефон (необязательно)">
-      <input type="password" class="auth-input" id="authRegPassword" placeholder="Пароль (минимум 6 символов)">
-      <button class="auth-btn" id="authRegBtn">🚀 Зарегистрироваться</button>
-      <div class="auth-switch">Уже есть аккаунт? <a href="#" id="authShowLogin">Войти</a></div>
+      <input type="text" class="auth-input" id="authRegNickname" placeholder="Никнейм" maxlength="20" data-i18n-placeholder="auth.nickname">
+      <input type="email" class="auth-input" id="authRegEmail" placeholder="Email" data-i18n-placeholder="auth.email">
+      <input type="tel" class="auth-input" id="authRegPhone" placeholder="Телефон (необязательно)" data-i18n-placeholder="auth.phoneOptional">
+      <input type="password" class="auth-input" id="authRegPassword" placeholder="Пароль (минимум 6 символов)" data-i18n-placeholder="auth.passwordMin">
+      <button class="auth-btn" id="authRegBtn" data-i18n="auth.registerBtn">🚀 Зарегистрироваться</button>
+      <div class="auth-switch" data-i18n="auth.haveAccount">Уже есть аккаунт? <a href="#" id="authShowLogin" data-i18n="auth.loginLink">Войти</a></div>
     </div>
 
     <!-- Login form -->
     <div class="auth-panel" id="authPanelLogin">
-      <input type="email" class="auth-input" id="authLoginEmail" placeholder="Email">
+      <input type="email" class="auth-input" id="authLoginEmail" placeholder="Email" data-i18n-placeholder="auth.email">
       <input type="password" class="auth-input" id="authLoginPassword" placeholder="Пароль" data-i18n-placeholder="auth.password">
       <button class="auth-btn" id="authLoginBtn" data-i18n="auth.loginBtn">🔑 Войти</button>
       <div class="auth-switch" data-i18n="auth.noAccount">Нет аккаунта? <a href="#" id="authShowRegister" data-i18n="auth.register">Зарегистрироваться</a></div>

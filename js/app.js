@@ -4,10 +4,10 @@
 
 function getSpeakerName(key) {
   var names = {
-    hrust: window.I18n ? I18n.t('characters.hrust') : 'Мудрый Хрусталик',
-    sovet: window.I18n ? I18n.t('characters.sovet') : 'Советник',
-    dev: window.I18n ? I18n.t('characters.dev') : 'Девочка',
-    tolpa: window.I18n ? I18n.t('characters.tolpa') : 'Толпа',
+    hrust: window.I18n ? I18n.t('characters.hrust.name') : 'Мудрый Хрусталик',
+    sovet: window.I18n ? I18n.t('characters.sovet.name') : 'Советник',
+    dev: window.I18n ? I18n.t('characters.dev.name') : 'Девочка',
+    tolpa: window.I18n ? I18n.t('characters.tolpa.name') : 'Толпа',
     nar: window.I18n ? I18n.t('characters.nar') : 'Рассказчик'
   };
   return names[key] || key;
@@ -808,7 +808,7 @@ const BottomSheet = {
     if (!games || games.length === 0) {
       const empty = document.createElement('div');
       empty.style.cssText = 'color:rgba(255,255,255,0.4);font-size:13px;';
-      empty.textContent = 'Нет доступных игр на этом кадре';
+      empty.textContent = (window.I18n ? I18n.t('app.noGames') : 'Нет доступных игр на этом кадре');
       this.gamePanelInner.appendChild(empty);
       return;
     }
@@ -1076,7 +1076,7 @@ const App = (function() {
       info.className = 'frame-preview-info';
       const num = document.createElement('div');
       num.className = 'frame-preview-num';
-      num.textContent = 'Кадр ' + (idx + 1);
+      num.textContent = (window.I18n ? I18n.t('app.frame') : 'Кадр') + ' ' + (idx + 1);
       const title = document.createElement('div');
       title.className = 'frame-preview-title';
       title.textContent = frameData.title || '';
@@ -1107,7 +1107,7 @@ const App = (function() {
         phIcon.textContent = '⚠️';
         const phText = document.createElement('div');
         phText.className = 'ph-text';
-        phText.textContent = 'Видео недоступно';
+        phText.textContent = (window.I18n ? I18n.t('app.videoUnavailable') : 'Видео недоступно');
         const phNote = document.createElement('div');
         phNote.className = 'ph-note';
         phNote.textContent = frameData.videoPrompt || '';
@@ -1200,7 +1200,7 @@ const App = (function() {
     if (subtitleSyncCleanup) { subtitleSyncCleanup(); subtitleSyncCleanup = null; }
     SubtitleOverlay.clear();
 
-    const narrationText = frameData.narration || '';
+    const narrationText = (frameData.narration || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     if (!narrationText) return;
 
     const lines = splitLines(narrationText, 70);
@@ -1512,7 +1512,7 @@ const App = (function() {
 
   function showEndScreen() {
     const text = document.querySelector('#transition-overlay .transition-text');
-    if (text) text.textContent = 'Глава завершена! Скоро продолжение...';
+    if (text) text.textContent = (window.I18n ? I18n.t('app.chapterComplete') : 'Глава завершена! Скоро продолжение...');
     const overlay = document.getElementById('transition-overlay');
     if (overlay) overlay.classList.add('visible');
     // Mark episode as completed
@@ -1581,7 +1581,7 @@ const App = (function() {
     if (pos && pos.frameIdx >= 0) {
       var cached = episodesCache[pos.episodeId];
       var epName = cached && cached.title ? cached.title : 'Глава ' + pos.episodeId;
-      if (info) info.textContent = 'Глава ' + pos.episodeId + ' — ' + epName;
+      if (info) info.textContent = (window.I18n ? I18n.t('app.chapter') : 'Глава') + ' ' + pos.episodeId + ' — ' + epName;
       if (previewImg) {
         var episode = episodesCache[pos.episodeId];
         if (!episode) {
@@ -1734,7 +1734,7 @@ const App = (function() {
     APP_BOOKS.forEach(function(book, bookIdx) {
       var tab = document.createElement('button');
       tab.className = 'book-tab' + (bookIdx === 0 ? ' active' : '');
-      tab.textContent = 'Книга ' + book.num;
+      tab.textContent = (window.I18n ? I18n.t('app.book') : 'Книга') + ' ' + book.num;
       tab.addEventListener('click', function() {
         tabsContainer.querySelectorAll('.book-tab').forEach(function(t) { t.classList.remove('active'); });
         tab.classList.add('active');
@@ -1767,7 +1767,7 @@ const App = (function() {
 
         var numEl = document.createElement('div');
         numEl.className = 'episode-mini-num';
-        numEl.textContent = 'Эп. ' + ep.id;
+        numEl.textContent = (window.I18n ? I18n.t('app.ep') : 'Эп.') + ' ' + ep.id;
 
         var titleEl = document.createElement('div');
         titleEl.className = 'episode-mini-title';
@@ -1827,7 +1827,7 @@ const App = (function() {
 
     var text = document.createElement('div');
     text.className = 'overall-progress-text';
-    text.textContent = 'Общий прогресс: ' + totalSeen + ' из ' + totalFrames + ' кадров';
+    text.textContent = (window.I18n ? I18n.t('app.totalProgress', {seen: totalSeen, total: totalFrames}) : 'Общий прогресс: ' + totalSeen + ' из ' + totalFrames + ' кадров');
 
     var barTrack = document.createElement('div');
     barTrack.className = 'progress-track overall-track';
