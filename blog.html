@@ -5,28 +5,29 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0618">
-<meta name="description" content="Советы по здоровью глаз для детей от проекта Суперглазка: правило 20-20-20, признаки усталости, выбор очков.">
-<title>Блог — Советы по здоровью глаз — Суперглазка</title>
+<meta name="description" content="Блог Суперглазки: полезные статьи о здоровье глаз, мультипликации и образовании для детей и родителей.">
+<title>Блог — Суперглазка</title>
 <link rel="canonical" href="https://vidial-media.ru/blog.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
 <link rel="apple-touch-icon" href="icons/icon-180x180.png">
 <link rel="manifest" href="manifest.json">
-<meta property="og:title" content="Блог — Советы по здоровью глаз — Суперглазка">
-<meta property="og:description" content="Полезные статьи о гигиене зрения для детей.">
+<meta property="og:title" content="Блог — Суперглазка">
+<meta property="og:description" content="Полезные статьи о здоровье глаз, мультипликации и образовании для детей.">
 <meta property="og:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
 <meta property="og:url" content="https://vidial-media.ru/blog.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Блог — Советы по здоровью глаз — Суперглазка">
-<meta name="twitter:description" content="Полезные статьи о гигиене зрения для детей.">
+<meta name="twitter:title" content="Блог — Суперглазка">
+<meta name="twitter:description" content="Полезные статьи о здоровье глаз, мультипликации и образовании для детей.">
 <meta name="twitter:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/landing.css">
 <script src="js/i18n.js"></script>
+<script src="js/blog-data.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js')
@@ -94,21 +95,114 @@ if ('serviceWorker' in navigator) {
   line-height: 1.6;
 }
 .theme-light .blog-hero p { color: rgba(0,0,0,0.6); }
-.blog-list {
+
+/* Search & Filters */
+.blog-controls {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 0 auto 28px;
   padding: 0 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+}
+.blog-search-wrap {
+  position: relative;
+}
+.blog-search-wrap input {
+  width: 100%;
+  padding: 14px 18px 14px 44px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Nunito', sans-serif;
+  outline: none;
+  transition: all .2s;
+}
+.blog-search-wrap input::placeholder { color: rgba(255,255,255,0.4); }
+.blog-search-wrap input:focus {
+  border-color: rgba(192,132,252,0.5);
+  background: rgba(255,255,255,0.08);
+}
+.theme-light .blog-search-wrap input {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.08);
+  color: #3d1a5c;
+}
+.theme-light .blog-search-wrap input::placeholder { color: rgba(0,0,0,0.35); }
+.theme-light .blog-search-wrap input:focus {
+  border-color: rgba(224,86,200,0.5);
+}
+.blog-search-wrap::before {
+  content: '🔎';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  opacity: .6;
+  pointer-events: none;
+}
+.blog-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.blog-filter-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.75);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  font-family: 'Nunito', sans-serif;
+}
+.blog-filter-chip:hover {
+  border-color: rgba(192,132,252,0.4);
+  color: #fff;
+}
+.blog-filter-chip.active {
+  background: rgba(192,132,252,0.25);
+  border-color: rgba(192,132,252,0.5);
+  color: #fff;
+}
+.theme-light .blog-filter-chip {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.6);
+}
+.theme-light .blog-filter-chip:hover {
+  border-color: rgba(224,86,200,0.4);
+  color: #3d1a5c;
+}
+.theme-light .blog-filter-chip.active {
+  background: rgba(224,86,200,0.15);
+  border-color: rgba(224,86,200,0.5);
+  color: #3d1a5c;
+}
+
+/* Blog Grid */
+.blog-grid {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 .blog-card {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px;
-  padding: 28px;
+  overflow: hidden;
   backdrop-filter: blur(12px);
   transition: all .3s var(--ease-spring);
+  display: flex;
+  flex-direction: column;
 }
 .blog-card:hover {
   transform: translateY(-4px);
@@ -119,65 +213,91 @@ if ('serviceWorker' in navigator) {
   background: rgba(255,255,255,0.6);
   border-color: rgba(0,0,0,0.06);
 }
+.blog-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, rgba(192,132,252,0.1), rgba(6,182,212,0.1));
+}
+.blog-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.blog-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.blog-card-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #c084fc;
+  background: rgba(192,132,252,0.1);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+.theme-light .blog-card-tag {
+  color: #e056c8;
+  background: rgba(224,86,200,0.08);
+}
+.blog-card-date {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+.theme-light .blog-card-date { color: rgba(0,0,0,0.35); }
 .blog-card h2 {
   font-family: 'Comfortaa', cursive;
-  font-size: 22px;
+  font-size: 18px;
   color: #fff;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  line-height: 1.35;
 }
 .theme-light .blog-card h2 { color: #3d1a5c; }
-.blog-card .blog-meta {
-  font-size: 13px;
-  color: rgba(255,255,255,0.45);
-  margin-bottom: 16px;
-}
-.theme-light .blog-card .blog-meta { color: rgba(0,0,0,0.4); }
 .blog-card p {
-  font-size: 15px;
-  color: rgba(255,255,255,0.75);
-  line-height: 1.75;
-  margin-bottom: 12px;
-}
-.theme-light .blog-card p { color: rgba(0,0,0,0.75); }
-.blog-card ul {
-  padding-left: 20px;
-  margin: 12px 0;
-}
-.blog-card li {
-  font-size: 15px;
-  color: rgba(255,255,255,0.75);
-  line-height: 1.75;
-  margin-bottom: 8px;
-}
-.theme-light .blog-card li { color: rgba(0,0,0,0.75); }
-.blog-card strong { color: #c084fc; }
-.theme-light .blog-card strong { color: #e056c8; }
-.blog-card .blog-tip {
-  background: rgba(192,132,252,0.1);
-  border-left: 3px solid #c084fc;
-  padding: 12px 16px;
-  border-radius: 0 12px 12px 0;
-  margin-top: 16px;
   font-size: 14px;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.65);
+  line-height: 1.65;
+  margin-bottom: 16px;
+  flex: 1;
 }
-.theme-light .blog-card .blog-tip {
-  background: rgba(224,86,200,0.08);
-  border-color: #e056c8;
-  color: rgba(0,0,0,0.75);
+.theme-light .blog-card p { color: rgba(0,0,0,0.6); }
+.blog-card-btn {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #c084fc, #a855f7);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .2s, box-shadow .2s;
+}
+.blog-card-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(192,132,252,0.3);
 }
 .blog-loading, .blog-error, .blog-empty {
   text-align: center;
   padding: 60px 24px;
   color: rgba(255,255,255,0.6);
   font-size: 16px;
+  grid-column: 1 / -1;
 }
 .theme-light .blog-loading, .theme-light .blog-error, .theme-light .blog-empty {
   color: rgba(0,0,0,0.55);
 }
 @media (max-width: 768px) {
   .blog-header { padding: 16px 20px; }
-  .blog-list { padding: 0 20px; }
+  .blog-grid, .blog-controls { padding: 0 20px; }
+  .blog-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -194,7 +314,14 @@ if ('serviceWorker' in navigator) {
     <p data-i18n="blog.subtitle">Полезные советы о здоровье глаз для детей и родителей</p>
   </div>
 
-  <div class="blog-list" id="blogList">
+  <div class="blog-controls">
+    <div class="blog-search-wrap">
+      <input type="search" id="blogSearch" placeholder="Поиск по статьям..." data-i18n-placeholder="blog.searchPlaceholder">
+    </div>
+    <div class="blog-filters" id="blogFilters"></div>
+  </div>
+
+  <div class="blog-grid" id="blogGrid">
     <div class="blog-loading" data-i18n="blog.loading">Загрузка статей...</div>
   </div>
 
@@ -223,25 +350,78 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <script>
-// Load blog posts dynamically
 (function() {
-  const list = document.getElementById('blogList');
+  const grid = document.getElementById('blogGrid');
+  const searchInput = document.getElementById('blogSearch');
+  const filtersWrap = document.getElementById('blogFilters');
+  let allPosts = [];
+  let activeCategory = 'all';
 
-  function renderPosts(posts) {
+  const CATEGORIES = [
+    { key: 'all', label: 'Все' },
+    { key: 'Здоровье глаз', label: 'Здоровье глаз' },
+    { key: 'ЗОЖ', label: 'ЗОЖ' },
+    { key: 'Мультипликация', label: 'Мультипликация' },
+    { key: 'Образование', label: 'Образование' }
+  ];
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    try {
+      return new Date(iso).toLocaleDateString('ru-RU');
+    } catch(e) { return iso; }
+  }
+
+  function renderFilters() {
+    filtersWrap.innerHTML = CATEGORIES.map(function(cat) {
+      return '<button class="blog-filter-chip' + (activeCategory === cat.key ? ' active' : '') + '" data-cat="' + escapeHtml(cat.key) + '">' + escapeHtml(cat.label) + '</button>';
+    }).join('');
+    filtersWrap.querySelectorAll('.blog-filter-chip').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        activeCategory = this.getAttribute('data-cat');
+        renderFilters();
+        renderPosts();
+      });
+    });
+  }
+
+  function getFilteredPosts() {
+    var term = (searchInput.value || '').toLowerCase().trim();
+    return allPosts.filter(function(post) {
+      if (activeCategory !== 'all' && post.category !== activeCategory) return false;
+      if (!term) return true;
+      var text = (post.title + ' ' + (post.excerpt || '') + ' ' + (post.category || '')).toLowerCase();
+      return text.indexOf(term) !== -1;
+    });
+  }
+
+  function renderPosts() {
+    var posts = getFilteredPosts();
     if (!posts || posts.length === 0) {
-      list.innerHTML = '<div class="blog-empty" data-i18n="blog.empty">' + (window.I18n ? I18n.t('blog.empty') : 'Пока нет статей. Загляни позже!') + '</div>';
+      grid.innerHTML = '<div class="blog-empty">' + (window.I18n ? I18n.t('blog.empty') : 'Ничего не найдено. Попробуй другой запрос!') + '</div>';
       return;
     }
-    list.innerHTML = posts.map(function(post) {
-      const date = post.created_at ? new Date(post.created_at).toLocaleDateString('ru-RU') : '';
-      const category = post.category || 'Совет дня';
-      const excerpt = post.excerpt || '';
-      const image = post.image ? '<img src="' + post.image + '" alt="' + escapeHtml(post.title) + '" style="width:100%;border-radius:12px;margin-bottom:16px;max-height:300px;object-fit:cover;">' : '';
+    grid.innerHTML = posts.map(function(post) {
+      var date = formatDate(post.created_at);
+      var img = post.image ? '<img class="blog-card-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '" loading="lazy">' : '';
       return '<article class="blog-card reveal">' +
-        image +
-        '<h2>' + escapeHtml(post.title) + '</h2>' +
-        '<div class="blog-meta">' + (date ? date + ' · ' : '') + escapeHtml(category) + '</div>' +
-        '<p>' + escapeHtml(excerpt) + '</p>' +
+        img +
+        '<div class="blog-card-body">' +
+          '<div class="blog-card-meta">' +
+            '<span class="blog-card-tag">' + escapeHtml(post.category || 'Статья') + '</span>' +
+            '<span class="blog-card-date">' + escapeHtml(date) + '</span>' +
+          '</div>' +
+          '<h2>' + escapeHtml(post.title) + '</h2>' +
+          '<p>' + escapeHtml(post.excerpt || '') + '</p>' +
+          '<a href="blog-post.html?slug=' + encodeURIComponent(post.slug) + '" class="blog-card-btn">' + (window.I18n ? I18n.t('blog.readMore') : 'Читать') + '</a>' +
+        '</div>' +
       '</article>';
     }).join('');
     // Re-init reveal animations
@@ -253,44 +433,25 @@ if ('serviceWorker' in navigator) {
     });
   }
 
-  function escapeHtml(text) {
-    if (!text) return '';
-    var div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-  }
+  searchInput.addEventListener('input', function() {
+    renderPosts();
+  });
+
+  renderFilters();
 
   fetch('/api/blog')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      if (data.success) {
-        renderPosts(data.posts);
+      if (data.success && data.posts && data.posts.length) {
+        allPosts = data.posts;
       } else {
-        list.innerHTML = '<div class="blog-error" data-i18n="blog.error">' + (window.I18n ? I18n.t('blog.error') : 'Не удалось загрузить статьи') + '</div>';
+        allPosts = window.BLOG_POSTS || [];
       }
+      renderPosts();
     })
     .catch(function() {
-      // Fallback to hardcoded posts if API fails
-      renderPosts([
-        {
-          title: '🎯 Правило 20-20-20 для детских глаз',
-          excerpt: 'Каждые 20 минут экранного времени ребёнок должен смотреть на предмет в 20 футах (≈6 метров) в течение 20 секунд. Это простое правило помогает расслабить глазные мышцы и предотвратить цифровое зрительное утомление.',
-          category: 'Совет дня',
-          created_at: '2026-05-20'
-        },
-        {
-          title: '👀 5 признаков усталости глаз у ребёнка',
-          excerpt: 'Дети часто не говорят о проблемах со зрением напрямую. Частое моргание, головная боль, нежелание читать, прищуривание и красные глаза — вот на что стоит обратить внимание.',
-          category: 'Здоровье',
-          created_at: '2026-05-15'
-        },
-        {
-          title: '👓 Как выбрать первые очки ребёнку',
-          excerpt: 'Первые очки — важное событие. Выбирайте лёгкую оправу, поликарбонатные линзы, приучайте постепенно и позвольте ребёнку выбрать цвет самостоятельно.',
-          category: 'Практика',
-          created_at: '2026-05-10'
-        }
-      ]);
+      allPosts = window.BLOG_POSTS || [];
+      renderPosts();
     });
 })();
 

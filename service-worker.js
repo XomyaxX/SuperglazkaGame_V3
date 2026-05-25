@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v27';
+const CACHE_NAME = 'superglazka-v28';
 
 const STATIC_ASSETS = [
   '/',
@@ -7,6 +7,7 @@ const STATIC_ASSETS = [
   '/parents.html',
   '/privacy.html',
   '/blog.html',
+  '/blog-post.html',
   '/checklist.html',
   '/favicon.svg',
   '/manifest.json',
@@ -25,6 +26,7 @@ const STATIC_ASSETS = [
   '/js/tone.min.js',
   '/js/auth.js',
   '/js/i18n.js',
+  '/js/blog-data.js',
   '/locales/ru.json',
   '/locales/en.json',
   '/locales/kz.json',

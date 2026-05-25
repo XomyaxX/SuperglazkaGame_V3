@@ -551,10 +551,17 @@ select option { background-color: #1a1a2e; color: #fff; }
   <!-- Sidebar: Episodes -->
   <div class="sidebar-col">
     <h1><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;">Игросказка</div>👁️ Суперглазка CMS</h1>
-    <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск глав...">
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <button class="btn btn-sm" id="tabEpisodesBtn" style="flex:1;font-size:12px;padding:6px;" onclick="showAdminSection('episodes')">📖 Эпизоды</button>
+      <button class="btn btn-secondary btn-sm" id="tabBlogBtn" style="flex:1;font-size:12px;padding:6px;" onclick="showAdminSection('blog')">📝 Блог</button>
+    </div>
+    <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск глав..." style="display:block;">
     <button class="btn" id="newEpisodeBtn">+ Новая глава</button>
     <button class="btn btn-secondary" id="importEpisodesBtn" style="font-size:12px;padding:8px 10px;">🔄 Импортировать главы</button>
     <div class="episode-list" id="episodeList">
+      <div class="empty-state">Загрузка...</div>
+    </div>
+    <div class="episode-list" id="blogList" style="display:none;">
       <div class="empty-state">Загрузка...</div>
     </div>
     <button class="btn btn-secondary btn-sm" onclick="logoutAdmin()" style="margin-top:auto;">🚪 Выйти</button>
@@ -575,6 +582,11 @@ select option { background-color: #1a1a2e; color: #fff; }
     <div class="editor-body" id="editorBody">
       <div class="empty-state">
         <h2>Выберите главу или создайте новую</h2>
+      </div>
+    </div>
+    <div class="editor-body" id="blogEditor" style="display:none;">
+      <div class="empty-state">
+        <h2>Выберите статью или создайте новую</h2>
       </div>
     </div>
   </div>
@@ -741,7 +753,16 @@ function renderEpisodeList() {
   });
 }
 
-document.getElementById('episodeSearch').addEventListener('input', renderEpisodeList);
+document.getElementById('episodeSearch').addEventListener('input', function() {
+  const blogList = document.getElementById('blogList');
+  if (blogList.style.display !== 'none') {
+    const filter = this.value.toLowerCase();
+    const filtered = blogPosts.filter(p => (p.title || '').toLowerCase().includes(filter));
+    renderBlogList(filtered);
+  } else {
+    renderEpisodeList();
+  }
+});
 
 async function loadEpisodes() {
   try {
@@ -1498,6 +1519,11 @@ document.getElementById('importEpisodesBtn').addEventListener('click', async () 
 // New episode
 let creatingEpisode = false;
 document.getElementById('newEpisodeBtn').addEventListener('click', async () => {
+  const blogList = document.getElementById('blogList');
+  if (blogList.style.display !== 'none') {
+    await createBlogPost();
+    return;
+  }
   if (creatingEpisode) return;
   creatingEpisode = true;
   try {
@@ -1518,6 +1544,157 @@ document.getElementById('newEpisodeBtn').addEventListener('click', async () => {
 function editFrameInline(frameId) {
   selectFrame(frameId);
   switchTab(document.querySelector('.tab:nth-child(2)'), 'frames');
+}
+
+/* ═══════════════════════════════════════════════
+   BLOG ADMIN
+   ═══════════════════════════════════════════════ */
+let blogPosts = [];
+let selectedBlogPost = null;
+
+function showAdminSection(section) {
+  const epBtn = document.getElementById('tabEpisodesBtn');
+  const blogBtn = document.getElementById('tabBlogBtn');
+  const epSearch = document.getElementById('episodeSearch');
+  const newEpBtn = document.getElementById('newEpisodeBtn');
+  const importBtn = document.getElementById('importEpisodesBtn');
+  const epList = document.getElementById('episodeList');
+  const blogList = document.getElementById('blogList');
+  const editorBody = document.getElementById('editorBody');
+  const blogEditor = document.getElementById('blogEditor');
+
+  if (section === 'blog') {
+    epBtn.classList.add('btn-secondary'); epBtn.classList.remove('btn');
+    blogBtn.classList.add('btn'); blogBtn.classList.remove('btn-secondary');
+    epSearch.style.display = 'none';
+    newEpBtn.style.display = 'none';
+    importBtn.style.display = 'none';
+    epList.style.display = 'none';
+    blogList.style.display = '';
+    editorBody.style.display = 'none';
+    blogEditor.style.display = '';
+    loadBlogPosts();
+  } else {
+    blogBtn.classList.add('btn-secondary'); blogBtn.classList.remove('btn');
+    epBtn.classList.add('btn'); epBtn.classList.remove('btn-secondary');
+    epSearch.style.display = '';
+    newEpBtn.style.display = '';
+    importBtn.style.display = '';
+    epList.style.display = '';
+    blogList.style.display = 'none';
+    editorBody.style.display = '';
+    blogEditor.style.display = 'none';
+  }
+}
+
+async function loadBlogPosts() {
+  try {
+    const data = await api('/admin/blog');
+    blogPosts = data.posts || [];
+    renderBlogList(blogPosts);
+  } catch (e) {
+    document.getElementById('blogList').innerHTML = '<div class="empty-state">Ошибка загрузки</div>';
+  }
+}
+
+function renderBlogList(posts) {
+  const list = document.getElementById('blogList');
+  if (!posts.length) { list.innerHTML = '<div class="empty-state">Нет статей</div>'; return; }
+  list.innerHTML = posts.map(p => `
+    <div class="episode-item${selectedBlogPost?.id === p.id ? ' active' : ''}" onclick="selectBlogPost(${p.id})">
+      <div class="title">${escapeHtml(p.title)}</div>
+      <div class="meta">${escapeHtml(p.category || '')} · ${p.published ? '✅ Опубликована' : '🚫 Черновик'} · ${new Date(p.created_at).toLocaleDateString('ru-RU')}</div>
+    </div>
+  `).join('');
+}
+
+async function selectBlogPost(id) {
+  selectedBlogPost = blogPosts.find(p => p.id === id);
+  renderBlogList(blogPosts);
+  if (!selectedBlogPost) return;
+  try {
+    const data = await api('/admin/blog/' + id);
+    selectedBlogPost = data.post;
+    renderBlogEditor(selectedBlogPost);
+  } catch (e) { toast('Ошибка загрузки статьи', 'error'); }
+}
+
+function renderBlogEditor(post) {
+  const container = document.getElementById('blogEditor');
+  container.innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:16px;max-width:700px;">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-sm" onclick="saveBlogPost()">💾 Сохранить</button>
+        <button class="btn btn-secondary btn-sm" onclick="toggleBlogPublish(${post.id}, ${post.published ? 0 : 1})">${post.published ? '🚫 Снять с публикации' : '✅ Опубликовать'}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteBlogPost(${post.id})">🗑 Удалить</button>
+      </div>
+      <label>Заголовок<input type="text" id="bpTitle" value="${escapeHtml(post.title || '')}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;margin-top:4px;"></label>
+      <div style="display:flex;gap:12px;">
+        <label style="flex:1;">Slug<input type="text" id="bpSlug" value="${escapeHtml(post.slug || '')}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;margin-top:4px;"></label>
+        <label style="flex:1;">Категория<input type="text" id="bpCategory" value="${escapeHtml(post.category || '')}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;margin-top:4px;"></label>
+      </div>
+      <label>Изображение (URL)<input type="text" id="bpImage" value="${escapeHtml(post.image || '')}" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;margin-top:4px;"></label>
+      <label>Краткое описание<textarea id="bpExcerpt" rows="3" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;margin-top:4px;resize:vertical;">${escapeHtml(post.excerpt || '')}</textarea></label>
+      <label>Контент (HTML)<textarea id="bpContent" rows="12" style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;margin-top:4px;resize:vertical;font-family:monospace;font-size:13px;">${escapeHtml(post.content || '')}</textarea></label>
+    </div>
+  `;
+}
+
+async function saveBlogPost() {
+  if (!selectedBlogPost) return;
+  const payload = {
+    title: document.getElementById('bpTitle').value,
+    slug: document.getElementById('bpSlug').value,
+    category: document.getElementById('bpCategory').value,
+    image: document.getElementById('bpImage').value,
+    excerpt: document.getElementById('bpExcerpt').value,
+    content: document.getElementById('bpContent').value,
+    published: selectedBlogPost.published ? 1 : 0
+  };
+  try {
+    await api('/admin/blog/' + selectedBlogPost.id, { method: 'PUT', body: JSON.stringify(payload) });
+    toast('Статья сохранена');
+    await loadBlogPosts();
+  } catch (e) { toast('Ошибка сохранения: ' + e.message, 'error'); }
+}
+
+async function deleteBlogPost(id) {
+  if (!confirm('Удалить статью?')) return;
+  try {
+    await api('/admin/blog/' + id, { method: 'DELETE' });
+    selectedBlogPost = null;
+    document.getElementById('blogEditor').innerHTML = '<div class="empty-state"><h2>Выберите статью или создайте новую</h2></div>';
+    await loadBlogPosts();
+    toast('Статья удалена');
+  } catch (e) { toast('Ошибка удаления: ' + e.message, 'error'); }
+}
+
+async function toggleBlogPublish(id, published) {
+  const post = blogPosts.find(p => p.id === id);
+  if (!post) return;
+  try {
+    await api('/admin/blog/' + id, { method: 'PUT', body: JSON.stringify({ ...post, published }) });
+    toast(published ? 'Опубликовано' : 'Снято с публикации');
+    await loadBlogPosts();
+    if (selectedBlogPost?.id === id) { selectedBlogPost.published = published; renderBlogEditor(selectedBlogPost); }
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+// New blog post
+let creatingBlogPost = false;
+async function createBlogPost() {
+  if (creatingBlogPost) return;
+  creatingBlogPost = true;
+  try {
+    const res = await api('/admin/blog', {
+      method: 'POST',
+      body: JSON.stringify({ title: 'Новая статья', slug: 'new-article-' + Date.now(), excerpt: '', content: '<p>Содержимое статьи...</p>', category: '', image: '', published: 0 })
+    });
+    await loadBlogPosts();
+    await selectBlogPost(res.id);
+    toast('Статья создана');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+  finally { creatingBlogPost = false; }
 }
 
 /* ═══════════════════════════════════════════════

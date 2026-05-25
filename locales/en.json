@@ -526,7 +526,19 @@
     "subtitle": "Useful eye health tips for children and parents",
     "loading": "Loading articles...",
     "empty": "No articles yet. Check back later!",
-    "error": "Failed to load articles"
+    "error": "Failed to load articles",
+    "searchPlaceholder": "Search articles...",
+    "allCategories": "All",
+    "readMore": "Read",
+    "related": "Related articles",
+    "backToBlog": "← Back to blog",
+    "missionToday": "Today's mission",
+    "cat": {
+      "eyeHealth": "Eye Health",
+      "lifestyle": "Healthy Lifestyle",
+      "animation": "Animation",
+      "education": "Education"
+    }
   },
   "checklistPage": {
     "title": "10 Eye Health Rules",

@@ -522,11 +522,23 @@
     "socials": "Или найдите нас в соцсетях: Telegram · VK"
   },
   "blog": {
-    "title": "Блог Суперглазки",
-    "subtitle": "Полезные советы о здоровье глаз для детей и родителей",
-    "loading": "Загрузка статей...",
-    "empty": "Пока нет статей. Загляни позже!",
-    "error": "Не удалось загрузить статьи"
+    "title": "Superglazka 博客",
+    "subtitle": "面向儿童和家长的眼睛健康实用建议",
+    "loading": "正在加载文章...",
+    "empty": "暂无文章。请稍后再来！",
+    "error": "加载文章失败",
+    "searchPlaceholder": "搜索文章...",
+    "allCategories": "全部",
+    "readMore": "阅读",
+    "related": "相关文章",
+    "backToBlog": "← 返回博客",
+    "missionToday": "今日任务",
+    "cat": {
+      "eyeHealth": "眼睛健康",
+      "lifestyle": "健康生活",
+      "animation": "动画",
+      "education": "教育"
+    }
   },
   "checklistPage": {
     "title": "10条眼睛健康规则",

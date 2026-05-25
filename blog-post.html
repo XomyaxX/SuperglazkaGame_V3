@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' blob:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; media-src 'self'; manifest-src 'self';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0618">
+<meta name="description" content="Статья в блоге Суперглазки — полезные советы для детей и родителей.">
+<title>Статья — Суперглазка</title>
+<link rel="canonical" href="https://vidial-media.ru/blog-post.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="manifest" href="manifest.json">
+<meta property="og:title" content="Блог — Суперглазка">
+<meta property="og:description" content="Полезные статьи о здоровье глаз, мультипликации и образовании для детей.">
+<meta property="og:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<meta property="og:url" content="https://vidial-media.ru/blog-post.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Блог — Суперглазка">
+<meta name="twitter:description" content="Полезные статьи о здоровье глаз, мультипликации и образовании для детей.">
+<meta name="twitter:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/landing.css">
+<script src="js/i18n.js"></script>
+<script src="js/blog-data.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(r => console.log('SW registered:', r.scope))
+    .catch(e => console.log('SW failed:', e));
+}
+</script>
+<style>
+.blog-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0a0618 0%, #1a0b2e 40%, #0f0718 100%);
+  padding-bottom: 80px;
+}
+.theme-light .blog-page {
+  background: linear-gradient(180deg, #f3e8ff 0%, #ffe4f0 40%, #f8eeff 100%);
+}
+.blog-header {
+  padding: 24px max(24px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.blog-header .land-logo {
+  font-family: 'Comfortaa', cursive;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-light .blog-header .land-logo { color: #3d1a5c; }
+.blog-back {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.blog-back:hover { color: #c084fc; }
+.theme-light .blog-back { color: rgba(0,0,0,0.6); }
+.theme-light .blog-back:hover { color: #e056c8; }
+
+.blog-article-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.blog-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.blog-article-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #c084fc;
+  background: rgba(192,132,252,0.1);
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+.theme-light .blog-article-tag {
+  color: #e056c8;
+  background: rgba(224,86,200,0.08);
+}
+.blog-article-date {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+}
+.theme-light .blog-article-date { color: rgba(0,0,0,0.35); }
+.blog-article h1 {
+  font-family: 'Comfortaa', cursive;
+  font-size: clamp(24px, 4vw, 34px);
+  color: #fff;
+  margin-bottom: 20px;
+  line-height: 1.25;
+}
+.theme-light .blog-article h1 { color: #3d1a5c; }
+.blog-article-img {
+  width: 100%;
+  border-radius: 16px;
+  margin-bottom: 28px;
+  max-height: 380px;
+  object-fit: cover;
+  display: block;
+  background: linear-gradient(135deg, rgba(192,132,252,0.1), rgba(6,182,212,0.1));
+}
+.blog-article-body {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.82);
+}
+.theme-light .blog-article-body { color: rgba(0,0,0,0.78); }
+.blog-article-body h2 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 22px;
+  color: #fff;
+  margin: 32px 0 14px;
+}
+.theme-light .blog-article-body h2 { color: #3d1a5c; }
+.blog-article-body h3 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 18px;
+  color: #fff;
+  margin: 24px 0 10px;
+}
+.theme-light .blog-article-body h3 { color: #3d1a5c; }
+.blog-article-body p { margin-bottom: 16px; }
+.blog-article-body ul, .blog-article-body ol {
+  padding-left: 22px;
+  margin: 14px 0;
+}
+.blog-article-body li { margin-bottom: 10px; }
+.blog-article-body strong { color: #c084fc; }
+.theme-light .blog-article-body strong { color: #e056c8; }
+.blog-article-body a { color: #c084fc; }
+.theme-light .blog-article-body a { color: #e056c8; }
+
+.blog-mission {
+  background: rgba(192,132,252,0.08);
+  border: 1px solid rgba(192,132,252,0.2);
+  border-radius: 16px;
+  padding: 22px;
+  margin: 28px 0;
+}
+.theme-light .blog-mission {
+  background: rgba(224,86,200,0.06);
+  border-color: rgba(224,86,200,0.15);
+}
+.blog-mission h3 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 18px;
+  color: #c084fc;
+  margin-bottom: 10px;
+}
+.theme-light .blog-mission h3 { color: #e056c8; }
+.blog-mission p { margin: 0; font-size: 15px; }
+
+.blog-related {
+  max-width: 800px;
+  margin: 48px auto 0;
+  padding: 0 24px;
+}
+.blog-related h2 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 22px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.theme-light .blog-related h2 { color: #3d1a5c; }
+.blog-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.blog-related-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 18px;
+  text-decoration: none;
+  transition: all .25s;
+}
+.blog-related-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(192,132,252,0.3);
+}
+.theme-light .blog-related-card {
+  background: rgba(255,255,255,0.6);
+  border-color: rgba(0,0,0,0.06);
+}
+.blog-related-card h3 {
+  font-family: 'Comfortaa', cursive;
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.theme-light .blog-related-card h3 { color: #3d1a5c; }
+.blog-related-card span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+}
+.theme-light .blog-related-card span { color: rgba(0,0,0,0.4); }
+
+.blog-loading, .blog-error {
+  text-align: center;
+  padding: 60px 24px;
+  color: rgba(255,255,255,0.6);
+  font-size: 16px;
+}
+.theme-light .blog-loading, .theme-light .blog-error {
+  color: rgba(0,0,0,0.55);
+}
+
+@media (max-width: 768px) {
+  .blog-header { padding: 16px 20px; }
+  .blog-article-wrap { padding: 16px 20px; }
+  .blog-related { padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="blog-page">
+  <header class="blog-header">
+    <a href="index.html" class="land-logo"><span class="land-logo-pretitle">Игросказка</span><span class="land-logo-title">👁️ СУПЕРГЛАЗКА</span></a>
+    <a href="blog.html" data-i18n="blog.backToBlog" class="blog-back">← В блог</a>
+  </header>
+
+  <div class="blog-article-wrap">
+    <div id="postContent">
+      <div class="blog-loading" data-i18n="blog.loading">Загрузка статьи...</div>
+    </div>
+  </div>
+
+  <div class="blog-related" id="relatedSection" style="display:none;">
+    <h2 data-i18n="blog.related">Похожие статьи</h2>
+    <div class="blog-related-grid" id="relatedGrid"></div>
+  </div>
+
+  <footer class="land-footer" style="margin-top:60px;">
+    <p data-i18n="footer.text">Сделано с <span class="land-footer-heart">❤️</span> для защиты зрения детей · <a href="index.html" style="color:inherit; text-decoration:none;">Суперглазка</a> · 2025</p>
+  </footer>
+</div>
+
+<div class="cookie-banner" id="cookieBanner">
+  <div class="cookie-banner-text">
+    <span data-i18n="cookieBanner.text">Мы используем localStorage для сохранения прогресса и настроек.</span>
+    <a href="privacy.html" data-i18n="cookieBanner.privacy">Политика конфиденциальности</a>
+  </div>
+  <button class="cookie-banner-btn" id="cookieAccept" data-i18n="cookieBanner.accept">Принять</button>
+</div>
+<script>
+  (function() {
+    if (!localStorage.getItem('cookie_consent')) {
+      document.getElementById('cookieBanner').classList.add('visible');
+    }
+    document.getElementById('cookieAccept').addEventListener('click', function() {
+      localStorage.setItem('cookie_consent', 'true');
+      document.getElementById('cookieBanner').classList.remove('visible');
+    });
+  })();
+</script>
+
+<script>
+(function() {
+  var params = new URLSearchParams(location.search);
+  var slug = params.get('slug');
+  var container = document.getElementById('postContent');
+  var relatedSection = document.getElementById('relatedSection');
+  var relatedGrid = document.getElementById('relatedGrid');
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleDateString('ru-RU'); } catch(e) { return iso; }
+  }
+
+  function renderPost(post) {
+    document.title = post.title + ' — Блог Суперглазки';
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', post.excerpt || '');
+
+    var img = post.image ? '<img class="blog-article-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '">' : '';
+    container.innerHTML = '<article class="blog-article">' +
+      '<div class="blog-article-meta">' +
+        '<span class="blog-article-tag">' + escapeHtml(post.category || 'Статья') + '</span>' +
+        '<span class="blog-article-date">' + escapeHtml(formatDate(post.created_at)) + '</span>' +
+      '</div>' +
+      '<h1>' + escapeHtml(post.title) + '</h1>' +
+      img +
+      '<div class="blog-article-body">' + (post.content || '') + '</div>' +
+    '</article>';
+    renderRelated(post);
+  }
+
+  function renderRelated(currentPost) {
+    var pool = (window.BLOG_POSTS || []).filter(function(p) {
+      return p.slug !== currentPost.slug && p.category === currentPost.category;
+    });
+    if (pool.length === 0) {
+      pool = (window.BLOG_POSTS || []).filter(function(p) { return p.slug !== currentPost.slug; });
+    }
+    if (pool.length === 0) return;
+    // Shuffle and pick 3
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = pool[i]; pool[i] = pool[j]; pool[j] = t;
+    }
+    var picks = pool.slice(0, 3);
+    relatedGrid.innerHTML = picks.map(function(p) {
+      return '<a href="blog-post.html?slug=' + encodeURIComponent(p.slug) + '" class="blog-related-card">' +
+        '<h3>' + escapeHtml(p.title) + '</h3>' +
+        '<span>' + escapeHtml(p.category || '') + ' · ' + escapeHtml(formatDate(p.created_at)) + '</span>' +
+      '</a>';
+    }).join('');
+    relatedSection.style.display = '';
+  }
+
+  function renderError() {
+    container.innerHTML = '<div class="blog-error" data-i18n="blog.error">' + (window.I18n ? I18n.t('blog.error') : 'Не удалось загрузить статью') + '</div>';
+  }
+
+  if (!slug) {
+    renderError();
+    return;
+  }
+
+  // Try API first
+  fetch('/api/blog/' + encodeURIComponent(slug))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success && data.post) {
+        renderPost(data.post);
+      } else {
+        // Fallback to local data
+        var local = (window.BLOG_POSTS || []).find(function(p) { return p.slug === slug; });
+        if (local) renderPost(local); else renderError();
+      }
+    })
+    .catch(function() {
+      var local = (window.BLOG_POSTS || []).find(function(p) { return p.slug === slug; });
+      if (local) renderPost(local); else renderError();
+    });
+})();
+
+const savedTheme = localStorage.getItem('superglazka_theme');
+if (savedTheme) document.body.classList.add('theme-' + savedTheme);
+</script>
+<script>I18n.init();</script>
+
+</body>
+</html>
