@@ -120,6 +120,7 @@
         document.documentElement.lang = currentLang === 'kz' ? 'kk' : currentLang;
         onReadyCallbacks.forEach(function(fn) { fn(); });
         onReadyCallbacks = [];
+        document.dispatchEvent(new Event('i18n:ready'));
       }
     }
 
