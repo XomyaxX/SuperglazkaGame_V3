@@ -3680,7 +3680,6 @@ body.device-desktop .swipe-hint {
   display: none;
 }
 
-body.device-touch .bs-toggle,
 body.device-touch .font-size-btn {
   min-height: 44px;
   min-width: 44px;
