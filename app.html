@@ -191,7 +191,11 @@ if ('serviceWorker' in navigator) {
               <div class="settings-row-name" data-i18n="app.narrator">Рассказчик</div>
             </div>
           </div>
-          <div class="bs-toggle" id="settingsToggleNarration"></div>
+          <div class="bs-volume-row compact">
+            <span class="vol-icon" id="narrationVolIcon">🔈</span>
+            <input type="range" class="bs-volume-slider" id="settingsNarrationVolume" min="0" max="100" value="80">
+            <span class="vol-value" id="narrationVolValue">80%</span>
+          </div>
         </div>
         <div class="settings-row" id="settingsRowBgMusic">
           <div class="settings-row-info">
@@ -200,12 +204,11 @@ if ('serviceWorker' in navigator) {
               <div class="settings-row-name" data-i18n="app.bgMusic">Фоновая музыка</div>
             </div>
           </div>
-          <div class="bs-toggle" id="settingsToggleBgMusic"></div>
-        </div>
-        <div class="bs-volume-row">
-          <span class="vol-icon">🔉</span>
-          <input type="range" class="bs-volume-slider" id="bsVolumeSlider" min="0" max="100" value="80">
-          <span class="vol-icon">🔊</span>
+          <div class="bs-volume-row compact">
+            <span class="vol-icon" id="bgmVolIcon">🔈</span>
+            <input type="range" class="bs-volume-slider" id="settingsBgMusicVolume" min="0" max="100" value="50">
+            <span class="vol-value" id="bgmVolValue">50%</span>
+          </div>
         </div>
       </div>
 

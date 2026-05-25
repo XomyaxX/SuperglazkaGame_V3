@@ -113,13 +113,13 @@ const ThemeManager = {
 const AppSettings = {
   defaults: {
     volume: 80,
-    narration: true,
+    narrationVolume: 80,
+    bgMusicVolume: 50,
     subtitles: true,
     subtitleFontSize: 'medium',
     highContrast: false,
     reduceMotion: false,
-    uiFontSize: 'medium',
-    bgMusic: true
+    uiFontSize: 'medium'
   },
   _data: {},
 
@@ -129,6 +129,14 @@ const AppSettings = {
       const raw = localStorage.getItem('superglazka_settings');
       const saved = raw ? JSON.parse(raw) : {};
       this._data = Object.assign({}, this.defaults, saved);
+
+      // Migrate old boolean toggles + single volume to separate volume sliders
+      if (typeof this._data.narrationVolume === 'undefined') {
+        this._data.narrationVolume = this._data.narration !== false ? (this._data.volume || 80) : 0;
+      }
+      if (typeof this._data.bgMusicVolume === 'undefined') {
+        this._data.bgMusicVolume = this._data.bgMusic !== false ? (this._data.volume || 80) : 0;
+      }
     } catch (e) {
       this._data = Object.assign({}, this.defaults);
     }
@@ -158,20 +166,21 @@ const AppSettings = {
   apply() {
     const d = this._data;
 
-    // Narration: toggleTrack actually starts/stops audio; avoid double-toggle on init
-    if (AudioController.activeTracks.narration !== d.narration) {
+    // Narration: volume 0 = off; toggle track when crossing 0 threshold
+    const narrationOn = (d.narrationVolume || 0) > 0;
+    if (AudioController.activeTracks.narration !== narrationOn) {
       AudioController.toggleTrack('narration');
     }
-
-    AudioController.volume = d.volume / 100;
+    AudioController.volume = (d.narrationVolume || 0) / 100;
     if (AudioController.currentAudio) {
       AudioController.currentAudio.volume = AudioController.volume;
     }
 
     if (typeof BackgroundMusic !== 'undefined') {
-      BackgroundMusic.setEnabled(d.bgMusic);
-      BackgroundMusic.setVolume(d.volume / 100);
-      if (d.bgMusic) {
+      const bgmOn = (d.bgMusicVolume || 0) > 0;
+      BackgroundMusic.setEnabled(bgmOn);
+      BackgroundMusic.setVolume((d.bgMusicVolume || 0) / 100);
+      if (bgmOn) {
         BackgroundMusic.resumeContext();
         const mood = AudioController.frameData && typeof MoodDetector !== 'undefined'
           ? MoodDetector.detectMood(AudioController.frameData)
@@ -202,8 +211,6 @@ const AppSettings = {
     const d = this._data;
 
     const toggles = {
-      settingsToggleNarration: d.narration,
-      settingsToggleBgMusic: d.bgMusic,
       settingsToggleSubtitles: d.subtitles,
       settingsToggleHighContrast: d.highContrast,
       settingsToggleReduceMotion: d.reduceMotion
@@ -213,8 +220,23 @@ const AppSettings = {
       if (el) el.classList.toggle('active', active);
     });
 
-    const slider = document.getElementById('bsVolumeSlider');
-    if (slider) slider.value = d.volume;
+    const narrationSlider = document.getElementById('settingsNarrationVolume');
+    if (narrationSlider) {
+      narrationSlider.value = d.narrationVolume || 0;
+      const valEl = document.getElementById('narrationVolValue');
+      if (valEl) valEl.textContent = (d.narrationVolume || 0) + '%';
+      const iconEl = document.getElementById('narrationVolIcon');
+      if (iconEl) iconEl.textContent = (d.narrationVolume || 0) === 0 ? '🔇' : ((d.narrationVolume || 0) < 50 ? '🔈' : '🔊');
+    }
+
+    const bgmSlider = document.getElementById('settingsBgMusicVolume');
+    if (bgmSlider) {
+      bgmSlider.value = d.bgMusicVolume || 0;
+      const valEl = document.getElementById('bgmVolValue');
+      if (valEl) valEl.textContent = (d.bgMusicVolume || 0) + '%';
+      const iconEl = document.getElementById('bgmVolIcon');
+      if (iconEl) iconEl.textContent = (d.bgMusicVolume || 0) === 0 ? '🔇' : ((d.bgMusicVolume || 0) < 50 ? '🔈' : '🔊');
+    }
 
     const setFontActive = (groupId, size) => {
       const group = document.getElementById(groupId);
@@ -604,16 +626,16 @@ const BottomSheet = {
       }
     });
 
-    // Narration toggle
-    const narrationToggle = document.getElementById('settingsToggleNarration');
-    if (narrationToggle) narrationToggle.addEventListener('click', () => {
-      AppSettings.set('narration', !AppSettings.get('narration'));
+    // Narration volume slider
+    const narrationSlider = document.getElementById('settingsNarrationVolume');
+    if (narrationSlider) narrationSlider.addEventListener('input', (e) => {
+      AppSettings.set('narrationVolume', parseInt(e.target.value, 10));
     });
 
-    // Background music toggle
-    const bgmToggle = document.getElementById('settingsToggleBgMusic');
-    if (bgmToggle) bgmToggle.addEventListener('click', () => {
-      AppSettings.set('bgMusic', !AppSettings.get('bgMusic'));
+    // Background music volume slider
+    const bgmSlider = document.getElementById('settingsBgMusicVolume');
+    if (bgmSlider) bgmSlider.addEventListener('input', (e) => {
+      AppSettings.set('bgMusicVolume', parseInt(e.target.value, 10));
     });
 
     // Subtitles toggle
@@ -632,12 +654,6 @@ const BottomSheet = {
     const rmToggle = document.getElementById('settingsToggleReduceMotion');
     if (rmToggle) rmToggle.addEventListener('click', () => {
       AppSettings.set('reduceMotion', !AppSettings.get('reduceMotion'));
-    });
-
-    // Volume slider
-    const volSlider = document.getElementById('bsVolumeSlider');
-    if (volSlider) volSlider.addEventListener('input', (e) => {
-      AppSettings.set('volume', parseInt(e.target.value, 10));
     });
 
     // Font size groups
