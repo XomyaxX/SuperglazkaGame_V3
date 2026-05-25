@@ -427,7 +427,11 @@ if ('serviceWorker' in navigator) {
     }
     grid.innerHTML = posts.map(function(post) {
       var date = formatDate(post.created_at);
-      var img = post.image ? '<img class="blog-card-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '" loading="lazy">' : '';
+      var img = '';
+      if (post.image) {
+        var webp = post.image.replace(/\.png$/i, '.webp');
+        img = '<picture><source srcset="' + escapeHtml(webp) + '" type="image/webp"><img class="blog-card-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '" loading="lazy" width="400" height="225"></picture>';
+      }
       return '<article class="blog-card reveal">' +
         img +
         '<div class="blog-card-body">' +

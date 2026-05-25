@@ -335,7 +335,11 @@ if ('serviceWorker' in navigator) {
     if (metaDesc) metaDesc.setAttribute('content', post.excerpt || '');
     renderSchema(post);
 
-    var img = post.image ? '<img class="blog-article-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '">' : '';
+    var img = '';
+    if (post.image) {
+      var webp = post.image.replace(/\.png$/i, '.webp');
+      img = '<picture><source srcset="' + escapeHtml(webp) + '" type="image/webp"><img class="blog-article-img" src="' + escapeHtml(post.image) + '" alt="' + escapeHtml(post.title) + '" width="720" height="380"></picture>';
+    }
     container.innerHTML = '<article class="blog-article">' +
       '<div class="blog-article-meta">' +
         '<span class="blog-article-tag">' + escapeHtml(post.category || 'Статья') + '</span>' +

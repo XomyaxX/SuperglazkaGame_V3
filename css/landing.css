@@ -28,6 +28,7 @@
 
 /* ─── RESET & BASE ─── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+img, picture img { max-width: 100%; height: auto; display: block; }
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 body {
   font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
