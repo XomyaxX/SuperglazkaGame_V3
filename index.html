@@ -281,43 +281,166 @@ if ('serviceWorker' in navigator) {
      CHARACTERS SECTION
      ═══════════════════════════════════════════════════════════ -->
 <section class="land-section land-characters" id="characters">
-  <h2 class="land-section-title">Герои</h2>
-  <p class="land-section-sub">Познакомься с главными персонажами комикса</p>
-  <div class="land-char-grid">
-    <div class="land-char-card reveal">
-      <div class="land-char-avatar">
-        <img src="assets/shared/characters/superglazka.png" alt="Суперглазка">
+  <h2 class="land-section-title">Персонажи</h2>
+  <p class="land-section-sub">Познакомься с героями и злодеями комикса</p>
+
+  <div class="char-tabs">
+    <button class="char-tab active" data-tab="heroes">🦸 Герои</button>
+    <button class="char-tab" data-tab="villains">👿 Злодеи</button>
+  </div>
+
+  <div class="char-panels">
+    <!-- HEROES -->
+    <div class="char-panel active" id="heroes-panel">
+      <div class="char-grid">
+        <div class="char-card reveal" data-char="superglazka">
+          <div class="char-card-img-wrap">
+            <img src="heros/magnific_img1-img2_wPhRt2i7EI.png" alt="Суперглазка" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Суперглазка</div>
+            <div class="char-card-role">Главная героиня</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#ef4444"></div>
+        </div>
+
+        <div class="char-card reveal" data-char="vanya">
+          <div class="char-card-img-wrap">
+            <img src="heros/magnific_img1-img2_Bm4QN7poQR.png" alt="Ваня" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Ваня</div>
+            <div class="char-card-role">Верный друг</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#f97316"></div>
+        </div>
+
+        <div class="char-card reveal" data-char="advisor">
+          <div class="char-card-img-wrap">
+            <img src="heros/magnific_img1-img2_8vNKufRIrU.png" alt="Советник" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Советник</div>
+            <div class="char-card-role">Воин Видеаля</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#3b82f6"></div>
+        </div>
+
+        <div class="char-card reveal" data-char="crystal">
+          <div class="char-card-img-wrap">
+            <img src="heros/magnific_img1_kLDyuzb16B.png" alt="Мудрый Хрусталик" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Мудрый Хрусталик</div>
+            <div class="char-card-role">Правитель Видеаля</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#06b6d4"></div>
+        </div>
+
+        <div class="char-card reveal" data-char="queen">
+          <div class="char-card-img-wrap">
+            <img src="heros/magnific_img1_ubngYIRQLD.png" alt="Королева София" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Королева София</div>
+            <div class="char-card-role">Хранительница знаний</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#a855f7"></div>
+        </div>
+
+        <div class="char-card reveal" data-char="professor">
+          <div class="char-card-img-wrap">
+            <img src="heros/magnific_img1_wPhGDV87EI.png" alt="Профессор" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Профессор</div>
+            <div class="char-card-role">Учёный и изобретатель</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#22c55e"></div>
+        </div>
       </div>
-      <div class="land-char-name">Суперглазка</div>
-      <div class="land-char-role">Главная героиня</div>
-      <div class="land-char-desc">Девочка из древнего ритуала с суперсилой зрения. В красном костюме с белым плащом защищает детей.</div>
     </div>
-    <div class="land-char-card reveal">
-      <div class="land-char-avatar">
-        <img src="assets/shared/characters/vanya.png" alt="Ваня">
+
+    <!-- VILLAINS -->
+    <div class="char-panel" id="villains-panel">
+      <div class="char-grid">
+        <div class="char-card reveal villain" data-char="lenivus-human">
+          <div class="char-card-img-wrap">
+            <img src="eviels/magnific_img1_jSX6atMLD0.png" alt="Ленивус" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Ленивус</div>
+            <div class="char-card-role">Владыка Тьмы</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#dc2626"></div>
+        </div>
+
+        <div class="char-card reveal villain" data-char="lenivus-true">
+          <div class="char-card-img-wrap">
+            <img src="eviels/Airbrush-IMAGE-ENHANCER-1779352038956-1779352038956.png" alt="Ленивус — истинный облик" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Ленивус</div>
+            <div class="char-card-role">Истинный облик</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#7c3aed"></div>
+        </div>
+
+        <div class="char-card reveal villain" data-char="pixelko">
+          <div class="char-card-img-wrap">
+            <img src="eviels/magnific_img1_XtPbQfkBfo.png" alt="Пикселько" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Пикселько</div>
+            <div class="char-card-role">Паук-искуситель</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#ec4899"></div>
+        </div>
+
+        <div class="char-card reveal villain" data-char="darkness">
+          <div class="char-card-img-wrap">
+            <img src="eviels/magnific_img1_swo22Kxl8e.png" alt="Великая Тьма" loading="lazy">
+          </div>
+          <div class="char-card-body">
+            <div class="char-card-name">Великая Тьма</div>
+            <div class="char-card-role">Древнее зло</div>
+            <div class="char-card-hint">Нажми, чтобы узнать больше →</div>
+          </div>
+          <div class="char-card-glow" style="--glow-color:#475569"></div>
+        </div>
       </div>
-      <div class="land-char-name">Ваня</div>
-      <div class="land-char-role">Верный друг</div>
-      <div class="land-char-desc">Земной мальчик, который первым поверил в Суперглазку. Помогает ей в миссии спасти глаза детей.</div>
-    </div>
-    <div class="land-char-card reveal">
-      <div class="land-char-avatar">
-        <img src="assets/shared/characters/wise-crystal.png" alt="Мудрый Хрусталик">
-      </div>
-      <div class="land-char-name">Мудрый Хрусталик</div>
-      <div class="land-char-role">Правитель Видеаля</div>
-      <div class="land-char-desc">Мудрый правитель планеты Видеаль. Провёл ритуал Призыва и стал наставником Суперглазки.</div>
-    </div>
-    <div class="land-char-card reveal">
-      <div class="land-char-avatar">
-        <img src="assets/shared/characters/lenivus.png" alt="Ленивус">
-      </div>
-      <div class="land-char-name">Ленивус</div>
-      <div class="land-char-role">Главный злодей</div>
-      <div class="land-char-desc">Великое Зло, угрожающее поглотить Видеаль. Его слабость — активные и здоровые глаза!</div>
     </div>
   </div>
 </section>
+
+<!-- CHARACTER MODAL -->
+<div class="char-modal-backdrop" id="charModalBackdrop">
+  <div class="char-modal">
+    <button class="char-modal-close" id="charModalClose" aria-label="Закрыть">✕</button>
+    <div class="char-modal-layout">
+      <div class="char-modal-visual">
+        <img class="char-modal-img" id="charModalImg" src="" alt="">
+        <div class="char-modal-frame"></div>
+      </div>
+      <div class="char-modal-info">
+        <div class="char-modal-name" id="charModalName"></div>
+        <div class="char-modal-role" id="charModalRole"></div>
+        <div class="char-modal-badges" id="charModalBadges"></div>
+        <div class="char-modal-desc" id="charModalDesc"></div>
+        <div class="char-modal-stats" id="charModalStats"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════
      ARTIFACTS SECTION
@@ -554,6 +677,201 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ─── CHARACTER TABS & MODAL ─── */
+(function() {
+  const charData = {
+    superglazka: {
+      name: 'Суперглазка',
+      role: 'Главная героиня',
+      img: 'heros/magnific_img1-img2_wPhRt2i7EI.png',
+      badges: ['⭐ Избранная', '👁️ Суперзрение', '❤️ Отважная'],
+      desc: 'Девочка с огромными голубыми глазами и белоснежными косичками. Родилась из древнего ритуала Призыва на планете Видеаль. Носит красный костюм с белым плащом и серебряным поясом. Её миссия — защищать зрение детей на Земле и спасти планету Видеаль от Великой Тьмы. Обладает суперсилой зрения: видит сквозь иллюзии, замечает то, что не видят другие, и может испускать лазерный луч из глаз.',
+      stats: [
+        { label: 'Сила', value: 75 },
+        { label: 'Скорость', value: 90 },
+        { label: 'Зрение', value: 100 },
+        { label: 'Харизма', value: 95 }
+      ]
+    },
+    vanya: {
+      name: 'Ваня',
+      role: 'Верный друг',
+      img: 'heros/magnific_img1-img2_Bm4QN7poQR.png',
+      badges: ['🦸 Помощник', '🌍 С Земли', '💪 Храбрый'],
+      desc: 'Земной мальчик, который первым поверил в Суперглазку и стал её верным другом и напарником. Носит красную маску и костюм, вдохновлённый супергероиней. Вместе с Суперглазкой проходит через все испытания, помогая ей в миссии спасти глаза детей. Его сила — в верности, находчивости и умении поддерживать друзей в трудную минуту.',
+      stats: [
+        { label: 'Сила', value: 60 },
+        { label: 'Ловкость', value: 80 },
+        { label: 'Верность', value: 100 },
+        { label: 'Ум', value: 85 }
+      ]
+    },
+    advisor: {
+      name: 'Советник',
+      role: 'Воин Видеаля',
+      img: 'heros/magnific_img1-img2_8vNKufRIrU.png',
+      badges: ['🛡️ Защитник', '⚔️ Воин', '📋 Стратег'],
+      desc: 'Отважный воин планеты Видеаль, верный защитник правителя и наставник Суперглазки. Носит синий боевой костюм с эмблемой планеты. Мастер ближнего боя и тактики. Всегда готов встать на защиту слабых и дать совет в трудную минуту. Его девиз: «Глаза видят правду, а сердце — путь».',
+      stats: [
+        { label: 'Сила', value: 90 },
+        { label: 'Защита', value: 95 },
+        { label: 'Мудрость', value: 85 },
+        { label: 'Скорость', value: 70 }
+      ]
+    },
+    crystal: {
+      name: 'Мудрый Хрусталик',
+      role: 'Правитель Видеаля',
+      img: 'heros/magnific_img1_kLDyuzb16B.png',
+      badges: ['👑 Король', '🔮 Маг', '📖 Наставник'],
+      desc: 'Мудрый и справедливый правитель планеты Видеаль. Провёл древний ритуал Призыва, который породил Суперглазку. Обладает могущественной магией хрусталя и света. Носит королевскую мантию с мехом и корону с драгоценным камнем. Его посох — источник древней мудрости и силы. Наставляет героев и хранит секреты планеты Видеаль.',
+      stats: [
+        { label: 'Магия', value: 100 },
+        { label: 'Мудрость', value: 100 },
+        { label: 'Власть', value: 95 },
+        { label: 'Сила', value: 60 }
+      ]
+    },
+    queen: {
+      name: 'Королева София',
+      role: 'Хранительница знаний',
+      img: 'heros/magnific_img1_ubngYIRQLD.png',
+      badges: ['👑 Королева', '📚 Мудрость', '🔑 Хранитель'],
+      desc: 'Королева Видеаля и жена Мудрого Хрусталика. Хранительница древних знаний и тайн планеты. Носит великолепное фиолетово-синее платье с магическим ключом на груди. Её книга заклинаний содержит мудрость веков. Помогает Суперглазке постичь силу зрения и найти путь к победе над тьмой.',
+      stats: [
+        { label: 'Магия', value: 95 },
+        { label: 'Знания', value: 100 },
+        { label: 'Защита', value: 80 },
+        { label: 'Харизма', value: 90 }
+      ]
+    },
+    professor: {
+      name: 'Профессор',
+      role: 'Учёный и изобретатель',
+      img: 'heros/magnific_img1_wPhGDV87EI.png',
+      badges: ['🔬 Учёный', '💡 Изобретатель', '📖 Мудрец'],
+      desc: 'Главный учёный и изобретатель планеты Видеаль. Создаёт удивительные приборы и артефакты, которые помогают героям в борьбе со злом. Носит потрёпанную мантию с красками и круглые очки. Его голографическая книга содержит все открытия Видеаля. Иногда кажется рассеянным, но в критический момент всегда находит гениальное решение.',
+      stats: [
+        { label: 'Интеллект', value: 100 },
+        { label: 'Изобретательность', value: 95 },
+        { label: 'Магия', value: 50 },
+        { label: 'Сила', value: 40 }
+      ]
+    },
+    'lenivus-human': {
+      name: 'Ленивус',
+      role: 'Владыка Тьмы',
+      img: 'eviels/magnific_img1_jSX6atMLD0.png',
+      badges: ['👿 Антагонист', '🖤 Тьма', '👁️ Повязка'],
+      desc: 'Главный злодей комикса, владыка Великой Тьмы. В человекоподобном облике — величественный и жуткий правитель с чёрной короной и повязкой на глазу. Его броня пропитана тёмной магией, а посох с красным кристаллом поглощает свет. Ленивус угрожает поглотить планету Видеаль и лишить детей зрения. Его слабость — активные и здоровые глаза!',
+      stats: [
+        { label: 'Тьма', value: 100 },
+        { label: 'Сила', value: 90 },
+        { label: 'Хитрость', value: 95 },
+        { label: 'Зрение', value: 10 }
+      ]
+    },
+    'lenivus-true': {
+      name: 'Ленивус',
+      role: 'Истинный облик',
+      img: 'eviels/Airbrush-IMAGE-ENHANCER-1779352038956-1779352038956.png',
+      badges: ['👿 Монстр', '📱 Леность', '🦠 Слизь'],
+      desc: 'Истинный облик Ленивуса — огромное фиолетово-зелёное существо, рождённое из лени и плохих привычек. Весь день сидит с планшетом, не отрываясь от экрана. Его кожа покрыта пятнами, а глаза полузакрыты от усталости. Питается чужой ленью и нежеланием заботиться о зрении. Именно поэтому гимнастика для глаз и активный отдых — его главные враги!',
+      stats: [
+        { label: 'Лень', value: 100 },
+        { label: 'Тьма', value: 85 },
+        { label: 'Здоровье', value: 30 },
+        { label: 'Движение', value: 5 }
+      ]
+    },
+    pixelko: {
+      name: 'Пикселько',
+      role: 'Паук-искуситель',
+      img: 'eviels/magnific_img1_XtPbQfkBfo.png',
+      badges: ['🕷️ Паук', '🌈 Иллюзия', '💎 Кристалл'],
+      desc: 'Хитрый паук-искуситель из мира экранов и пикселей. Его тело состоит из радужных кристаллов, которые завлекают детей слишком долго смотреть в экраны. Пикселько плетёт иллюзии и заманивает в ловушку тех, кто забывает делать перерывы. Только правильный режим работы с гаджетами и гимнастика для глаз помогают развеять его чары!',
+      stats: [
+        { label: 'Иллюзия', value: 95 },
+        { label: 'Скорость', value: 80 },
+        { label: 'Ловкость', value: 90 },
+        { label: 'Сила', value: 50 }
+      ]
+    },
+    darkness: {
+      name: 'Великая Тьма',
+      role: 'Древнее зло',
+      img: 'eviels/magnific_img1_swo22Kxl8e.png',
+      badges: ['🌑 Тьма', '👻 Дух', '🌪️ Хаос'],
+      desc: 'Древнее и могущественное зло, угрожающее поглотить всю планету Видеаль. Представляет собой гигантское облако тумана с горящими глазами, внутри которого видны искажённые миры. Великая Тьма питается слабым зрением, ленью и вредными привычками. Только объединённые силы всех героев и здоровые глаза детей могут её остановить!',
+      stats: [
+        { label: 'Тьма', value: 100 },
+        { label: 'Разрушение', value: 100 },
+        { label: 'Страх', value: 95 },
+        { label: 'Уязвимость', value: 20 }
+      ]
+    }
+  };
+
+  // Tabs
+  document.querySelectorAll('.char-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.char-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.dataset.tab;
+      document.querySelectorAll('.char-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(target + '-panel').classList.add('active');
+    });
+  });
+
+  // Modal
+  const backdrop = document.getElementById('charModalBackdrop');
+  const closeBtn = document.getElementById('charModalClose');
+
+  function openModal(key) {
+    const data = charData[key];
+    if (!data) return;
+    document.getElementById('charModalImg').src = data.img;
+    document.getElementById('charModalImg').alt = data.name;
+    document.getElementById('charModalName').textContent = data.name;
+    document.getElementById('charModalRole').textContent = data.role;
+    document.getElementById('charModalDesc').textContent = data.desc;
+
+    const badgesEl = document.getElementById('charModalBadges');
+    badgesEl.innerHTML = data.badges.map(b => `<span class="char-modal-badge">${b}</span>`).join('');
+
+    const statsEl = document.getElementById('charModalStats');
+    statsEl.innerHTML = data.stats.map(s => `
+      <div class="char-modal-stat">
+        <div class="char-modal-stat-label">${s.label}</div>
+        <div class="char-modal-stat-bar-wrap">
+          <div class="char-modal-stat-bar" style="--stat-width:${s.value}%;"></div>
+        </div>
+        <div class="char-modal-stat-value">${s.value}</div>
+      </div>
+    `).join('');
+
+    backdrop.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    backdrop.classList.remove('visible');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.char-card').forEach(card => {
+    card.addEventListener('click', () => openModal(card.dataset.char));
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && backdrop.classList.contains('visible')) closeModal();
+  });
+})();
 </script>
   <div class="cookie-banner" id="cookieBanner">
     <div class="cookie-banner-text">
