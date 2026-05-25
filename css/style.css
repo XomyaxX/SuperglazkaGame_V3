@@ -195,6 +195,7 @@ body {
   padding: 32px 24px 48px;
   transition: opacity .6s var(--ease-smooth);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 #main-menu.hidden { opacity: 0; pointer-events: none; }
 
@@ -393,7 +394,7 @@ body {
 
 .logo-title {
   font-family: 'Comfortaa', cursive;
-  font-size: 20px;
+  font-size: clamp(14px, 5vw, 20px);
   font-weight: 700;
   background: var(--gradient-hero);
   -webkit-background-clip: text;
@@ -631,6 +632,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.05);
   cursor: pointer;
   transition: all 0.2s var(--ease-spring);
+  min-width: 0;
 }
 
 .episode-mini:hover {
@@ -665,7 +667,10 @@ body {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
 }
 
 .episode-mini-status {
@@ -752,8 +757,12 @@ body {
 }
 
 @media (max-width: 480px) {
+  #main-menu {
+    padding: 16px;
+  }
   .app-header {
-    padding: 10px 16px;
+    padding: 10px 12px;
+    gap: 8px;
   }
   .app-menu-container {
     padding: 16px;
@@ -766,6 +775,7 @@ body {
   }
   .book-grid {
     grid-template-columns: repeat(2, 1fr);
+    min-width: 0;
   }
   .countdown-group {
     min-width: 48px;
