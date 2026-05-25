@@ -30,7 +30,10 @@ const BackgroundMusic = (function() {
     magical:    ['assets/audio/moods/magical/track01.mp3'],
     triumphant: ['assets/audio/moods/triumphant/track01.mp3'],
     warm:       ['assets/audio/moods/warm/track01.mp3'],
-    mystery:    ['assets/audio/moods/mystery/track01.mp3']
+    mystery:    ['assets/audio/moods/mystery/track01.mp3'],
+    epic:       ['assets/audio/moods/epic/track01.mp3'],
+    sad:        ['assets/audio/moods/sad/track01.mp3'],
+    action:     ['assets/audio/moods/action/track01.mp3']
   };
 
   const MOOD_SYNTH_PARAMS = {
@@ -41,7 +44,10 @@ const BackgroundMusic = (function() {
     magical:    { freqs: [293.66, 369.99, 493.88], type: 'sine',  filter: 2500, detune: 4 },
     triumphant: { freqs: [196, 246.94, 293.66], type: 'triangle', filter: 2000, detune: 3 },
     warm:       { freqs: [130.81, 164.81, 196], type: 'sine',     filter: 1200, detune: 2 },
-    mystery:    { freqs: [155.56, 196, 233.08], type: 'sine',     filter: 1800, detune: 6 }
+    mystery:    { freqs: [155.56, 196, 233.08], type: 'sine',     filter: 1800, detune: 6 },
+    epic:       { freqs: [174.61, 220, 261.63], type: 'triangle', filter: 1800, detune: 3 },
+    sad:        { freqs: [130.81, 155.56, 196], type: 'sine',     filter: 1200, detune: 2 },
+    action:     { freqs: [110, 164.81, 220],    type: 'sawtooth', filter: 2000, detune: 5 }
   };
 
   // ─── Tone.js Procedural Engine ───
@@ -188,6 +194,59 @@ const BackgroundMusic = (function() {
       reverb: 5,
       delay: 0.3,
       drums: { hat: '8n', pop: '2n' }
+    },
+    epic: {
+      bpm: 80,
+      scale: ['C4','E4','G4','B4','C5','E5'],
+      chords: [['C3','G3','C4'], ['G2','D3','G3'], ['F2','C3','F3'], ['C2','G2','C3']],
+      pad: { type: 'triangle', attack: 1, release: 3 },
+      bass: { type: 'triangle', attack: 0.3, release: 1, pattern: ['C2','G1','F1','C2'], interval: '1m' },
+      melody: {
+        type: 'triangle', attack: 0.05, release: 1,
+        motifs: [
+          ['C5','E5','G5','C6'], ['E5','G5','B5','E6'],
+          ['G4','C5','E5','G5'], ['C6','G5','E5','C5']
+        ],
+        interval: '2n', variation: 0.2
+      },
+      reverb: 5,
+      delay: 0.3,
+      drums: { kick: '2n', hit: '2n' }
+    },
+    sad: {
+      bpm: 50,
+      scale: ['A3','C4','E4','A4','C5','E5'],
+      chords: [['A2','C3','E3'], ['F2','A2','C3'], ['D2','F2','A2'], ['E2','G#2','B2']],
+      pad: { type: 'sine', attack: 2, release: 4 },
+      bass: { type: 'sine', attack: 1, release: 3, pattern: ['A1','E1','D1','C1'], interval: '1m' },
+      melody: {
+        type: 'sine', attack: 0.05, release: 1.5,
+        motifs: [
+          ['A4','E4','C4','A3'], ['C5','A4','E4','C4'],
+          ['E5','C5','A4','E4'], ['A4','C5','E5','A5']
+        ],
+        interval: '2n', variation: 0.1
+      },
+      reverb: 7,
+      delay: 0.4
+    },
+    action: {
+      bpm: 130,
+      scale: ['E3','G3','A3','B3','D4','E4'],
+      chords: [['E2','B2','E3'], ['A2','E3','A3'], ['B2','F#3','B3'], ['C2','G2','C3']],
+      pad: { type: 'triangle', attack: 0.1, release: 0.5 },
+      bass: { type: 'sawtooth', attack: 0.01, release: 0.2, pattern: ['E1','E1','A0','B0'], interval: '4n' },
+      melody: {
+        type: 'sawtooth', attack: 0.02, release: 0.3,
+        motifs: [
+          ['E3','G3','A3','B3'], ['G3','A3','B3','D4'],
+          ['A3','B3','D4','E4'], ['B3','D4','E4','G4']
+        ],
+        interval: '4n', variation: 0.3
+      },
+      reverb: 2,
+      delay: 0.1,
+      drums: { kick: '4n', hat: '8n', pop: '4n', hit: '4n' }
     }
   };
 

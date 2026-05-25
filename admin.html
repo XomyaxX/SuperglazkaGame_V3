@@ -594,6 +594,20 @@ const API_BASE = '/api';
 const UPLOADS_BASE = '/uploads/';
 let ADMIN_KEY = localStorage.getItem('admin_key') || '';
 
+const MOOD_LABELS = {
+  cosmic: 'Космическая',
+  joyful: 'Радостная',
+  tension: 'Мрачная',
+  peaceful: 'Спокойная',
+  magical: 'Волшебная',
+  triumphant: 'Победная',
+  warm: 'Уютная',
+  mystery: 'Загадочная',
+  epic: 'Эпичная',
+  sad: 'Грустная',
+  action: 'Боевая'
+};
+
 /* ═══════════════════════════════════════════════
    AUTH
    ═══════════════════════════════════════════════ */
@@ -1024,14 +1038,17 @@ function renderFrameEditor() {
             <select id="frameMood" onchange="scheduleFrameAutoSave()">
               <option value="">—</option>
               ${[
-                {v:'cosmic',l:'Космические пэды + медленный арпеджио'},
-                {v:'joyful',l:'Мажорные аккорды, лёгкие барабаны'},
-                {v:'tension',l:'Диссонансные дроны, низкие басы'},
-                {v:'peaceful',l:'Арфоподобные плаки, мягкие пэды'},
-                {v:'magical',l:'Колокольчики, арпеджио, задержки'},
-                {v:'triumphant',l:'Героические аккорды, маршевый ритм'},
-                {v:'warm',l:'Гитарные плаки, тёплые пэды'},
-                {v:'mystery',l:'Пиццикато, разреженная мелодия'}
+                {v:'cosmic',l:'Космическая'},
+                {v:'joyful',l:'Радостная'},
+                {v:'tension',l:'Мрачная'},
+                {v:'peaceful',l:'Спокойная'},
+                {v:'magical',l:'Волшебная'},
+                {v:'triumphant',l:'Победная'},
+                {v:'warm',l:'Уютная'},
+                {v:'mystery',l:'Загадочная'},
+                {v:'epic',l:'Эпичная'},
+                {v:'sad',l:'Грустная'},
+                {v:'action',l:'Боевая'}
               ].map(m =>
                 `<option value="${m.v}" ${(f.mood === m.v) ? 'selected' : ''}>${m.l}</option>`
               ).join('')}
@@ -1158,7 +1175,7 @@ function renderPreview() {
     </div>
     <div style="margin-bottom:8px;font-size:12px;color:var(--text-muted);">
       ${f.game_type || f.game ? '🎮 ' + (f.game_type || f.game) : ''}
-      ${f.mood ? ' · 🎭 ' + f.mood : ''}
+      ${f.mood ? ' · 🎭 ' + (MOOD_LABELS[f.mood] || f.mood) : ''}
     </div>
     <div class="preview-narration">
       ${escapeHtml(f.narration || '(нет повествования)').replace(/\n/g, '<br>')}
