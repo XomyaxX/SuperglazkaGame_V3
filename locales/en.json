@@ -498,18 +498,8 @@
   },
   "parents": {
     "title": "For Parents",
-    "subtitle": "Everything you need to know about your child's eye health",
-    "benefits": {
-      "title": "🎯 Project Benefits",
-      "attention": "Attention development",
-      "attentionDesc": "Game exercises train voluntary attention in children.",
-      "hygiene": "Vision hygiene",
-      "hygieneDesc": "The comic introduces children to eye health rules in an engaging form.",
-      "fatigue": "Fatigue prevention",
-      "fatigueDesc": "Exercises relieve tension after screen time.",
-      "muscles": "Muscle strengthening",
-      "musclesDesc": "Accommodation exercises strengthen eye muscles."
-    },
+    "subtitle": "Everything you need to know about your child's eye health and how Superglazka helps preserve it",
+    "benefits": "Project Benefits",
     "time": {
       "title": "⏱️ Time Recommendations",
       "chapterTime": "One chapter — 10–15 minutes.",
@@ -517,27 +507,19 @@
       "maxChapters": "No more than 2 chapters per day.",
       "lighting": "Good lighting."
     },
-    "explain": {
-      "title": "💬 How to explain to a child",
-      "p1": "«Superglazka teaches your eyes to be strong like a superhero's!»",
-      "p2": "«Exercises help eyes rest after tablet and phone use.»",
-      "p3": "«Every time you train, your eyes become faster and smarter.»",
-      "p4": "«It's like a gym, but for eyes — the more you practice, the better you see.»"
-    },
-    "checklist": {
-      "title": "📋 Parent Checklist",
-      "distance": "Child sits at least 30 cm from the screen.",
-      "rule202020": "After 20 minutes of screen time — 20 seconds of rest.",
-      "noGlare": "Room is well lit, no glare on the screen.",
-      "blink": "Child blinks during activities.",
-      "noScreenBeforeBed": "Evening: no screens 1 hour before bedtime."
-    },
+    "explain": "How to Explain to Your Child",
+    "checklist": "Parent Checklist",
     "contact": {
       "title": "📧 Feedback",
       "text": "Have questions, suggestions or comments? We are always happy to hear from you.",
       "email": "Write to hello@superglazka.ru",
       "socials": "Or find us on social media:"
-    }
+    },
+    "timeTips": "Time Recommendations",
+    "contactTitle": "📧 Feedback",
+    "contactDesc": "Have questions, suggestions or feedback? We are always happy to hear from you — it helps make the project better.",
+    "emailUs": "Write to hello@superglazka.ru",
+    "socials": "Or find us on social media: Telegram · VK"
   },
   "blog": {
     "title": "Superglazka Blog",
@@ -577,7 +559,8 @@
     "p6": "6. Cookies and localStorage",
     "p7": "7. Children's safety",
     "p8": "8. Policy changes",
-    "p9": "9. Contacts"
+    "p9": "9. Contacts",
+    "date": "Last updated: May 21, 2026"
   },
   "admin": {
     "login": "Admin Login",
@@ -653,5 +636,25 @@
     "login": "🔑 Already have an account? Login",
     "enterLogin": "🔑 Login / Register",
     "logout": "🚪 Logout"
+  },
+  "checklist": {
+    "title": "10 Eye Health Rules",
+    "subtitle": "Parent checklist · Print and hang on the fridge",
+    "progress": "Completed {{checked}} of {{total}}",
+    "dailyRules": "📋 Daily Rules",
+    "nutrition": "🥗 Nutrition & Lifestyle",
+    "prevention": "🏥 Prevention",
+    "item0": "20-20-20 Rule. Every 20 minutes of screen time — 20 seconds rest, look at 6 meters.",
+    "item1": "Screen distance. Minimum 50–60 cm to monitor, 30 cm to tablet.",
+    "item2": "Good lighting. No glare on screen, enough light in the room.",
+    "item3": "Blink more! Remind your child to blink while using screens.",
+    "item4": "No screens 1 hour before sleep. Blue light disrupts melatonin production.",
+    "item5": "Vitamin A. Carrots, pumpkin, apricots, liver — daily in diet.",
+    "item6": "Omega-3. Fish, flax seeds, walnuts — protect the retina.",
+    "item7": "Walks in fresh air. Minimum 1 hour a day — natural eye training.",
+    "item8": "Eye doctor checkup. Once a year even without complaints.",
+    "item9": "Do not rub eyes with dirty hands. Infections are a common cause of vision problems.",
+    "print": "🖨️ Print checklist",
+    "reset": "↺ Reset progress"
   }
 }

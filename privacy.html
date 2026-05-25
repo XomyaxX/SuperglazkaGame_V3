@@ -137,8 +137,8 @@ if ('serviceWorker' in navigator) {
   </header>
 
   <div class="privacy-content">
-    <h1>Политика конфиденциальности</h1>
-    <p class="privacy-date">Последнее обновление: 21 мая 2026 г.</p>
+    <h1 data-i18n="privacy.title">Политика конфиденциальности</h1>
+    <p class="privacy-date" data-i18n="privacy.date">Последнее обновление: 21 мая 2026 г.</p>
 
     <h2>1. Какие данные мы собираем</h2>
     <p>При использовании проекта «Суперглазка» мы можем собирать следующие данные:</p>
@@ -218,10 +218,10 @@ if (savedTheme) document.body.classList.add('theme-' + savedTheme);
 
   <div class="cookie-banner" id="cookieBanner">
     <div class="cookie-banner-text">
-      Мы используем localStorage и серверное хранилище для сохранения прогресса и настроек.
-      <a href="privacy.html">Политика конфиденциальности</a>
+      <span data-i18n="cookieBanner.text">Мы используем localStorage и серверное хранилище для сохранения прогресса и настроек.</span>
+      <a href="privacy.html" data-i18n="cookieBanner.privacy">Политика конфиденциальности</a>
     </div>
-    <button class="cookie-banner-btn" id="cookieAccept">Принять</button>
+    <button class="cookie-banner-btn" id="cookieAccept" data-i18n="cookieBanner.accept">Принять</button>
   </div>
   <script>
     (function() {

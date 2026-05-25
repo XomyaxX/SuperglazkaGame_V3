@@ -260,8 +260,8 @@ if ('serviceWorker' in navigator) {
   </header>
 
   <div class="checklist-content">
-    <h1>10 правил здоровья глаз</h1>
-    <p class="checklist-subtitle">Чек-лист для родителей · Распечатайте и повесьте на холодильник</p>
+    <h1 data-i18n="checklist.title">10 правил здоровья глаз</h1>
+    <p class="checklist-subtitle" data-i18n="checklist.subtitle">Чек-лист для родителей · Распечатайте и повесьте на холодильник</p>
 
     <div class="checklist-progress" id="checklistProgress">
       <div id="progressText">Выполнено 0 из 10</div>
@@ -269,29 +269,29 @@ if ('serviceWorker' in navigator) {
     </div>
 
     <div class="checklist-card">
-      <h2>📋 Ежедневные правила</h2>
-      <label class="checklist-item"><input type="checkbox" data-index="0"><span><strong>Правило 20-20-20.</strong> Каждые 20 минут экрана — 20 секунд отдыха, взгляд на 6 метров.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="1"><span><strong>Расстояние от экрана.</strong> Минимум 50–60 см до монитора, 30 см до планшета.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="2"><span><strong>Хорошее освещение.</strong> Нет бликов на экране, достаточно света в комнате.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="3"><span><strong>Моргай чаще!</strong> Напоминайте ребёнку моргать во время работы за экраном.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="4"><span><strong>Никаких экранов за 1 час до сна.</strong> Синий свет нарушает выработку мелатонина.</span></label>
+      <h2 data-i18n="checklist.dailyRules">📋 Ежедневные правила</h2>
+      <label class="checklist-item"><input type="checkbox" data-index="0"><span data-i18n="checklist.item0"><strong>Правило 20-20-20.</strong> Каждые 20 минут экрана — 20 секунд отдыха, взгляд на 6 метров.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="1"><span data-i18n="checklist.item1"><strong>Расстояние от экрана.</strong> Минимум 50–60 см до монитора, 30 см до планшета.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="2"><span data-i18n="checklist.item2"><strong>Хорошее освещение.</strong> Нет бликов на экране, достаточно света в комнате.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="3"><span data-i18n="checklist.item3"><strong>Моргай чаще!</strong> Напоминайте ребёнку моргать во время работы за экраном.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="4"><span data-i18n="checklist.item4"><strong>Никаких экранов за 1 час до сна.</strong> Синий свет нарушает выработку мелатонина.</span></label>
     </div>
 
     <div class="checklist-card">
-      <h2>🥗 Питание и образ жизни</h2>
-      <label class="checklist-item"><input type="checkbox" data-index="5"><span><strong>Витамин А.</strong> Морковь, тыква, абрикосы, печень — ежедневно в рационе.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="6"><span><strong>Омега-3.</strong> Рыба, семена льна, грецкие орехи — защищают сетчатку.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="7"><span><strong>Прогулки на свежем воздухе.</strong> Минимум 1 час в день — естественная тренировка глаз.</span></label>
+      <h2 data-i18n="checklist.nutrition">🥗 Питание и образ жизни</h2>
+      <label class="checklist-item"><input type="checkbox" data-index="5"><span data-i18n="checklist.item5"><strong>Витамин А.</strong> Морковь, тыква, абрикосы, печень — ежедневно в рационе.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="6"><span data-i18n="checklist.item6"><strong>Омега-3.</strong> Рыба, семена льна, грецкие орехи — защищают сетчатку.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="7"><span data-i18n="checklist.item7"><strong>Прогулки на свежем воздухе.</strong> Минимум 1 час в день — естественная тренировка глаз.</span></label>
     </div>
 
     <div class="checklist-card">
-      <h2>🏥 Профилактика</h2>
-      <label class="checklist-item"><input type="checkbox" data-index="8"><span><strong>Осмотр у офтальмолога.</strong> 1 раз в год даже при отсутствии жалоб.</span></label>
-      <label class="checklist-item"><input type="checkbox" data-index="9"><span><strong>Не трите глаза грязными руками.</strong> Инфекции — частая причина проблем со зрением.</span></label>
+      <h2 data-i18n="checklist.prevention">🏥 Профилактика</h2>
+      <label class="checklist-item"><input type="checkbox" data-index="8"><span data-i18n="checklist.item8"><strong>Осмотр у офтальмолога.</strong> 1 раз в год даже при отсутствии жалоб.</span></label>
+      <label class="checklist-item"><input type="checkbox" data-index="9"><span data-i18n="checklist.item9"><strong>Не трите глаза грязными руками.</strong> Инфекции — частая причина проблем со зрением.</span></label>
     </div>
 
-    <button class="checklist-print-btn" onclick="window.print()">🖨️ Распечатать чек-лист</button>
-    <button class="checklist-reset-btn" id="resetBtn">↺ Сбросить прогресс</button>
+    <button class="checklist-print-btn" onclick="window.print()" data-i18n="checklist.print">🖨️ Распечатать чек-лист</button>
+    <button class="checklist-reset-btn" id="resetBtn" data-i18n="checklist.reset">↺ Сбросить прогресс</button>
   </div>
 
   <footer class="land-footer" style="margin-top:40px;">
@@ -356,7 +356,7 @@ if ('serviceWorker' in navigator) {
 
   function updateProgress() {
     var checked = Array.prototype.filter.call(checkboxes, function(cb) { return cb.checked; }).length;
-    progressText.textContent = 'Выполнено ' + checked + ' из ' + total;
+    progressText.textContent = (window.I18n ? I18n.t('checklist.progress', {checked: checked, total: total}) : 'Выполнено ' + checked + ' из ' + total);
     progressFill.style.width = (checked / total * 100) + '%';
   }
 

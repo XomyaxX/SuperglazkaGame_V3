@@ -190,12 +190,12 @@ if ('serviceWorker' in navigator) {
   </header>
 
   <div class="blog-hero">
-    <h1>Блог Суперглазки</h1>
-    <p>Полезные советы о здоровье глаз для детей и родителей</p>
+    <h1 data-i18n="blog.title">Блог Суперглазки</h1>
+    <p data-i18n="blog.subtitle">Полезные советы о здоровье глаз для детей и родителей</p>
   </div>
 
   <div class="blog-list" id="blogList">
-    <div class="blog-loading">Загрузка статей...</div>
+    <div class="blog-loading" data-i18n="blog.loading">Загрузка статей...</div>
   </div>
 
   <footer class="land-footer" style="margin-top:60px;">
@@ -229,7 +229,7 @@ if ('serviceWorker' in navigator) {
 
   function renderPosts(posts) {
     if (!posts || posts.length === 0) {
-      list.innerHTML = '<div class="blog-empty">Пока нет статей. Загляни позже!</div>';
+      list.innerHTML = '<div class="blog-empty" data-i18n="blog.empty">' + (window.I18n ? I18n.t('blog.empty') : 'Пока нет статей. Загляни позже!') + '</div>';
       return;
     }
     list.innerHTML = posts.map(function(post) {
@@ -266,7 +266,7 @@ if ('serviceWorker' in navigator) {
       if (data.success) {
         renderPosts(data.posts);
       } else {
-        list.innerHTML = '<div class="blog-error">Не удалось загрузить статьи</div>';
+        list.innerHTML = '<div class="blog-error" data-i18n="blog.error">' + (window.I18n ? I18n.t('blog.error') : 'Не удалось загрузить статьи') + '</div>';
       }
     })
     .catch(function() {
