@@ -3,7 +3,7 @@
   'use strict';
 
   const GA4_ID = 'G-RGNEEV29CZ'; // GA4 Stream ID
-  const YM_ID = '12345678';      // TODO: replace with real Yandex Metrika ID
+  const YM_ID = '109403755';      // Yandex Metrika ID
 
   // Google Analytics 4
   if (GA4_ID && !GA4_ID.includes('XXXX')) {
