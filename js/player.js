@@ -242,23 +242,6 @@ const PlayerProfile = (function() {
     const coinsEl = modal.querySelector('.profile-coins-big');
     if (coinsEl) coinsEl.textContent = p.coins;
 
-    // Episode list
-    const epList = modal.querySelector('.profile-episodes');
-    if (epList) {
-      epList.textContent = '';
-      Object.entries(p.episodes).forEach(([id, data]) => {
-        const row = document.createElement('div');
-        row.className = 'profile-row';
-        const left = document.createElement('span');
-        left.textContent = (window.I18n ? I18n.t('episodes.ep1.num') : 'Глава') + ' ' + id;
-        const right = document.createElement('span');
-        right.textContent = data.completed ? '✅' : '🔒';
-        row.appendChild(left);
-        row.appendChild(right);
-        epList.appendChild(row);
-      });
-    }
-
     // Games stats
     const gamesList = modal.querySelector('.profile-games');
     if (gamesList) {
