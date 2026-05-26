@@ -2791,6 +2791,18 @@ body {
   justify-content: space-between;
   gap: 10px;
 }
+.settings-row.audio-row {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+.settings-row.audio-row .settings-row-info {
+  width: 100%;
+}
+.settings-row.audio-row .bs-volume-row.compact {
+  width: 100%;
+  justify-content: flex-start;
+}
 .settings-row-info {
   display: flex;
   align-items: center;
