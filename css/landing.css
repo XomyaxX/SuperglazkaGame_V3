@@ -944,11 +944,16 @@ body {
 .char-modal-img {
   position: relative;
   z-index: 2;
-  max-width: 100%;
-  max-height: 520px;
+  max-width: 90%;
+  max-height: 420px;
+  width: auto;
+  height: auto;
   object-fit: contain;
   object-position: bottom center;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  padding: 8px;
 }
 
 .char-modal-frame {
@@ -1064,11 +1069,12 @@ body {
   }
   .char-modal-visual {
     width: 100%;
-    min-height: 280px;
-    max-height: 360px;
+    min-height: 240px;
+    max-height: 320px;
   }
   .char-modal-img {
-    max-height: 340px;
+    max-height: 280px;
+    max-width: 85%;
   }
   .char-modal-info {
     padding: 24px 20px;
@@ -1080,10 +1086,13 @@ body {
 
 @media (max-width: 480px) {
   .char-modal-visual {
-    min-height: 220px;
+    min-height: 200px;
+    max-height: 280px;
   }
   .char-modal-img {
-    max-height: 260px;
+    max-height: 220px;
+    max-width: 80%;
+    padding: 4px;
   }
 }
 

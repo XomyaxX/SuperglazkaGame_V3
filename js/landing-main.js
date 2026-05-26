@@ -333,7 +333,11 @@
   function openModal(key) {
     var data = charData[key];
     if (!data) return;
-    document.getElementById('charModalImg').src = data.img;
+    var imgPath = data.img;
+    if (imgPath.indexOf('.png') !== -1) {
+      imgPath = imgPath.replace('.png', '.webp');
+    }
+    document.getElementById('charModalImg').src = imgPath;
     document.getElementById('charModalImg').alt = data.name;
     document.getElementById('charModalName').textContent = data.name;
     document.getElementById('charModalRole').textContent = data.role;
