@@ -620,6 +620,20 @@ const MOOD_LABELS = {
   action: 'Боевая'
 };
 
+const MOOD_GRADIENTS = {
+  cosmic: 'radial-gradient(ellipse at 50% 50%, #312e81 0%, #1e1b4b 40%, #0f0a1e 100%)',
+  joyful: 'radial-gradient(ellipse at 50% 50%, #f59e0b 0%, #b45309 40%, #451a03 100%)',
+  tension: 'radial-gradient(ellipse at 50% 50%, #7c2d12 0%, #450a0a 40%, #1a0505 100%)',
+  peaceful: 'radial-gradient(ellipse at 50% 50%, #0ea5e9 0%, #0369a1 40%, #0c1e3a 100%)',
+  magical: 'radial-gradient(ellipse at 50% 50%, #a855f7 0%, #6b21a8 40%, #2e1065 100%)',
+  triumphant: 'radial-gradient(ellipse at 50% 50%, #eab308 0%, #a16207 40%, #422006 100%)',
+  warm: 'radial-gradient(ellipse at 50% 50%, #f97316 0%, #c2410c 40%, #431407 100%)',
+  mystery: 'radial-gradient(ellipse at 50% 50%, #6366f1 0%, #3730a3 40%, #1e1b4b 100%)',
+  epic: 'radial-gradient(ellipse at 50% 50%, #dc2626 0%, #991b1b 40%, #450a0a 100%)',
+  sad: 'radial-gradient(ellipse at 50% 50%, #64748b 0%, #334155 40%, #0f172a 100%)',
+  action: 'radial-gradient(ellipse at 50% 50%, #ef4444 0%, #b91c1c 40%, #450a0a 100%)'
+};
+
 /* ═══════════════════════════════════════════════
    AUTH
    ═══════════════════════════════════════════════ */
@@ -1016,16 +1030,8 @@ function renderFrameEditor() {
           <label>Текст перехода (transitionText)</label>
           <input id="frameTransition" value="${escapeHtml(f.transitionText || f.transition_text || '')}" oninput="scheduleFrameAutoSave()">
         </div>
-        <div class="form-group">
-          <label>Video Prompt</label>
-          <textarea id="frameVideoPrompt" oninput="scheduleFrameAutoSave()">${escapeHtml(f.videoPrompt || f.video_prompt || '')}</textarea>
-        </div>
       </div>
       <div>
-        <div class="form-group">
-          <label>Фоновый градиент (CSS)</label>
-          <input id="frameBgGradient" value="${escapeHtml(f.bgGradient || f.bg_gradient || '')}" oninput="scheduleFrameAutoSave();renderPreview()">
-        </div>
         <div class="form-group">
           <label>Фоновое изображение</label>
           <div class="dropzone" onclick="document.getElementById('frameImgInput').click()" id="frameImgDropzone">
@@ -1037,14 +1043,14 @@ function renderFrameEditor() {
           <label>Фоновое видео</label>
           <div class="dropzone" onclick="document.getElementById('frameVidInput').click()" id="frameVidDropzone">
             <input type="file" id="frameVidInput" accept="video/*" onchange="handleFrameMediaUpload(this, 'videoSrc')">
-            ${f.background_video || f.videoSrc ? `<div class="file-name">${escapeHtml(f.background_video || f.videoSrc)}</div>` : '<div>Загрузить видео</div>'}
+            ${f.background_video || f.videoSrc ? `<video controls style="max-width:100%;max-height:160px;border-radius:8px;" src="${UPLOADS_BASE}${f.background_video || f.videoSrc}"></video>` : '<div>Загрузить видео</div>'}
           </div>
         </div>
         <div class="form-group">
           <label>Озвучка повествования</label>
           <div class="dropzone" onclick="document.getElementById('frameAudioInput').click()" id="frameAudioDropzone">
             <input type="file" id="frameAudioInput" accept="audio/*" onchange="handleFrameMediaUpload(this, 'audioSrc')">
-            ${f.audio_src || f.audioSrc ? `<div class="file-name">${escapeHtml(f.audio_src || f.audioSrc)}</div>` : '<div>Загрузить аудио</div>'}
+            ${f.audio_src || f.audioSrc ? `<audio controls style="width:100%;" src="${UPLOADS_BASE}${f.audio_src || f.audioSrc}"></audio>` : '<div>Загрузить аудио</div>'}
           </div>
         </div>
       </div>
@@ -1121,8 +1127,8 @@ function renderFrameEditor() {
         <h3 style="margin-top:16px;">🔊 Аудио диалогов</h3>
         <div id="dialogueAudioList">
           ${dlgAudio.map((a, i) => `
-            <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-              <span style="font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(a)}</span>
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+              <audio controls style="flex:1;min-width:0;height:32px;" src="${UPLOADS_BASE}${escapeHtml(a)}"></audio>
               <button class="btn btn-sm btn-danger" onclick="removeDialogueAudio(${i})">×</button>
             </div>
           `).join('')}
@@ -1170,7 +1176,7 @@ function renderPreview() {
     return;
   }
   const f = selectedFrame;
-  const bgStyle = f.bgGradient || f.bg_gradient || 'var(--bg-tertiary)';
+  const bgStyle = f.background_image || f.bgImage ? '' : (MOOD_GRADIENTS[f.mood] || 'radial-gradient(ellipse at 50% 50%, #312e81 0%, #1e1b4b 40%, #0f0a1e 100%)');
   const bgImg = f.background_image || f.bgImage;
   const dialogues = f.dialogue || f.dialogues || [];
 
@@ -1388,9 +1394,7 @@ function collectFramePayload() {
     game_type: document.getElementById('frameGame')?.value || '',
     choices: selectedFrame.choices || [],
     transition_text: document.getElementById('frameTransition')?.value || '',
-    video_prompt: document.getElementById('frameVideoPrompt')?.value || '',
-    available_games: availableGames,
-    bg_gradient: document.getElementById('frameBgGradient')?.value || ''
+    available_games: availableGames
   };
 }
 
@@ -1414,12 +1418,8 @@ async function saveFrameNow(silent = false) {
       game_type: payload.game_type,
       transition_text: payload.transition_text,
       transitionText: payload.transition_text,
-      video_prompt: payload.video_prompt,
-      videoPrompt: payload.video_prompt,
       available_games: payload.available_games,
-      availableGames: payload.available_games,
-      bg_gradient: payload.bg_gradient,
-      bgGradient: payload.bg_gradient
+      availableGames: payload.available_games
     });
     frameUploads[selectedFrame.id] = {};
     setFrameAutosaveStatus('saved');
