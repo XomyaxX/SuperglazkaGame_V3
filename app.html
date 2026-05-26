@@ -438,6 +438,7 @@ if ('serviceWorker' in navigator) {
     <div class="stats-section"><h3 data-i18n="games.stats.bonuses">💎 Бонусы</h3><div class="stat-row"><span data-i18n="games.stats.collected">Собрано:</span><span class="stat-value" id="runner-stats-bonuses">0</span></div></div>
     <div class="stats-section"><h3 data-i18n="games.stats.result">🎯 Результат</h3><div class="stat-row"><span data-i18n="games.stats.distance">Дистанция:</span><span class="stat-value">2000м</span></div><div class="stat-row"><span data-i18n="games.stats.status">Статус:</span><span class="stat-value" id="runner-stats-status" data-i18n="games.stats.victory">Победа!</span></div></div>
     <div class="total-score" id="runner-total-score" data-i18n="games.stats.rating">🏆 Оценка: ⭐⭐⭐</div>
+    <div class="total-score" id="runner-best-score" style="font-size:14px;color:var(--neon-cyan);">🏆 Рекорд: —</div>
   </div>
   <button class="tr-btn" onclick="showRunnerRegistration()" style="margin-top:20px;" data-i18n="app.continue">Продолжить ➜</button>
 </div>
@@ -498,6 +499,7 @@ if ('serviceWorker' in navigator) {
     <div class="stats-section"><h3 data-i18n="games.gym.aimName">🎯 Точный Прицел</h3><div class="stat-row"><span data-i18n="games.stats.hits">Попаданий:</span><span class="stat-value" id="stats-p2-hits">0/5</span></div><div class="stat-row"><span data-i18n="games.stats.avgAimTime">Среднее время наведения:</span><span class="stat-value" id="stats-p2-time">0с</span></div></div>
     <div class="stats-section"><h3 data-i18n="games.gym.tearName">💧 Слезный Водопад</h3><div class="stat-row"><span data-i18n="games.stats.waterfalls">Водопадов:</span><span class="stat-value" id="stats-p3-hits">0/4</span></div><div class="stat-row"><span data-i18n="games.stats.totalBlinks">Всего морганий:</span><span class="stat-value" id="stats-p3-blinks">0</span></div></div>
     <div class="total-score" id="stats-score" data-i18n="games.stats.totalScore">🏆 Общий счёт: 0</div>
+    <div class="total-score" id="stats-best-score" style="font-size:14px;color:var(--neon-cyan);">🏆 Лучший счёт: —</div>
   </div>
   <button class="tr-btn" onclick="showRegistration()" style="margin-top:20px;" data-i18n="app.continue">Продолжить ➜</button>
 </div>
@@ -614,6 +616,7 @@ if ('serviceWorker' in navigator) {
   <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
   <div class="win-title" data-i18n="app.wellDone">Молодец!</div>
   <div class="win-sub" data-i18n="games.blink.win">Глаза в порядке!<br>+100 🪙</div>
+  <div class="win-sub" id="blink-best-score" style="font-size:13px;color:var(--neon-cyan);margin-top:4px;">🏆 Рекорд: —</div>
   <button class="win-btn" onclick="closeBlinkContinue()" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
@@ -637,6 +640,7 @@ if ('serviceWorker' in navigator) {
   <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
   <div class="win-title" data-i18n="app.great">Отлично!</div>
   <div class="win-sub" data-i18n="games.tracker.win">Глаза отдохнули!<br>+100 🪙</div>
+  <div class="win-sub" id="tracker-best-score" style="font-size:13px;color:var(--neon-cyan);margin-top:4px;">🏆 Рекорд: —</div>
   <button class="win-btn" onclick="closeTrackerContinue()" data-i18n="app.continue">Продолжить ➜</button>
 </div>
 
@@ -673,6 +677,7 @@ if ('serviceWorker' in navigator) {
 <script src="js/tone.min.js" defer></script>
 <script src="js/background-music.js" defer></script>
 <script src="js/game-difficulty.js" defer></script>
+<script src="js/haptic.js" defer></script>
 <script src="js/game_runner.js" defer></script>
 <script src="js/game_gymnastics.js" defer></script>
 <script src="js/game_blink.js" defer></script>

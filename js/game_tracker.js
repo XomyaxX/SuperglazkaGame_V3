@@ -250,6 +250,16 @@ const TrackerGame = (function() {
       PlayerProfile.addCoins(100);
       PlayerProfile.completeGame('tracker', 100);
     }
+    if (typeof Haptic !== 'undefined') {
+      Haptic.vibrateSuccess();
+    }
+    var bestTracker = 0;
+    if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) {
+      var pt = PlayerProfile.getProfile();
+      if (pt && pt.games && pt.games.tracker) bestTracker = pt.games.tracker.bestScore || 0;
+    }
+    var bestEl = document.getElementById('tracker-best-score');
+    if (bestEl) bestEl.textContent = (window.I18n ? I18n.t('games.stats.best') : '🏆 Рекорд: ') + bestTracker;
     if (typeof GameDifficulty !== 'undefined') {
       GameDifficulty.increaseLevel('tracker');
     }

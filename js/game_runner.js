@@ -712,6 +712,15 @@ const RunnerGame = (function(){
       // Store stats globally for registration
       window.lastRunnerStats = {...runnerStats};
       
+      // Save score and haptic
+      var runnerScore = runnerStats.stars * 100;
+      if (typeof PlayerProfile !== 'undefined') {
+        PlayerProfile.completeGame('runner', runnerScore);
+      }
+      if (typeof Haptic !== 'undefined') {
+        Haptic.vibrateSuccess();
+      }
+      
       // Increase difficulty level on victory
       if (typeof GameDifficulty !== 'undefined') {
         GameDifficulty.increaseLevel('runner');
@@ -796,6 +805,16 @@ const RunnerGame = (function(){
     const scoreEl = document.getElementById('runner-total-score');
     if (scoreEl) {
       scoreEl.textContent = (window.I18n ? I18n.t('games.stats.rating') : '🏆 Оценка: ') + '⭐'.repeat(runnerStats.stars);
+    }
+    
+    const bestEl = document.getElementById('runner-best-score');
+    if (bestEl) {
+      var best = 0;
+      if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) {
+        var p = PlayerProfile.getProfile();
+        if (p && p.games && p.games.runner) best = p.games.runner.bestScore || 0;
+      }
+      bestEl.textContent = (window.I18n ? I18n.t('games.stats.best') : '🏆 Рекорд: ') + best;
     }
     
     overlay.classList.add('visible');

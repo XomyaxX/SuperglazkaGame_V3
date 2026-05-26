@@ -674,6 +674,11 @@ const GymGame = (function(){
     gameStats.totalTime = Date.now() - gameStartTime;
     gameStats.phase3.blinks = totalBlinks;
     
+    // Haptic feedback
+    if (typeof Haptic !== 'undefined') {
+      Haptic.vibrateSuccess();
+    }
+    
     // Increase difficulty on victory
     if (typeof GameDifficulty !== 'undefined') {
       GameDifficulty.increaseLevel('gym');
@@ -760,6 +765,16 @@ const GymGame = (function(){
     
     const scoreEl = getEl('stats-score');
     if (scoreEl) scoreEl.textContent = '🏆 ' + (window.I18n ? I18n.t('games.stats.totalScoreShort') : 'Общий счёт: ') + gameStats.totalScore;
+    
+    const bestEl = getEl('stats-best-score');
+    if (bestEl) {
+      var best = 0;
+      if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) {
+        var p = PlayerProfile.getProfile();
+        if (p && p.games && p.games.gym) best = p.games.gym.bestScore || 0;
+      }
+      bestEl.textContent = '🏆 ' + (window.I18n ? I18n.t('games.stats.best') : 'Лучший счёт: ') + best;
+    }
   }
   
   window.showRegistration = function() {

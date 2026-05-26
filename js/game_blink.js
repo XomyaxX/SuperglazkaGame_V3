@@ -349,6 +349,16 @@ const BlinkGame = (function() {
       PlayerProfile.addCoins(100);
       PlayerProfile.completeGame('blink', 100);
     }
+    if (typeof Haptic !== 'undefined') {
+      Haptic.vibrateSuccess();
+    }
+    var bestBlink = 0;
+    if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) {
+      var pb = PlayerProfile.getProfile();
+      if (pb && pb.games && pb.games.blink) bestBlink = pb.games.blink.bestScore || 0;
+    }
+    var bestEl = document.getElementById('blink-best-score');
+    if (bestEl) bestEl.textContent = (window.I18n ? I18n.t('games.stats.best') : '🏆 Рекорд: ') + bestBlink;
     if (typeof GameDifficulty !== 'undefined') {
       GameDifficulty.increaseLevel('blink');
     }
