@@ -494,12 +494,26 @@
         <input type="text" id="guestNickname" placeholder="Придумай никнейм" maxlength="20" data-i18n-placeholder="profileLanding.nicknamePlaceholder">
         <button class="profile-guest-btn" id="guestPlayBtn" data-i18n="profileLanding.play">🚀 Играть!</button>
       </div>
+      <div class="profile-register-form" id="registerForm">
+        <input type="text" id="regNickname" placeholder="Никнейм" maxlength="20" data-i18n-placeholder="auth.nickname">
+        <input type="email" id="regEmail" placeholder="Email" data-i18n-placeholder="auth.email">
+        <input type="password" id="regPassword" placeholder="Пароль (минимум 6 символов)" data-i18n-placeholder="auth.passwordMin6">
+        <label class="profile-consent-label">
+          <input type="checkbox" id="regConsent">
+          <span>Согласен с <a href="privacy.html" target="_blank">политикой конфиденциальности</a></span>
+        </label>
+        <button class="profile-guest-btn" id="registerBtn" data-i18n="auth.registerBtn">🚀 Зарегистрироваться</button>
+      </div>
       <div class="profile-login-form" id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email" data-i18n-placeholder="auth.email">
         <input type="password" id="loginPassword" placeholder="Пароль" data-i18n-placeholder="auth.password">
         <button class="profile-guest-btn" id="loginBtn" data-i18n="profileLanding.login">🔑 Войти</button>
       </div>
-      <button class="profile-guest-switch" id="authSwitch" data-i18n="profileLanding.haveAccount">Уже есть аккаунт? Войти</button>
+      <div class="profile-auth-tabs" id="authTabs">
+        <button class="profile-auth-tab active" data-target="guestForm" data-i18n="auth.guest">Гость</button>
+        <button class="profile-auth-tab" data-target="registerForm" data-i18n="auth.register">Регистрация</button>
+        <button class="profile-auth-tab" data-target="loginForm" data-i18n="auth.login">Вход</button>
+      </div>
     </div>
     <div class="profile-user-card" id="profileUser" style="display:none;">
       <div class="profile-avatar" id="userAvatar">👤</div>
@@ -703,24 +717,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function initGuestForm() {
     const guestBtn = document.getElementById('guestPlayBtn');
+    const registerBtn = document.getElementById('registerBtn');
     const loginBtn = document.getElementById('loginBtn');
-    const switchBtn = document.getElementById('authSwitch');
+    const tabs = document.querySelectorAll('.profile-auth-tab');
     const guestForm = document.getElementById('guestForm');
+    const registerForm = document.getElementById('registerForm');
     const loginForm = document.getElementById('loginForm');
 
-    if (switchBtn) {
-      switchBtn.addEventListener('click', function() {
-        const showingLogin = loginForm.classList.contains('active');
-        if (showingLogin) {
-          loginForm.classList.remove('active');
-          guestForm.style.display = 'flex';
-          switchBtn.textContent = 'Уже есть аккаунт? Войти';
-        } else {
-          guestForm.style.display = 'none';
-          loginForm.classList.add('active');
-          switchBtn.textContent = 'Нет аккаунта? Быстрый старт';
-        }
+    function showForm(name) {
+      guestForm.style.display = name === 'guest' ? 'flex' : 'none';
+      registerForm.classList.toggle('active', name === 'register');
+      loginForm.classList.toggle('active', name === 'login');
+      tabs.forEach(function(t) {
+        t.classList.toggle('active', t.dataset.target === (name === 'guest' ? 'guestForm' : name === 'register' ? 'registerForm' : 'loginForm'));
       });
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        var target = tab.dataset.target;
+        if (target === 'guestForm') showForm('guest');
+        else if (target === 'registerForm') showForm('register');
+        else if (target === 'loginForm') showForm('login');
+      });
+    });
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
     if (guestBtn) {
@@ -738,11 +761,34 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    if (registerBtn) {
+      registerBtn.addEventListener('click', async function() {
+        const nick = document.getElementById('regNickname').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        const consent = document.getElementById('regConsent').checked;
+        if (!nick) { alert('Введи никнейм!'); return; }
+        if (!email) { alert('Введи email!'); return; }
+        if (!validateEmail(email)) { alert('Введи корректный email!'); return; }
+        if (!password || password.length < 6) { alert('Пароль должен быть минимум 6 символов!'); return; }
+        if (!consent) { alert('Необходимо согласие с политикой конфиденциальности!'); return; }
+        if (typeof Auth !== 'undefined' && Auth.register) {
+          try {
+            await Auth.register(email, '', password, nick);
+            window.location.reload();
+          } catch (e) {
+            alert('Ошибка: ' + (e.message || 'Не удалось зарегистрироваться'));
+          }
+        }
+      });
+    }
+
     if (loginBtn) {
       loginBtn.addEventListener('click', async function() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
         if (!email || !password) { alert('Введи email и пароль!'); return; }
+        if (!validateEmail(email)) { alert('Введи корректный email!'); return; }
         if (typeof Auth !== 'undefined' && Auth.login) {
           try {
             await Auth.login(email, password);
