@@ -160,30 +160,30 @@
   },
   "artifacts": {
     "title": "🎒 Artifacts",
-    "sub": "Items that will help you in your adventures",
-    "shield": {
-      "name": "Shield Glasses",
-      "desc": "Protect against Pixel's harmful rays"
+    "sub": "Real items that help protect your eyesight",
+    "lamp": {
+      "name": "Crystal of Videal",
+      "desc": "Desktop LED lamp with eye protection — no Pixel's rays!"
     },
-    "drops": {
+    "stand": {
+      "name": "Shield of Superglazka",
+      "desc": "Book and tablet stand — the right angle for your eyes"
+    },
+    "mask": {
       "name": "Elixir Drops",
-      "desc": "Restore eye strength between levels"
+      "desc": "Gel eye mask — restore strength before battling Lazivus"
     },
-    "lens": {
-      "name": "Magnifying Lens",
-      "desc": "Enlarges targets in arrow trainer games"
+    "timer": {
+      "name": "20-20-20 Timer",
+      "desc": "Reminder bracelet — look away from the screen every 20 minutes"
     },
-    "binoculars": {
-      "name": "Scout Binoculars",
-      "desc": "Lets you peek behind obstacles during chases"
-    },
-    "carrot": {
+    "grow": {
       "name": "Carrot Booster",
-      "desc": "Gives a short speed bonus"
+      "desc": "Carrot growing kit — grow your super vision!"
     },
-    "flashlight": {
-      "name": "Searchlight Flashlight",
-      "desc": "Illuminates hidden objects in the dark"
+    "cards": {
+      "name": "Artifact Cards",
+      "desc": "6 laminated cards with QR — scan and get in-game bonuses"
     }
   },
   "profileLanding": {
