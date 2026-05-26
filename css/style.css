@@ -2706,10 +2706,9 @@ body {
 .bs-volume-row.compact {
   gap: 8px;
   margin-top: 0;
-  flex-shrink: 0;
+  flex: 1 1 auto;
   justify-content: flex-end;
-  width: 170px;
-  max-width: 170px;
+  min-width: 0;
 }
 
 .bs-volume-row .vol-icon {
