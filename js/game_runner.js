@@ -717,6 +717,9 @@ const RunnerGame = (function(){
       if (typeof PlayerProfile !== 'undefined') {
         PlayerProfile.completeGame('runner', runnerScore);
       }
+      if (typeof Leaderboard !== 'undefined') {
+        Leaderboard.recordScore('runner', runnerScore);
+      }
       if (typeof Haptic !== 'undefined') {
         Haptic.vibrateSuccess();
       }
@@ -748,6 +751,15 @@ const RunnerGame = (function(){
       const skipBtn = document.querySelector('#game-overlay-runner .runner-controls button');
       if (skipBtn) {
         skipBtn.addEventListener('touchstart', (e) => { e.preventDefault(); closeRunner(true); }, {passive: false});
+      }
+
+      // Tutorial
+      if (typeof Tutorial !== 'undefined') {
+        Tutorial.start('runner', [
+          { target: '#game-overlay-runner canvas', text: (window.I18n ? I18n.t('games.runner.tutorial1') : '👆 ТАП = прыжок. Нажми на экран, чтобы перепрыгнуть препятствие.'), position: 'top' },
+          { target: '#game-overlay-runner canvas', text: (window.I18n ? I18n.t('games.runner.tutorial2') : 'Два тапа подряд = двойной прыжок. Используй для высоких барьеров!'), position: 'top' },
+          { target: '#game-overlay-runner canvas', text: (window.I18n ? I18n.t('games.runner.tutorial3') : 'Собирай 💎 бонусы для дополнительных очков!'), position: 'top' }
+        ]);
       }
     }, 50);
   };

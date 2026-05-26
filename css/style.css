@@ -3730,3 +3730,62 @@ body.device-touch .chapter-card:hover {
     letter-spacing: 2px;
   }
 }
+
+
+/* ─── TUTORIAL OVERLAY ─── */
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+}
+.tutorial-highlight {
+  position: absolute;
+  border: 3px solid var(--neon-purple);
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.75), 0 0 30px var(--neon-purple);
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+.tutorial-tooltip {
+  position: absolute;
+  z-index: 10000;
+  background: rgba(15,8,35,0.95);
+  border: 1px solid rgba(168,85,247,0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  max-width: 280px;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  pointer-events: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+.tutorial-tooltip .tutorial-next {
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 50px;
+  padding: 8px 18px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.tutorial-tooltip .tutorial-next:hover {
+  transform: scale(1.05);
+}
+.tutorial-tooltip .tutorial-skip {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.5);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+.tutorial-tooltip .tutorial-skip:hover {
+  color: var(--neon-purple);
+}

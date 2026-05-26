@@ -349,6 +349,9 @@ const BlinkGame = (function() {
       PlayerProfile.addCoins(100);
       PlayerProfile.completeGame('blink', 100);
     }
+    if (typeof Leaderboard !== 'undefined') {
+      Leaderboard.recordScore('blink', 100);
+    }
     if (typeof Haptic !== 'undefined') {
       Haptic.vibrateSuccess();
     }

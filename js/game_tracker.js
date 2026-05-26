@@ -250,6 +250,9 @@ const TrackerGame = (function() {
       PlayerProfile.addCoins(100);
       PlayerProfile.completeGame('tracker', 100);
     }
+    if (typeof Leaderboard !== 'undefined') {
+      Leaderboard.recordScore('tracker', 100);
+    }
     if (typeof Haptic !== 'undefined') {
       Haptic.vibrateSuccess();
     }

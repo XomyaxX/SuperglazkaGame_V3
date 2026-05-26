@@ -441,6 +441,7 @@ if ('serviceWorker' in navigator) {
     <div class="total-score" id="runner-best-score" style="font-size:14px;color:var(--neon-cyan);">🏆 Рекорд: —</div>
   </div>
   <button class="tr-btn" onclick="showRunnerRegistration()" style="margin-top:20px;" data-i18n="app.continue">Продолжить ➜</button>
+  <button class="tr-btn" onclick="Leaderboard.showModal('runner')" style="margin-top:8px;background:rgba(255,255,255,0.08);color:var(--neon-cyan);">🏆 Топ-5</button>
 </div>
 
 <div class="overlay" id="runner-registration-overlay">
@@ -502,6 +503,7 @@ if ('serviceWorker' in navigator) {
     <div class="total-score" id="stats-best-score" style="font-size:14px;color:var(--neon-cyan);">🏆 Лучший счёт: —</div>
   </div>
   <button class="tr-btn" onclick="showRegistration()" style="margin-top:20px;" data-i18n="app.continue">Продолжить ➜</button>
+  <button class="tr-btn" onclick="Leaderboard.showModal('gym')" style="margin-top:8px;background:rgba(255,255,255,0.08);color:var(--neon-cyan);">🏆 Топ-5</button>
 </div>
 
 <div class="overlay" id="registration-overlay">
@@ -618,6 +620,7 @@ if ('serviceWorker' in navigator) {
   <div class="win-sub" data-i18n="games.blink.win">Глаза в порядке!<br>+100 🪙</div>
   <div class="win-sub" id="blink-best-score" style="font-size:13px;color:var(--neon-cyan);margin-top:4px;">🏆 Рекорд: —</div>
   <button class="win-btn" onclick="closeBlinkContinue()" data-i18n="app.continue">Продолжить ➜</button>
+  <button class="win-btn" onclick="Leaderboard.showModal('blink')" style="margin-top:8px;background:rgba(255,255,255,0.08);color:var(--neon-cyan);font-size:13px;">🏆 Топ-5</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -642,6 +645,7 @@ if ('serviceWorker' in navigator) {
   <div class="win-sub" data-i18n="games.tracker.win">Глаза отдохнули!<br>+100 🪙</div>
   <div class="win-sub" id="tracker-best-score" style="font-size:13px;color:var(--neon-cyan);margin-top:4px;">🏆 Рекорд: —</div>
   <button class="win-btn" onclick="closeTrackerContinue()" data-i18n="app.continue">Продолжить ➜</button>
+  <button class="win-btn" onclick="Leaderboard.showModal('tracker')" style="margin-top:8px;background:rgba(255,255,255,0.08);color:var(--neon-cyan);font-size:13px;">🏆 Топ-5</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -678,6 +682,8 @@ if ('serviceWorker' in navigator) {
 <script src="js/background-music.js" defer></script>
 <script src="js/game-difficulty.js" defer></script>
 <script src="js/haptic.js" defer></script>
+<script src="js/tutorial.js" defer></script>
+<script src="js/leaderboard.js" defer></script>
 <script src="js/game_runner.js" defer></script>
 <script src="js/game_gymnastics.js" defer></script>
 <script src="js/game_blink.js" defer></script>

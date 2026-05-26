@@ -679,6 +679,14 @@ const GymGame = (function(){
       Haptic.vibrateSuccess();
     }
     
+    // Save progress
+    if (typeof PlayerProfile !== 'undefined') {
+      PlayerProfile.completeGame('gym', gameStats.totalScore);
+    }
+    if (typeof Leaderboard !== 'undefined') {
+      Leaderboard.recordScore('gym', gameStats.totalScore);
+    }
+    
     // Increase difficulty on victory
     if (typeof GameDifficulty !== 'undefined') {
       GameDifficulty.increaseLevel('gym');
