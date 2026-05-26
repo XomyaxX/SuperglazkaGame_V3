@@ -39,4 +39,15 @@
       trackHash: true
     });
   }
+
+  // Universal event tracker
+  window.trackEvent = function(eventName, params) {
+    params = params || {};
+    if (window.gtag) {
+      gtag('event', eventName, params);
+    }
+    if (window.ym && YM_ID) {
+      ym(YM_ID, 'reachGoal', eventName, params);
+    }
+  };
 })();

@@ -256,6 +256,7 @@ const TrackerGame = (function() {
     if (typeof Haptic !== 'undefined') {
       Haptic.vibrateSuccess();
     }
+    if (typeof trackEvent === 'function') trackEvent('game_completed', { game_type: 'tracker', score: 100 });
     var bestTracker = 0;
     if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) {
       var pt = PlayerProfile.getProfile();
@@ -285,8 +286,9 @@ window.startTrackerGame = function() {
 
 window.closeTracker = function(skip) {
   TrackerGame.closeGame();
-  if (skip && typeof App !== 'undefined') {
-    setTimeout(() => App.advanceFromGame(), 300);
+  if (skip) {
+    if (typeof trackEvent === 'function') trackEvent('game_skipped', { game_type: 'tracker' });
+    if (typeof App !== 'undefined') setTimeout(() => App.advanceFromGame(), 300);
   }
 };
 

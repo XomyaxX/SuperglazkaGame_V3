@@ -731,6 +731,9 @@ document.addEventListener('DOMContentLoaded', function() {
       tabs.forEach(function(t) {
         t.classList.toggle('active', t.dataset.target === (name === 'guest' ? 'guestForm' : name === 'register' ? 'registerForm' : 'loginForm'));
       });
+      if (name === 'register' && typeof trackEvent === 'function') {
+        trackEvent('registration_shown', { source: 'landing' });
+      }
     }
 
     tabs.forEach(function(tab) {
@@ -775,6 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof Auth !== 'undefined' && Auth.register) {
           try {
             await Auth.register(email, '', password, nick);
+            if (typeof trackEvent === 'function') trackEvent('registration_completed', { method: 'email', source: 'landing' });
             window.location.reload();
           } catch (e) {
             alert('Ошибка: ' + (e.message || 'Не удалось зарегистрироваться'));

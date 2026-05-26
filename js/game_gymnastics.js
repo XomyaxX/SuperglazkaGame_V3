@@ -678,6 +678,7 @@ const GymGame = (function(){
     if (typeof Haptic !== 'undefined') {
       Haptic.vibrateSuccess();
     }
+    if (typeof trackEvent === 'function') trackEvent('game_completed', { game_type: 'gym', score: gameStats.totalScore });
     
     // Save progress
     if (typeof PlayerProfile !== 'undefined') {
@@ -794,6 +795,7 @@ const GymGame = (function(){
   };
   
   window.skipRegistration = function() {
+    if (typeof trackEvent === 'function') trackEvent('game_skipped', { game_type: 'gym' });
     const regOverlay = getEl('registration-overlay');
     if (regOverlay) regOverlay.classList.remove('visible');
     

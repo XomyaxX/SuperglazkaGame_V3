@@ -1329,6 +1329,7 @@ const App = (function() {
   // ─── SHOW FRAME ───
   function showFrame(idx, direction) {
     if (typeof NavSound !== 'undefined') NavSound.pop();
+    if (typeof trackEvent === 'function') trackEvent('frame_viewed', { frame_index: idx, episode_id: currentEpisode });
     gameAdvancePending = false;
     const allFrames = document.querySelectorAll('.frame');
     AudioController.stop();
@@ -1482,6 +1483,7 @@ const App = (function() {
   }
 
   function launchGame(gameType) {
+    if (typeof trackEvent === 'function') trackEvent('game_started', { game_type: gameType, episode_id: currentEpisode, frame_index: currentFrameIdx });
     AudioController.stop();
     document.querySelectorAll('.frame.active video').forEach(v => {
       v.pause();
@@ -1549,6 +1551,7 @@ const App = (function() {
   async function startEpisode(episodeId, startFrame) {
     startFrame = typeof startFrame === 'number' ? startFrame : 0;
     console.log('[startEpisode]', episodeId, startFrame);
+    if (typeof trackEvent === 'function') trackEvent('episode_started', { episode_id: episodeId });
     var epData = episodesCache[episodeId];
     if (!epData) {
       console.log('[startEpisode] fetching episode', episodeId);
@@ -2055,6 +2058,7 @@ const App = (function() {
         if (!nick || !email || !password) { alert('\u0417\u0430\u043f\u043e\u043b\u043d\u0438 \u0432\u0441\u0435 \u043e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u044b\u0435 \u043f\u043e\u043b\u044f!'); return; }
         try {
           await Auth.register(email, phone, password, nick);
+          if (typeof trackEvent === 'function') trackEvent('registration_completed', { method: 'email' });
           modal.classList.remove('visible');
           window.location.reload();
         } catch (e) {
@@ -2329,12 +2333,16 @@ const App = (function() {
 
 window.closeRunner = function(skip) {
   document.getElementById('game-overlay-runner').classList.remove('visible');
-  if (skip) setTimeout(() => { if (typeof App !== 'undefined') App.advanceFromGame(); }, 300);
+  if (skip) {
+    if (typeof trackEvent === 'function') trackEvent('game_skipped', { game_type: 'runner' });
+    setTimeout(() => { if (typeof App !== 'undefined') App.advanceFromGame(); }, 300);
+  }
 };
 
 window.showRunnerRegistration = function() {
   document.getElementById('runner-stats-overlay').classList.remove('visible');
   document.getElementById('runner-registration-overlay').classList.add('visible');
+  if (typeof trackEvent === 'function') trackEvent('registration_shown', { source: 'runner' });
 };
 
 window.skipRunnerRegistration = function() {
@@ -2355,6 +2363,7 @@ window.closeGym = function(skip) {
 window.showRegistration = function() {
   document.getElementById('stats-overlay').classList.remove('visible');
   document.getElementById('registration-overlay').classList.add('visible');
+  if (typeof trackEvent === 'function') trackEvent('registration_shown', { source: 'gym' });
 };
 
 window.skipRegistration = function() {

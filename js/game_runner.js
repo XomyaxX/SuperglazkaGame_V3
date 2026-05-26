@@ -723,6 +723,7 @@ const RunnerGame = (function(){
       if (typeof Haptic !== 'undefined') {
         Haptic.vibrateSuccess();
       }
+      if (typeof trackEvent === 'function') trackEvent('game_completed', { game_type: 'runner', score: runnerScore, stars: runnerStats.stars });
       
       // Increase difficulty level on victory
       if (typeof GameDifficulty !== 'undefined') {

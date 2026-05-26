@@ -355,6 +355,7 @@ const BlinkGame = (function() {
     if (typeof Haptic !== 'undefined') {
       Haptic.vibrateSuccess();
     }
+    if (typeof trackEvent === 'function') trackEvent('game_completed', { game_type: 'blink', score: 100 });
     var bestBlink = 0;
     if (typeof PlayerProfile !== 'undefined' && PlayerProfile.getProfile) {
       var pb = PlayerProfile.getProfile();
@@ -384,8 +385,9 @@ window.startBlinkGame = function() {
 
 window.closeBlink = function(skip) {
   BlinkGame.closeGame();
-  if (skip && typeof App !== 'undefined') {
-    setTimeout(() => App.advanceFromGame(), 300);
+  if (skip) {
+    if (typeof trackEvent === 'function') trackEvent('game_skipped', { game_type: 'blink' });
+    if (typeof App !== 'undefined') setTimeout(() => App.advanceFromGame(), 300);
   }
 };
 
