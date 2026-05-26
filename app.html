@@ -26,6 +26,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 <style>
+@media (orientation: landscape) and (max-height: 500px) {
+  #landscapeHint { display: flex !important; }
+}
 .lang-switcher { position:relative; display:inline-flex; align-items:center; }
 .lang-switcher-trigger {
   background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
@@ -66,6 +69,13 @@ if ('serviceWorker' in navigator) {
 </script>
 </head>
 <body>
+
+<!-- LANDSCAPE ROTATION HINT -->
+<div id="landscapeHint" style="display:none;position:fixed;inset:0;z-index:99999;background:#0a0618;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;">
+  <div style="font-size:64px;margin-bottom:16px;">📱↔️</div>
+  <div style="font-size:18px;font-weight:800;color:#fff;margin-bottom:8px;">Поверни телефон вертикально</div>
+  <div style="font-size:14px;color:rgba(255,255,255,0.6);">Для комфортного чтения комикса нужна портретная ориентация</div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════════
      MAIN MENU v2
@@ -682,6 +692,7 @@ if ('serviceWorker' in navigator) {
 <script src="js/background-music.js" defer></script>
 <script src="js/game-difficulty.js" defer></script>
 <script src="js/haptic.js" defer></script>
+<script src="js/navigation-sounds.js" defer></script>
 <script src="js/tutorial.js" defer></script>
 <script src="js/leaderboard.js" defer></script>
 <script src="js/game_runner.js" defer></script>

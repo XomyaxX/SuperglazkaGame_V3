@@ -1109,7 +1109,8 @@ const App = (function() {
       const video = document.createElement('video');
       video.src = frameData.videoSrc;
       video.setAttribute('playsinline', '');
-      video.setAttribute('preload', 'auto');
+      video.setAttribute('muted', '');
+      video.setAttribute('preload', 'metadata');
 
       video.addEventListener('error', function() {
         videoLayer.classList.add('video-error');
@@ -1327,6 +1328,7 @@ const App = (function() {
 
   // ─── SHOW FRAME ───
   function showFrame(idx, direction) {
+    if (typeof NavSound !== 'undefined') NavSound.pop();
     gameAdvancePending = false;
     const allFrames = document.querySelectorAll('.frame');
     AudioController.stop();
@@ -1564,6 +1566,7 @@ const App = (function() {
     }
     if (mainMenu) mainMenu.classList.add('hidden');
     if (episodeViewer) episodeViewer.classList.add('active');
+    if (typeof NavSound !== 'undefined') NavSound.pop();
     BottomSheet.recalcSnapPoints();
     BottomSheet.collapse();
     if (typeof PlayerProfile !== 'undefined') PlayerProfile.renderBadge();
@@ -1576,6 +1579,7 @@ const App = (function() {
     if (typeof BackgroundMusic !== 'undefined') BackgroundMusic.stop();
     if (episodeViewer) episodeViewer.classList.remove('active');
     if (mainMenu) mainMenu.classList.remove('hidden');
+    if (typeof NavSound !== 'undefined') NavSound.pop();
     if (frameContainer) frameContainer.textContent = '';
     currentEpisode = null;
     frames = [];
@@ -1821,6 +1825,33 @@ const App = (function() {
             startEpisode(ep.id);
           });
         }
+
+        // Hover preview
+        mini.addEventListener('mouseenter', function(e) {
+          var tip = document.getElementById('episode-hover-tip');
+          if (!tip) {
+            tip = document.createElement('div');
+            tip.id = 'episode-hover-tip';
+            tip.style.cssText = 'position:fixed;z-index:1000;background:rgba(15,8,35,0.95);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:12px;max-width:220px;pointer-events:none;box-shadow:0 20px 40px rgba(0,0,0,0.5);transition:opacity 0.2s;';
+            document.body.appendChild(tip);
+          }
+          var desc = cached && cached.description ? cached.description : '';
+          tip.innerHTML = '<img src="' + (coverImg.src || '') + '" style="width:100%;height:auto;border-radius:8px;margin-bottom:8px;display:block;">' +
+            '<div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:4px;">' + (cached && cached.title ? cached.title : ep.title) + '</div>' +
+            '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.4;">' + (desc.length > 80 ? desc.substring(0, 80) + '…' : desc) + '</div>';
+          tip.style.opacity = '1';
+          var rect = mini.getBoundingClientRect();
+          var left = rect.right + 8;
+          var top = rect.top;
+          if (left + 220 > window.innerWidth) left = rect.left - 228;
+          if (top + 150 > window.innerHeight) top = window.innerHeight - 160;
+          tip.style.left = left + 'px';
+          tip.style.top = top + 'px';
+        });
+        mini.addEventListener('mouseleave', function() {
+          var tip = document.getElementById('episode-hover-tip');
+          if (tip) tip.style.opacity = '0';
+        });
 
         grid.appendChild(mini);
       });
