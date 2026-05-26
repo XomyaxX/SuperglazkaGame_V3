@@ -929,7 +929,7 @@ body {
   min-height: 400px;
   background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: center;
   overflow: hidden;
 }
@@ -944,16 +944,13 @@ body {
 .char-modal-img {
   position: relative;
   z-index: 2;
-  max-width: 90%;
-  max-height: 420px;
+  max-width: 100%;
+  max-height: 100%;
   width: auto;
   height: auto;
   object-fit: contain;
-  object-position: bottom center;
+  object-position: center center;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
-  background: rgba(255,255,255,0.02);
-  border-radius: 12px;
-  padding: 8px;
 }
 
 .char-modal-frame {
@@ -1073,8 +1070,8 @@ body {
     max-height: 320px;
   }
   .char-modal-img {
-    max-height: 280px;
-    max-width: 85%;
+    max-height: 320px;
+    max-width: 100%;
   }
   .char-modal-info {
     padding: 24px 20px;
@@ -1090,9 +1087,8 @@ body {
     max-height: 280px;
   }
   .char-modal-img {
-    max-height: 220px;
-    max-width: 80%;
-    padding: 4px;
+    max-height: 260px;
+    max-width: 100%;
   }
 }
 
