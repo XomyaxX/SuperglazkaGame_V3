@@ -59,7 +59,14 @@ Interactive educational comic about eye health for kids. Frontend is vanilla JS 
 
 ### Database
 - SQLite at `server/data/superglazka.db` (Docker volume `sqlite_data`).
-- Tables: `users`, `guests`, `progress`, `coins`, `subscriptions`, `episodes`, `frames`, `media`.
+- Tables: `users`, `guests`, `progress`, `coins`, `subscriptions`, `episodes`, `frames`, `media`, `refresh_tokens`, `user_achievements`, `daily_rewards`, `blog_posts`, `achievements`.
+
+### Auth Architecture
+- **Access/Refresh tokens**: Access JWT expires in 15 min, refresh token stored in `refresh_tokens` table (7 days default, 30 days with "remember me").
+- **Email verification**: New registrations require email verification before login. `users.email_verified` flag.
+- **Password reset**: `POST /auth/forgot-password` + `POST /auth/reset-password` with time-limited tokens in DB.
+- **OAuth**: Google (`/auth/oauth/google`) and VK (`/auth/oauth/vk`) via authorization code flow. OAuth users have `oauth_provider` + `oauth_id`.
+- **Frontend (`js/auth.js`)**: Auto-refreshes access token on 401. Handles OAuth popup/redirect, URL params (`?verify=`, `?reset=`, `?oauth=success`).
 
 ## Common Post-Merge Bugs
 - `APP_BOOKS` or `loadBooks()` missing → episodes menu breaks. Always verify after merges.

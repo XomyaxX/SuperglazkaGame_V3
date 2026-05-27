@@ -507,7 +507,16 @@
       <div class="profile-login-form" id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email" data-i18n-placeholder="auth.email">
         <input type="password" id="loginPassword" placeholder="Пароль" data-i18n-placeholder="auth.password">
+        <label class="profile-consent-label" style="margin:4px 0;">
+          <input type="checkbox" id="loginRememberMe">
+          <span>Запомнить меня</span>
+        </label>
         <button class="profile-guest-btn" id="loginBtn" data-i18n="profileLanding.login">🔑 Войти</button>
+        <div style="text-align:center;margin-top:6px;"><a href="#" id="landingForgot" style="font-size:12px;color:rgba(255,255,255,0.6);">Забыли пароль?</a></div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;">
+          <button class="profile-guest-btn" id="loginGoogleBtn" style="background:#fff;color:#333;font-size:13px;padding:6px 12px;">🔍 Google</button>
+          <button class="profile-guest-btn" id="loginVkBtn" style="background:#0077ff;color:#fff;font-size:13px;padding:6px 12px;">VK</button>
+        </div>
       </div>
       <div class="profile-auth-tabs" id="authTabs">
         <button class="profile-auth-tab active" data-target="guestForm" data-i18n="auth.guest">Гость</button>
@@ -651,6 +660,9 @@
     window.__authLoaded = true;
     var s1 = document.createElement('script'); s1.src = 'js/auth.js'; document.body.appendChild(s1);
     var s2 = document.createElement('script'); s2.src = 'js/player.js'; document.body.appendChild(s2);
+    s1.onload = function() {
+      if (window.Auth && Auth.init) Auth.init();
+    };
   }
   // Load on first interaction or after 5 seconds
   var events = ['scroll', 'click', 'touchstart', 'mousemove'];
@@ -779,7 +791,7 @@ document.addEventListener('DOMContentLoaded', function() {
           try {
             await Auth.register(email, '', password, nick);
             if (typeof trackEvent === 'function') trackEvent('registration_completed', { method: 'email', source: 'landing' });
-            window.location.reload();
+            alert('Регистрация успешна! Проверьте email для подтверждения аккаунта.');
           } catch (e) {
             alert('Ошибка: ' + (e.message || 'Не удалось зарегистрироваться'));
           }
@@ -791,17 +803,47 @@ document.addEventListener('DOMContentLoaded', function() {
       loginBtn.addEventListener('click', async function() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
+        const rememberMe = document.getElementById('loginRememberMe') && document.getElementById('loginRememberMe').checked;
         if (!email || !password) { alert('Введи email и пароль!'); return; }
         if (!validateEmail(email)) { alert('Введи корректный email!'); return; }
         if (typeof Auth !== 'undefined' && Auth.login) {
           try {
-            await Auth.login(email, password);
+            await Auth.login(email, password, rememberMe);
             window.location.reload();
           } catch (e) {
-            alert('Ошибка: ' + (e.message || 'Неверный email или пароль'));
+            if (e.code === 'EMAIL_NOT_VERIFIED') {
+              alert('Пожалуйста, подтвердите email. Повторная отправка...');
+              try { await Auth.resendVerification(email); } catch (_) {}
+            } else {
+              alert('Ошибка: ' + (e.message || 'Неверный email или пароль'));
+            }
           }
         }
       });
+    }
+
+    const landingForgot = document.getElementById('landingForgot');
+    if (landingForgot) {
+      landingForgot.addEventListener('click', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        if (!email || !validateEmail(email)) { alert('Введи корректный email!'); return; }
+        try {
+          await Auth.forgotPassword(email);
+          alert('Если email зарегистрирован, ссылка отправлена!');
+        } catch (err) {
+          alert('Ошибка: ' + (err.message || 'Не удалось'));
+        }
+      });
+    }
+
+    const loginGoogleBtn = document.getElementById('loginGoogleBtn');
+    if (loginGoogleBtn) {
+      loginGoogleBtn.addEventListener('click', function() { Auth.openOAuth('google'); });
+    }
+    const loginVkBtn = document.getElementById('loginVkBtn');
+    if (loginVkBtn) {
+      loginVkBtn.addEventListener('click', function() { Auth.openOAuth('vk'); });
     }
   }
 

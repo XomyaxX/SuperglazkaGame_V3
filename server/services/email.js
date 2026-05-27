@@ -70,4 +70,38 @@ async function sendConfirmationEmail(to, confirmToken) {
   return result;
 }
 
-module.exports = { sendNewEpisodeNotification, sendBulkNewEpisode, sendConfirmationEmail };
+async function sendVerificationEmail(to, token) {
+  const verifyUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/app.html?verify=' + encodeURIComponent(token);
+  const html = loadTemplate('verify-email', {
+    verifyUrl: verifyUrl,
+    year: String(new Date().getFullYear())
+  });
+
+  const result = await resend.emails.send({
+    from: 'Superglazka <' + FROM_EMAIL + '>',
+    to: [to],
+    subject: 'Подтвердите email для Суперглазки',
+    html: html
+  });
+
+  return result;
+}
+
+async function sendPasswordResetEmail(to, token) {
+  const resetUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/app.html?reset=' + encodeURIComponent(token);
+  const html = loadTemplate('reset-password', {
+    resetUrl: resetUrl,
+    year: String(new Date().getFullYear())
+  });
+
+  const result = await resend.emails.send({
+    from: 'Superglazka <' + FROM_EMAIL + '>',
+    to: [to],
+    subject: 'Сброс пароля в Суперглазке',
+    html: html
+  });
+
+  return result;
+}
+
+module.exports = { sendNewEpisodeNotification, sendBulkNewEpisode, sendConfirmationEmail, sendVerificationEmail, sendPasswordResetEmail };

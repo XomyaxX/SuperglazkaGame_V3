@@ -1,20 +1,40 @@
 /* ═══════════════════════════════════════════════════════════
    AUTH MODULE — backend synchronization for Superglazka
    Supports guest (token) and full (JWT) authentication.
-   Falls back to localStorage when offline.
+   Implements access/refresh tokens, auto-refresh, OAuth.
    ═══════════════════════════════════════════════════════════ */
 
 const Auth = {
   API_BASE: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') ? 'http://localhost:3000/api' : '/api',
   STORAGE_KEY: 'superglazka_auth',
   token: null,
+  refreshToken: null,
   type: null,
   user: null,
   offlineQueue: [],
+  _refreshPromise: null,
 
   init() {
     this.loadFromStorage();
     this.setupOnlineSync();
+    this.handleUrlAuth();
+    this.setupOAuthListener();
+  },
+
+  setupOAuthListener: function() {
+    var self = this;
+    window.addEventListener('message', function(e) {
+      if (!e.data || e.data.type !== 'oauth') return;
+      if (e.data.status === 'success' && e.data.token && e.data.refreshToken) {
+        self.token = e.data.token;
+        self.refreshToken = e.data.refreshToken;
+        self.type = 'user';
+        self.saveToStorage();
+        window.location.reload();
+      } else if (e.data.status === 'error') {
+        alert('Ошибка входа через соцсеть: ' + (e.data.message || 'неизвестная ошибка'));
+      }
+    });
   },
 
   loadFromStorage() {
@@ -23,6 +43,7 @@ const Auth = {
       if (raw) {
         var data = JSON.parse(raw);
         this.token = data.token || null;
+        this.refreshToken = data.refreshToken || null;
         this.type = data.type || null;
         this.user = data.user || null;
       }
@@ -33,6 +54,7 @@ const Auth = {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify({
         token: this.token,
+        refreshToken: this.refreshToken,
         type: this.type,
         user: this.user
       }));
@@ -65,19 +87,61 @@ const Auth = {
     options = options || {};
     var url = this.API_BASE + path;
     var headers = Object.assign({}, this.getHeaders(), options.headers || {});
-    try {
+    var self = this;
+
+    async function doRequest() {
       var resp = await fetch(url, Object.assign({}, options, { headers: headers }));
+      if (resp.status === 401 && self.refreshToken && self.type === 'user') {
+        var refreshed = await self.tryRefresh();
+        if (refreshed) {
+          headers['Authorization'] = 'Bearer ' + self.token;
+          resp = await fetch(url, Object.assign({}, options, { headers: headers }));
+        }
+      }
       if (!resp.ok) {
         var errData = await resp.json().catch(function() { return {}; });
-        throw new Error(errData.error || 'HTTP ' + resp.status);
+        var err = new Error(errData.error || 'HTTP ' + resp.status);
+        err.code = errData.code || null;
+        err.status = resp.status;
+        throw err;
       }
       return await resp.json();
+    }
+
+    try {
+      return await doRequest();
     } catch (err) {
       if (err.message.indexOf('fetch') !== -1 || err.message.indexOf('NetworkError') !== -1 || err.message.indexOf('Failed to fetch') !== -1) {
         throw new Error('offline');
       }
       throw err;
     }
+  },
+
+  tryRefresh: async function() {
+    if (this._refreshPromise) return this._refreshPromise;
+    var self = this;
+    this._refreshPromise = (async function() {
+      try {
+        var resp = await fetch(self.API_BASE + '/auth/refresh', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refreshToken: self.refreshToken })
+        });
+        if (!resp.ok) throw new Error('refresh failed');
+        var data = await resp.json();
+        self.token = data.token;
+        if (data.user) self.user = data.user;
+        self.saveToStorage();
+        return true;
+      } catch (e) {
+        self.logoutLocal();
+        return false;
+      } finally {
+        self._refreshPromise = null;
+      }
+    })();
+    return this._refreshPromise;
   },
 
   guestLogin: async function(nickname) {
@@ -97,31 +161,60 @@ const Auth = {
       method: 'POST',
       body: JSON.stringify({ email: email, phone: phone, password: password, nickname: nickname })
     });
-    this.token = data.token;
-    this.type = 'user';
-    this.user = data.user;
-    this.saveToStorage();
     return data;
   },
 
-  login: async function(email, password) {
+  resendVerification: async function(email) {
+    return await this.api('/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email: email })
+    });
+  },
+
+  login: async function(email, password, rememberMe) {
     var data = await this.api('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email: email, password: password })
+      body: JSON.stringify({ email: email, password: password, rememberMe: !!rememberMe })
     });
     this.token = data.token;
+    this.refreshToken = data.refreshToken;
     this.type = 'user';
     this.user = data.user;
     this.saveToStorage();
     return data;
   },
 
-  logout() {
+  logout: function() {
+    if (this.refreshToken) {
+      this.api('/auth/logout', {
+        method: 'POST',
+        body: JSON.stringify({ refreshToken: this.refreshToken })
+      }).catch(function(){});
+    }
+    this.logoutLocal();
+  },
+
+  logoutLocal: function() {
     this.token = null;
+    this.refreshToken = null;
     this.type = null;
     this.user = null;
     try { localStorage.removeItem(this.STORAGE_KEY); } catch (e) {}
     window.location.reload();
+  },
+
+  forgotPassword: async function(email) {
+    return await this.api('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email: email })
+    });
+  },
+
+  resetPassword: async function(token, newPassword) {
+    return await this.api('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token: token, newPassword: newPassword })
+    });
   },
 
   fetchProgress: async function() {
@@ -176,6 +269,53 @@ const Auth = {
       method: 'POST',
       body: JSON.stringify({ email: email })
     });
+  },
+
+  openOAuth: function(provider) {
+    var url = this.API_BASE + '/auth/oauth/' + provider;
+    var w = window.open(url, 'oauth', 'width=500,height=600');
+    if (!w) {
+      window.location.href = url;
+    }
+  },
+
+  handleUrlAuth: function() {
+    var params = new URLSearchParams(window.location.search);
+    var oauth = params.get('oauth');
+    var token = params.get('token');
+    var refresh = params.get('refresh');
+    var verified = params.get('verified');
+    var reset = params.get('reset');
+
+    if (oauth === 'success' && token && refresh) {
+      this.token = token;
+      this.refreshToken = refresh;
+      this.type = 'user';
+      this.saveToStorage();
+      // clean URL
+      var cleanUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, document.title, cleanUrl);
+      window.location.reload();
+      return;
+    }
+
+    if (verified === '1') {
+      // clean URL and maybe show toast later
+      var cleanUrl2 = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, document.title, cleanUrl2);
+      // trigger a custom event that UI can listen to
+      try {
+        window.dispatchEvent(new CustomEvent('auth:verified'));
+      } catch (e) {}
+      return;
+    }
+
+    if (reset) {
+      // trigger event for UI to show reset password modal
+      try {
+        window.dispatchEvent(new CustomEvent('auth:reset', { detail: { token: reset } }));
+      } catch (e) {}
+    }
   },
 
   enqueue: function(type, payload) {

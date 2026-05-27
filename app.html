@@ -601,8 +601,41 @@ if ('serviceWorker' in navigator) {
     <div class="auth-panel" id="authPanelLogin">
       <input type="email" class="auth-input" id="authLoginEmail" placeholder="Email" data-i18n-placeholder="auth.email">
       <input type="password" class="auth-input" id="authLoginPassword" placeholder="Пароль" data-i18n-placeholder="auth.password">
+      <label class="auth-checkbox" style="display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.7);margin-bottom:8px;">
+        <input type="checkbox" id="authRememberMe" style="accent-color:#9333ea;">
+        <span data-i18n="auth.rememberMe">Запомнить меня</span>
+      </label>
       <button class="auth-btn" id="authLoginBtn" data-i18n="auth.loginBtn">🔑 Войти</button>
-      <div class="auth-switch" data-i18n="auth.noAccount">Нет аккаунта? <a href="#" id="authShowRegister" data-i18n="auth.register">Зарегистрироваться</a></div>
+      <div class="auth-switch"><a href="#" id="authShowForgot" data-i18n="auth.forgotPassword">Забыли пароль?</a></div>
+      <div class="auth-oauth" style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+        <button class="auth-btn" id="authGoogleBtn" style="background:#fff;color:#333;font-size:13px;padding:8px 14px;">🔍 Google</button>
+        <button class="auth-btn" id="authVkBtn" style="background:#0077ff;color:#fff;font-size:13px;padding:8px 14px;">VK</button>
+      </div>
+      <div class="auth-switch" data-i18n="auth.noAccount" style="margin-top:8px;">Нет аккаунта? <a href="#" id="authShowRegister" data-i18n="auth.register">Зарегистрироваться</a></div>
+    </div>
+
+    <!-- Verify pending panel -->
+    <div class="auth-panel" id="authPanelVerify">
+      <div class="auth-desc" style="text-align:center;">📧 Письмо с подтверждением отправлено на ваш email. Нажмите ссылку в письме, чтобы активировать аккаунт.</div>
+      <button class="auth-btn" id="authResendBtn" data-i18n="auth.resend">Отправить повторно</button>
+      <div class="auth-switch"><a href="#" id="authShowLogin2">← Войти</a></div>
+    </div>
+
+    <!-- Forgot password panel -->
+    <div class="auth-panel" id="authPanelForgot">
+      <div class="auth-desc" style="text-align:center;">Введите email, и мы отправим ссылку для сброса пароля.</div>
+      <input type="email" class="auth-input" id="authForgotEmail" placeholder="Email" data-i18n-placeholder="auth.email">
+      <button class="auth-btn" id="authForgotBtn">📧 Отправить</button>
+      <div class="auth-switch"><a href="#" id="authShowLogin3">← Войти</a></div>
+    </div>
+
+    <!-- Reset password panel -->
+    <div class="auth-panel" id="authPanelReset">
+      <div class="auth-desc" style="text-align:center;">Придумайте новый пароль.</div>
+      <input type="password" class="auth-input" id="authResetPassword" placeholder="Новый пароль (минимум 6 символов)" data-i18n-placeholder="auth.passwordMin">
+      <input type="password" class="auth-input" id="authResetPassword2" placeholder="Повторите пароль" data-i18n-placeholder="auth.passwordRepeat">
+      <button class="auth-btn" id="authResetBtn">🔑 Сохранить пароль</button>
+      <div class="auth-switch"><a href="#" id="authShowLogin4">← Войти</a></div>
     </div>
   </div>
 </div>

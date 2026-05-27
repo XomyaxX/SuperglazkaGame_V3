@@ -9,6 +9,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
     process.exit(1);
   }
   console.log('Connected to SQLite database.');
+  db.run('PRAGMA foreign_keys = ON');
 });
 
 function run(sql, params = []) {
@@ -46,6 +47,13 @@ async function init() {
       phone TEXT,
       password_hash TEXT NOT NULL,
       nickname TEXT NOT NULL,
+      email_verified INTEGER DEFAULT 0,
+      verification_token TEXT,
+      verification_sent_at DATETIME,
+      reset_token TEXT,
+      reset_expires_at DATETIME,
+      oauth_provider TEXT,
+      oauth_id TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -180,6 +188,43 @@ async function init() {
   } catch (migErr) {
     console.warn('Episodes migration check skipped:', migErr.message);
   }
+
+  // Migration: add auth columns to users table
+  try {
+    const userColumns = await all("PRAGMA table_info(users)");
+    const userColNames = userColumns.map(c => c.name);
+    const userMigrations = [
+      { name: 'email_verified', sql: 'ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0' },
+      { name: 'verification_token', sql: 'ALTER TABLE users ADD COLUMN verification_token TEXT' },
+      { name: 'verification_sent_at', sql: 'ALTER TABLE users ADD COLUMN verification_sent_at DATETIME' },
+      { name: 'reset_token', sql: 'ALTER TABLE users ADD COLUMN reset_token TEXT' },
+      { name: 'reset_expires_at', sql: 'ALTER TABLE users ADD COLUMN reset_expires_at DATETIME' },
+      { name: 'oauth_provider', sql: 'ALTER TABLE users ADD COLUMN oauth_provider TEXT' },
+      { name: 'oauth_id', sql: 'ALTER TABLE users ADD COLUMN oauth_id TEXT' },
+    ];
+    for (const m of userMigrations) {
+      if (!userColNames.includes(m.name)) {
+        await run(m.sql);
+        console.log('Migration applied: added ' + m.name + ' to users');
+      }
+    }
+  } catch (migErr) {
+    console.warn('Users migration check skipped:', migErr.message);
+  }
+
+  // Refresh tokens table
+  await run(`
+    CREATE TABLE IF NOT EXISTS refresh_tokens (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      token TEXT UNIQUE NOT NULL,
+      expires_at DATETIME NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+  await run(`CREATE INDEX IF NOT EXISTS idx_refresh_token ON refresh_tokens(token)`);
+  await run(`CREATE INDEX IF NOT EXISTS idx_refresh_user ON refresh_tokens(user_id)`);
 
   await run(`
     CREATE TABLE IF NOT EXISTS media (

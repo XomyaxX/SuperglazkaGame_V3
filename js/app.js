@@ -2059,8 +2059,7 @@ const App = (function() {
         try {
           await Auth.register(email, phone, password, nick);
           if (typeof trackEvent === 'function') trackEvent('registration_completed', { method: 'email' });
-          modal.classList.remove('visible');
-          window.location.reload();
+          showPanel('Verify');
         } catch (e) {
           alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u0442\u044c\u0441\u044f'));
         }
@@ -2072,13 +2071,20 @@ const App = (function() {
       authLoginBtn.addEventListener('click', async function() {
         var email = document.getElementById('authLoginEmail').value.trim();
         var password = document.getElementById('authLoginPassword').value;
+        var rememberMe = document.getElementById('authRememberMe') && document.getElementById('authRememberMe').checked;
         if (!email || !password) { alert('\u0412\u0432\u0435\u0434\u0438 email \u0438 \u043f\u0430\u0440\u043e\u043b\u044c!'); return; }
         try {
-          await Auth.login(email, password);
+          await Auth.login(email, password, rememberMe);
           modal.classList.remove('visible');
           window.location.reload();
         } catch (e) {
-          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0439 email \u0438\u043b\u0438 \u043f\u0430\u0440\u043e\u043b\u044c'));
+          if (e.code === 'EMAIL_NOT_VERIFIED') {
+            alert('\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438 email. \u041f\u0435\u0440\u0435\u0445\u043e\u0434 \u043a \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0435 \u043f\u043e\u0432\u0442\u043e\u0440\u043d\u043e...');
+            try { await Auth.resendVerification(email); } catch (_) {}
+            showPanel('Verify');
+          } else {
+            alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0439 email \u0438\u043b\u0438 \u043f\u0430\u0440\u043e\u043b\u044c'));
+          }
         }
       });
     }
@@ -2098,6 +2104,89 @@ const App = (function() {
         showPanel('Register');
       });
     }
+
+    var authShowForgot = document.getElementById('authShowForgot');
+    if (authShowForgot) {
+      authShowForgot.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('Forgot');
+      });
+    }
+
+    ['authShowLogin2','authShowLogin3','authShowLogin4'].forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('click', function(e) { e.preventDefault(); showPanel('Login'); });
+    });
+
+    var authResendBtn = document.getElementById('authResendBtn');
+    if (authResendBtn) {
+      authResendBtn.addEventListener('click', async function() {
+        var email = document.getElementById('authRegEmail').value.trim() || document.getElementById('authLoginEmail').value.trim();
+        if (!email) { alert('\u0412\u0432\u0435\u0434\u0438\u0442\u0435 email'); return; }
+        try {
+          await Auth.resendVerification(email);
+          alert('\u041f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e!');
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c'));
+        }
+      });
+    }
+
+    var authForgotBtn = document.getElementById('authForgotBtn');
+    if (authForgotBtn) {
+      authForgotBtn.addEventListener('click', async function() {
+        var email = document.getElementById('authForgotEmail').value.trim();
+        if (!email) { alert('\u0412\u0432\u0435\u0434\u0438\u0442\u0435 email'); return; }
+        try {
+          await Auth.forgotPassword(email);
+          alert('\u0415\u0441\u043b\u0438 email \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043e\u0432\u0430\u043d, \u0441\u0441\u044b\u043b\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0430!');
+          showPanel('Login');
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c'));
+        }
+      });
+    }
+
+    var authResetBtn = document.getElementById('authResetBtn');
+    if (authResetBtn) {
+      authResetBtn.addEventListener('click', async function() {
+        var p1 = document.getElementById('authResetPassword').value;
+        var p2 = document.getElementById('authResetPassword2').value;
+        if (!p1 || p1.length < 6) { alert('\u041f\u0430\u0440\u043e\u043b\u044c \u043c\u0438\u043d\u0438\u043c\u0443\u043c 6 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432'); return; }
+        if (p1 !== p2) { alert('\u041f\u0430\u0440\u043e\u043b\u0438 \u043d\u0435 \u0441\u043e\u0432\u043f\u0430\u0434\u0430\u044e\u0442'); return; }
+        var token = modal.dataset.resetToken;
+        if (!token) { alert('\u041d\u0435\u0432\u0435\u0440\u043d\u044b\u0439 \u0442\u043e\u043a\u0435\u043d'); return; }
+        try {
+          await Auth.resetPassword(token, p1);
+          alert('\u041f\u0430\u0440\u043e\u043b\u044c \u043e\u0431\u043d\u043e\u0432\u043b\u0451\u043d! \u0422\u0435\u043f\u0435\u0440\u044c \u043c\u043e\u0436\u043d\u043e \u0432\u043e\u0439\u0442\u0438.');
+          modal.dataset.resetToken = '';
+          showPanel('Login');
+        } catch (e) {
+          alert('\u041e\u0448\u0438\u0431\u043a\u0430: ' + (e.message || '\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0441\u0431\u0440\u043e\u0441\u0438\u0442\u044c \u043f\u0430\u0440\u043e\u043b\u044c'));
+        }
+      });
+    }
+
+    var authGoogleBtn = document.getElementById('authGoogleBtn');
+    if (authGoogleBtn) {
+      authGoogleBtn.addEventListener('click', function() { Auth.openOAuth('google'); });
+    }
+    var authVkBtn = document.getElementById('authVkBtn');
+    if (authVkBtn) {
+      authVkBtn.addEventListener('click', function() { Auth.openOAuth('vk'); });
+    }
+
+    window.addEventListener('auth:verified', function() {
+      alert('\u2705 Email \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043d! \u0422\u0435\u043f\u0435\u0440\u044c \u043c\u043e\u0436\u043d\u043e \u0432\u043e\u0439\u0442\u0438.');
+    });
+
+    window.addEventListener('auth:reset', function(e) {
+      if (e.detail && e.detail.token) {
+        modal.dataset.resetToken = e.detail.token;
+        showPanel('Reset');
+        modal.classList.add('visible');
+      }
+    });
 
     // Profile subscription
     var profileSubBtn = document.getElementById('profileSubBtn');
