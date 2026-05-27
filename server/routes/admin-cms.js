@@ -366,7 +366,7 @@ router.get('/users/:id', async (req, res) => {
   try {
     const user = await get('SELECT id, email, phone, nickname, created_at FROM users WHERE id = ?', [req.params.id]);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    const progress = await all('SELECT episode_id, frame_index, completed, updated_at FROM progress WHERE user_id = ?', [req.params.id]);
+    const progress = await all('SELECT episode_id, max_frame, completed, updated_at FROM progress WHERE user_id = ?', [req.params.id]);
     const coins = await get('SELECT amount, updated_at FROM coins WHERE user_id = ?', [req.params.id]);
     const achievements = await all('SELECT achievement_id, unlocked_at FROM user_achievements WHERE user_id = ?', [req.params.id]);
     res.json({ success: true, user: { ...user, progress, coins, achievements } });

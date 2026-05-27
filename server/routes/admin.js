@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 const { all } = require('../db');
 const { sendBulkNewEpisode } = require('../services/email');
+const { requireAdmin } = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -12,13 +13,8 @@ const notifySchema = z.object({
 });
 
 // POST /api/admin/notify
-router.post('/notify', async (req, res) => {
+router.post('/notify', requireAdmin, async (req, res) => {
   try {
-    const adminKey = req.headers['x-admin-key'];
-    if (adminKey !== process.env.ADMIN_API_KEY) {
-      return res.status(403).json({ error: 'Forbidden' });
-    }
-
     const data = notifySchema.parse(req.body);
     const subscribers = await all('SELECT email FROM subscriptions WHERE confirmed = 1');
     if (subscribers.length === 0) {

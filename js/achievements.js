@@ -117,12 +117,20 @@
 
     // Sync to server (best effort)
     try {
-      var token = localStorage.getItem('superglazka_guest_token') || '';
-      fetch('/api/achievements/check', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Guest-Token': token },
-        body: JSON.stringify({ type: achievement.type, value: achievement.value, count: achievement.count || 1 })
-      }).catch(function(){});
+      var authData = JSON.parse(localStorage.getItem('superglazka_auth') || '{}');
+      var headers = { 'Content-Type': 'application/json' };
+      if (authData.type === 'guest' && authData.token) {
+        headers['X-Guest-Token'] = authData.token;
+      } else if (authData.type === 'user' && authData.token) {
+        headers['Authorization'] = 'Bearer ' + authData.token;
+      }
+      if (authData.token) {
+        fetch('/api/achievements/check', {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify({ type: achievement.type, value: achievement.value, count: achievement.count || 1 })
+        }).catch(function(){});
+      }
     } catch (e) {}
   }
 

@@ -74,7 +74,15 @@
 .about-contact a:hover { text-decoration:underline; }
 .about-placeholder { background:rgba(255,255,255,0.03); border:2px dashed rgba(255,255,255,0.15); border-radius:12px; padding:20px; text-align:center; color:rgba(255,255,255,0.5); font-size:0.9rem; }
 </style>
+<link rel="manifest" href="manifest.json">
 <script src="js/analytics.js" defer></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(function(r) { console.log('SW registered:', r.scope); })
+    .catch(function(e) { console.log('SW failed:', e); });
+}
+</script>
 </head>
 <body>
 

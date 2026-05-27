@@ -1,13 +1,14 @@
 const express = require('express');
 const { get, all, run } = require('../db');
+const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
 // GET /api/achievements — list all achievements with unlocked status
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
   try {
-    const userId = req.user?.id || null;
-    const guestToken = req.headers['x-guest-token'] || null;
+    const userId = req.auth.type === 'user' ? req.auth.id : null;
+    const guestToken = req.auth.type === 'guest' ? req.auth.token : null;
     const achievements = await all('SELECT * FROM achievements ORDER BY id ASC');
     let unlocked = [];
     if (userId) {
@@ -27,10 +28,10 @@ router.get('/', async (req, res) => {
 });
 
 // POST /api/achievements/check — check and unlock achievements
-router.post('/check', async (req, res) => {
+router.post('/check', authenticate, async (req, res) => {
   try {
-    const userId = req.user?.id || null;
-    const guestToken = req.headers['x-guest-token'] || null;
+    const userId = req.auth.type === 'user' ? req.auth.id : null;
+    const guestToken = req.auth.type === 'guest' ? req.auth.token : null;
     const { type, value, count } = req.body;
 
     if (!userId && !guestToken) {

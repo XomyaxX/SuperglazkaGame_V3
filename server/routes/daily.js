@@ -1,13 +1,14 @@
 const express = require('express');
-const { get, all, run } = require('../db');
+const { get, run } = require('../db');
+const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
 // GET /api/daily/status — get current streak and claim status
-router.get('/status', async (req, res) => {
+router.get('/status', authenticate, async (req, res) => {
   try {
-    const userId = req.user?.id || null;
-    const guestToken = req.headers['x-guest-token'] || null;
+    const userId = req.auth.type === 'user' ? req.auth.id : null;
+    const guestToken = req.auth.type === 'guest' ? req.auth.token : null;
 
     if (!userId && !guestToken) {
       return res.json({ success: true, streak: 0, canClaim: true, reward: 10 });
@@ -51,10 +52,10 @@ router.get('/status', async (req, res) => {
 });
 
 // POST /api/daily/claim — claim daily reward
-router.post('/claim', async (req, res) => {
+router.post('/claim', authenticate, async (req, res) => {
   try {
-    const userId = req.user?.id || null;
-    const guestToken = req.headers['x-guest-token'] || null;
+    const userId = req.auth.type === 'user' ? req.auth.id : null;
+    const guestToken = req.auth.type === 'guest' ? req.auth.token : null;
 
     if (!userId && !guestToken) {
       return res.status(401).json({ error: 'Authentication required' });

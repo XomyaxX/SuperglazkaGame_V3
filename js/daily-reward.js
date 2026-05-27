@@ -89,11 +89,16 @@
 
     // Sync to server
     try {
-      var token = localStorage.getItem('superglazka_guest_token') || '';
-      fetch('/api/daily/claim', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Guest-Token': token }
-      }).catch(function(){});
+      var authData = JSON.parse(localStorage.getItem('superglazka_auth') || '{}');
+      var headers = { 'Content-Type': 'application/json' };
+      if (authData.type === 'guest' && authData.token) {
+        headers['X-Guest-Token'] = authData.token;
+      } else if (authData.type === 'user' && authData.token) {
+        headers['Authorization'] = 'Bearer ' + authData.token;
+      }
+      if (authData.token) {
+        fetch('/api/daily/claim', { method: 'POST', headers: headers }).catch(function(){});
+      }
     } catch (e) {}
 
     return { streak: data.streak, reward: reward };

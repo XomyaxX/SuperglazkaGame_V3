@@ -68,6 +68,14 @@ Interactive educational comic about eye health for kids. Frontend is vanilla JS 
 - **OAuth**: Google (`/auth/oauth/google`) and VK (`/auth/oauth/vk`) via authorization code flow. OAuth users have `oauth_provider` + `oauth_id`.
 - **Frontend (`js/auth.js`)**: Auto-refreshes access token on 401. Handles OAuth popup/redirect, URL params (`?verify=`, `?reset=`, `?oauth=success`).
 
+## Critical Association Rules (from link audit)
+- **Auth middleware sets `req.auth`, never `req.user`**. Routes must read `req.auth.type`, `req.auth.id`, `req.auth.token`. `req.user?.id` is always `undefined`.
+- **Guest token storage changed**: old key `superglazka_guest_token` is dead. Read from `superglazka_auth` JSON (`token`, `type`, `refreshToken`).
+- **Service Worker must NEVER cache `/api/` routes**. Add `if (path.startsWith('/api/')) return;` in fetch handler before any cache logic.
+- **SW offline fallback**: JS/CSS stale-while-revalidate must resolve to a valid `Response`, not `undefined`.
+- **Database column names**: `progress` table uses `max_frame`, not `frame_index`.
+- **Manifest icon paths**: use absolute paths (`/icons/...`) not relative.
+
 ## Common Post-Merge Bugs
 - `APP_BOOKS` or `loadBooks()` missing → episodes menu breaks. Always verify after merges.
 - `resolveMediaPath()` losing `assets/` prefix → images 404.

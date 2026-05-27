@@ -320,6 +320,11 @@ async function init() {
   await run(`CREATE INDEX IF NOT EXISTS idx_coins_user ON coins(user_id)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_coins_guest ON coins(guest_token)`);
   await run(`CREATE INDEX IF NOT EXISTS idx_frames_episode ON frames(episode_id)`);
+  await run(`CREATE INDEX IF NOT EXISTS idx_daily_user ON daily_rewards(user_id)`);
+  await run(`CREATE INDEX IF NOT EXISTS idx_daily_guest ON daily_rewards(guest_token)`);
+  await run(`CREATE INDEX IF NOT EXISTS idx_user_achievements_user ON user_achievements(user_id)`);
+  await run(`CREATE INDEX IF NOT EXISTS idx_user_achievements_guest ON user_achievements(guest_token)`);
+  await run(`CREATE INDEX IF NOT EXISTS idx_users_oauth ON users(oauth_provider, oauth_id)`);
 
   console.log('Database initialized.');
 }

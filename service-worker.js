@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v41';
+const CACHE_NAME = 'superglazka-v42';
 
 const STATIC_ASSETS = [
   '/',
@@ -10,6 +10,7 @@ const STATIC_ASSETS = [
   '/blog-post.html',
   '/faq.html',
   '/checklist.html',
+  '/about.html',
   '/favicon.svg',
   '/manifest.json',
   '/css/style.css',
@@ -31,16 +32,28 @@ const STATIC_ASSETS = [
   '/js/analytics.js',
   '/js/landing-main.js',
   '/js/landing-games.js',
+  '/js/achievements.js',
+  '/js/daily-reward.js',
+  '/js/haptic.js',
+  '/js/leaderboard.js',
+  '/js/navigation-sounds.js',
+  '/js/tutorial.js',
   '/locales/ru.json',
   '/locales/en.json',
   '/locales/kz.json',
   '/locales/zh.json',
   '/assets/shared/characters/lenivus.png',
+  '/assets/shared/characters/lenivus.webp',
   '/assets/shared/characters/superglazka.png',
+  '/assets/shared/characters/superglazka.webp',
   '/assets/shared/characters/vanya.png',
+  '/assets/shared/characters/vanya.webp',
   '/assets/shared/characters/wise-crystal.png',
+  '/assets/shared/characters/wise-crystal.webp',
   '/assets/shared/games/runner-jump.png',
+  '/assets/shared/games/runner-jump.webp',
   '/assets/shared/games/runner-run.png',
+  '/assets/shared/games/runner-run.webp',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png'
 ];
@@ -74,12 +87,16 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Skip video/audio files — too large for cache
   const path = url.pathname.toLowerCase();
+
+  // Skip API routes — never cache dynamic data
+  if (path.startsWith('/api/')) return;
+
+  // Skip video/audio files — too large for cache
   if (path.endsWith('.mp4') || path.endsWith('.mp3') || path.endsWith('.webm') || path.endsWith('.wav')) return;
 
   // Skip admin panel — always fresh
-  if (path.endsWith('admin.html')) return;
+  if (path === '/admin.html') return;
 
   const isJsOrCss = path.endsWith('.js') || path.endsWith('.css');
 
@@ -97,7 +114,7 @@ self.addEventListener('fetch', (event) => {
           })
           .catch(() => cached); // fallback to cache if network fails
 
-        return cached || fetchPromise;
+        return cached || fetchPromise || new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
       })
     );
   } else {
