@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v40';
+const CACHE_NAME = 'superglazka-v41';
 
 const STATIC_ASSETS = [
   '/',
@@ -77,6 +77,9 @@ self.addEventListener('fetch', (event) => {
   // Skip video/audio files — too large for cache
   const path = url.pathname.toLowerCase();
   if (path.endsWith('.mp4') || path.endsWith('.mp3') || path.endsWith('.webm') || path.endsWith('.wav')) return;
+
+  // Skip admin panel — always fresh
+  if (path.endsWith('admin.html')) return;
 
   const isJsOrCss = path.endsWith('.js') || path.endsWith('.css');
 

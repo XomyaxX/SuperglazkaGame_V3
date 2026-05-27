@@ -338,4 +338,133 @@ router.delete('/blog/:id', async (req, res) => {
   }
 });
 
+// ─── USERS ───
+
+// GET /api/admin/users
+router.get('/users', async (req, res) => {
+  try {
+    const { search, limit = 50, offset = 0 } = req.query;
+    let sql = 'SELECT id, email, phone, nickname, created_at FROM users';
+    let params = [];
+    if (search) {
+      sql += ' WHERE email LIKE ? OR nickname LIKE ?';
+      params.push('%' + search + '%', '%' + search + '%');
+    }
+    sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(parseInt(limit), parseInt(offset));
+    const users = await all(sql, params);
+    const countRow = await get('SELECT COUNT(*) as count FROM users' + (search ? ' WHERE email LIKE ? OR nickname LIKE ?' : ''), search ? ['%' + search + '%', '%' + search + '%'] : []);
+    res.json({ success: true, users, total: countRow.count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/admin/users/:id
+router.get('/users/:id', async (req, res) => {
+  try {
+    const user = await get('SELECT id, email, phone, nickname, created_at FROM users WHERE id = ?', [req.params.id]);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const progress = await all('SELECT episode_id, frame_index, completed, updated_at FROM progress WHERE user_id = ?', [req.params.id]);
+    const coins = await get('SELECT amount, updated_at FROM coins WHERE user_id = ?', [req.params.id]);
+    const achievements = await all('SELECT achievement_id, unlocked_at FROM user_achievements WHERE user_id = ?', [req.params.id]);
+    res.json({ success: true, user: { ...user, progress, coins, achievements } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// PUT /api/admin/users/:id
+router.put('/users/:id', async (req, res) => {
+  try {
+    const { nickname, email, phone } = req.body;
+    if (!nickname || !email) return res.status(400).json({ error: 'Nickname and email are required' });
+    if (nickname.length > 30) return res.status(400).json({ error: 'Nickname too long' });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return res.status(400).json({ error: 'Invalid email' });
+    const existing = await get('SELECT id FROM users WHERE email = ? AND id != ?', [email, req.params.id]);
+    if (existing) return res.status(409).json({ error: 'Email already taken' });
+    await run(
+      'UPDATE users SET nickname = ?, email = ?, phone = ? WHERE id = ?',
+      [nickname, email, phone || '', req.params.id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE /api/admin/users/:id
+router.delete('/users/:id', async (req, res) => {
+  try {
+    await run('DELETE FROM progress WHERE user_id = ?', [req.params.id]);
+    await run('DELETE FROM coins WHERE user_id = ?', [req.params.id]);
+    await run('DELETE FROM user_achievements WHERE user_id = ?', [req.params.id]);
+    await run('DELETE FROM daily_rewards WHERE user_id = ?', [req.params.id]);
+    await run('DELETE FROM users WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ─── GUESTS ───
+
+// GET /api/admin/guests
+router.get('/guests', async (req, res) => {
+  try {
+    const { search, limit = 50, offset = 0 } = req.query;
+    let sql = 'SELECT id, token, nickname, created_at FROM guests';
+    let params = [];
+    if (search) {
+      sql += ' WHERE nickname LIKE ? OR token LIKE ?';
+      params.push('%' + search + '%', '%' + search + '%');
+    }
+    sql += ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+    params.push(parseInt(limit), parseInt(offset));
+    const guests = await all(sql, params);
+    const countRow = await get('SELECT COUNT(*) as count FROM guests' + (search ? ' WHERE nickname LIKE ? OR token LIKE ?' : ''), search ? ['%' + search + '%', '%' + search + '%'] : []);
+    res.json({ success: true, guests, total: countRow.count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// GET /api/admin/guests/:id
+router.get('/guests/:id', async (req, res) => {
+  try {
+    const guest = await get('SELECT id, token, nickname, created_at FROM guests WHERE id = ?', [req.params.id]);
+    if (!guest) return res.status(404).json({ error: 'Guest not found' });
+    const progress = await all('SELECT episode_id, frame_index, completed, updated_at FROM progress WHERE guest_token = ?', [guest.token]);
+    const coins = await get('SELECT amount, updated_at FROM coins WHERE guest_token = ?', [guest.token]);
+    res.json({ success: true, guest: { ...guest, progress, coins } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE /api/admin/guests/:id
+router.delete('/guests/:id', async (req, res) => {
+  try {
+    const guest = await get('SELECT token FROM guests WHERE id = ?', [req.params.id]);
+    if (guest) {
+      await run('DELETE FROM progress WHERE guest_token = ?', [guest.token]);
+      await run('DELETE FROM coins WHERE guest_token = ?', [guest.token]);
+      await run('DELETE FROM user_achievements WHERE guest_token = ?', [guest.token]);
+      await run('DELETE FROM daily_rewards WHERE guest_token = ?', [guest.token]);
+    }
+    await run('DELETE FROM guests WHERE id = ?', [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

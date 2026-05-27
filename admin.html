@@ -527,6 +527,28 @@ select option { background-color: #1a1a2e; color: #fff; }
   border-radius: 50%;
   background: currentColor;
 }
+
+/* Users & Guests */
+.user-tabs { display:flex; gap:8px; margin-bottom:16px; }
+.user-tabs button { flex:1; }
+.user-table { width:100%; border-collapse:collapse; font-size:13px; }
+.user-table th, .user-table td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+.user-table th { color:var(--text-muted); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; }
+.user-table tr:hover td { background:rgba(255,255,255,0.03); }
+.badge-role { display:inline-block; padding:2px 8px; border-radius:50px; font-size:11px; font-weight:600; }
+.badge-user { background:rgba(96,165,250,0.15); color:var(--info); }
+.badge-guest { background:rgba(251,191,36,0.15); color:var(--warning); }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:1000; backdrop-filter:blur(4px); }
+.modal { background:var(--bg-secondary); border:1px solid var(--border); border-radius:var(--radius); width:100%; max-width:480px; max-height:90vh; overflow:auto; padding:24px; }
+.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.modal-header h3 { font-size:18px; }
+.modal-close { background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; }
+.modal-close:hover { color:var(--text); }
+.modal-footer { display:flex; justify-content:flex-end; gap:10px; margin-top:20px; }
+.user-detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px; }
+.user-detail-grid .card { padding:12px; }
 </style>
 </head>
 <body>
@@ -554,14 +576,19 @@ select option { background-color: #1a1a2e; color: #fff; }
     <div style="display:flex;gap:6px;margin-bottom:12px;">
       <button class="btn btn-sm" id="tabEpisodesBtn" style="flex:1;font-size:12px;padding:6px;" onclick="showAdminSection('episodes')">📖 Эпизоды</button>
       <button class="btn btn-secondary btn-sm" id="tabBlogBtn" style="flex:1;font-size:12px;padding:6px;" onclick="showAdminSection('blog')">📝 Блог</button>
+      <button class="btn btn-secondary btn-sm" id="tabUsersBtn" style="flex:1;font-size:12px;padding:6px;" onclick="showAdminSection('users')">👤 Пользователи</button>
     </div>
     <input type="text" class="search-box" id="episodeSearch" placeholder="🔍 Поиск глав..." style="display:block;">
+    <input type="text" class="search-box" id="userSearch" placeholder="🔍 Поиск пользователей..." style="display:none;">
     <button class="btn" id="newEpisodeBtn">+ Новая глава</button>
     <button class="btn btn-secondary" id="importEpisodesBtn" style="font-size:12px;padding:8px 10px;">🔄 Импортировать главы</button>
     <div class="episode-list" id="episodeList">
       <div class="empty-state">Загрузка...</div>
     </div>
     <div class="episode-list" id="blogList" style="display:none;">
+      <div class="empty-state">Загрузка...</div>
+    </div>
+    <div class="episode-list" id="userList" style="display:none;">
       <div class="empty-state">Загрузка...</div>
     </div>
     <button class="btn btn-secondary btn-sm" onclick="logoutAdmin()" style="margin-top:auto;">🚪 Выйти</button>
@@ -587,6 +614,11 @@ select option { background-color: #1a1a2e; color: #fff; }
     <div class="editor-body" id="blogEditor" style="display:none;">
       <div class="empty-state">
         <h2>Выберите статью или создайте новую</h2>
+      </div>
+    </div>
+    <div class="editor-body" id="usersEditor" style="display:none;">
+      <div class="empty-state">
+        <h2>Выберите пользователя или гостя</h2>
       </div>
     </div>
   </div>
@@ -1555,35 +1587,51 @@ let selectedBlogPost = null;
 function showAdminSection(section) {
   const epBtn = document.getElementById('tabEpisodesBtn');
   const blogBtn = document.getElementById('tabBlogBtn');
+  const usersBtn = document.getElementById('tabUsersBtn');
   const epSearch = document.getElementById('episodeSearch');
+  const userSearch = document.getElementById('userSearch');
   const newEpBtn = document.getElementById('newEpisodeBtn');
   const importBtn = document.getElementById('importEpisodesBtn');
   const epList = document.getElementById('episodeList');
   const blogList = document.getElementById('blogList');
+  const userList = document.getElementById('userList');
   const editorBody = document.getElementById('editorBody');
   const blogEditor = document.getElementById('blogEditor');
+  const usersEditor = document.getElementById('usersEditor');
+
+  epBtn.classList.add('btn-secondary'); epBtn.classList.remove('btn');
+  blogBtn.classList.add('btn-secondary'); blogBtn.classList.remove('btn');
+  usersBtn.classList.add('btn-secondary'); usersBtn.classList.remove('btn');
+
+  epSearch.style.display = 'none';
+  userSearch.style.display = 'none';
+  newEpBtn.style.display = 'none';
+  importBtn.style.display = 'none';
+  epList.style.display = 'none';
+  blogList.style.display = 'none';
+  userList.style.display = 'none';
+  editorBody.style.display = 'none';
+  blogEditor.style.display = 'none';
+  usersEditor.style.display = 'none';
 
   if (section === 'blog') {
-    epBtn.classList.add('btn-secondary'); epBtn.classList.remove('btn');
     blogBtn.classList.add('btn'); blogBtn.classList.remove('btn-secondary');
-    epSearch.style.display = 'none';
-    newEpBtn.style.display = 'none';
-    importBtn.style.display = 'none';
-    epList.style.display = 'none';
     blogList.style.display = '';
-    editorBody.style.display = 'none';
     blogEditor.style.display = '';
     loadBlogPosts();
+  } else if (section === 'users') {
+    usersBtn.classList.add('btn'); usersBtn.classList.remove('btn-secondary');
+    userSearch.style.display = '';
+    userList.style.display = '';
+    usersEditor.style.display = '';
+    loadUsersAndGuests();
   } else {
-    blogBtn.classList.add('btn-secondary'); blogBtn.classList.remove('btn');
     epBtn.classList.add('btn'); epBtn.classList.remove('btn-secondary');
     epSearch.style.display = '';
     newEpBtn.style.display = '';
     importBtn.style.display = '';
     epList.style.display = '';
-    blogList.style.display = 'none';
     editorBody.style.display = '';
-    blogEditor.style.display = 'none';
   }
 }
 
@@ -1696,6 +1744,242 @@ async function createBlogPost() {
   } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
   finally { creatingBlogPost = false; }
 }
+
+/* ═══════════════════════════════════════════════
+   USERS & GUESTS ADMIN
+   ═══════════════════════════════════════════════ */
+let allUsers = [];
+let allGuests = [];
+let selectedUser = null;
+let selectedGuest = null;
+let userListMode = 'users';
+
+async function loadUsersAndGuests() {
+  await Promise.all([loadUsers(), loadGuests()]);
+  renderUserSidebar();
+}
+
+async function loadUsers() {
+  try {
+    const data = await api('/admin/users');
+    allUsers = data.users || [];
+  } catch (e) { allUsers = []; }
+}
+
+async function loadGuests() {
+  try {
+    const data = await api('/admin/guests');
+    allGuests = data.guests || [];
+  } catch (e) { allGuests = []; }
+}
+
+function renderUserSidebar() {
+  const list = document.getElementById('userList');
+  const search = (document.getElementById('userSearch')?.value || '').toLowerCase();
+  const items = userListMode === 'users'
+    ? allUsers.filter(u => !search || (u.email || '').toLowerCase().includes(search) || (u.nickname || '').toLowerCase().includes(search))
+    : allGuests.filter(g => !search || (g.id || '').toString().includes(search));
+  if (!items.length) { list.innerHTML = '<div class="empty-state">Ничего не найдено</div>'; return; }
+  list.innerHTML = items.map(item => {
+    const isUser = userListMode === 'users';
+    const id = item.id;
+    const title = isUser ? (item.nickname || item.email || 'Без имени') : ('Гость #' + id);
+    const meta = isUser
+      ? `${item.email || '—'} · ${item.phone || '—'} · ${new Date(item.created_at).toLocaleDateString('ru-RU')}`
+      : `Создан: ${new Date(item.created_at).toLocaleDateString('ru-RU')}`;
+    const active = (isUser && selectedUser?.id === id) || (!isUser && selectedGuest?.id === id);
+    return `<div class="episode-item${active ? ' active' : ''}" onclick="${isUser ? `selectUser(${id})` : `selectGuest(${id})`}">
+      <div class="title">${escapeHtml(title)}</div>
+      <div class="meta">${escapeHtml(meta)}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectUser(id) {
+  selectedUser = allUsers.find(u => u.id === id) || null;
+  selectedGuest = null;
+  renderUserSidebar();
+  renderUserEditor();
+}
+
+function selectGuest(id) {
+  selectedGuest = allGuests.find(g => g.id === id) || null;
+  selectedUser = null;
+  renderUserSidebar();
+  renderGuestEditor();
+}
+
+function userTabsHtml() {
+  return `<div class="user-tabs">
+    <button class="btn${userListMode === 'users' ? '' : ' btn-secondary'} btn-sm" style="flex:1;" onclick="setUserListMode('users')">👤 Пользователи (${allUsers.length})</button>
+    <button class="btn${userListMode === 'guests' ? '' : ' btn-secondary'} btn-sm" style="flex:1;" onclick="setUserListMode('guests')">👻 Гости (${allGuests.length})</button>
+  </div>`;
+}
+
+function setUserListMode(mode) {
+  userListMode = mode;
+  selectedUser = null;
+  selectedGuest = null;
+  document.getElementById('usersEditor').innerHTML = '<div class="empty-state"><h2>Выберите пользователя или гостя</h2></div>';
+  renderUserSidebar();
+}
+
+function renderUserEditor() {
+  const container = document.getElementById('usersEditor');
+  if (!selectedUser) { container.innerHTML = '<div class="empty-state"><h2>Выберите пользователя</h2></div>'; return; }
+  container.innerHTML = userTabsHtml() + `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2>${escapeHtml(selectedUser.nickname || 'Пользователь')}</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="openUserModal()">✏️ Редактировать</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteUser(${selectedUser.id})">🗑 Удалить</button>
+      </div>
+    </div>
+    <div class="user-detail-grid">
+      <div class="card"><h4>Email</h4><p>${escapeHtml(selectedUser.email || '—')}</p></div>
+      <div class="card"><h4>Телефон</h4><p>${escapeHtml(selectedUser.phone || '—')}</p></div>
+      <div class="card"><h4>Никнейм</h4><p>${escapeHtml(selectedUser.nickname || '—')}</p></div>
+      <div class="card"><h4>Дата регистрации</h4><p>${new Date(selectedUser.created_at).toLocaleString('ru-RU')}</p></div>
+    </div>
+    <div style="margin-top:16px;" id="userProgressArea"><div class="empty-state">Загрузка прогресса...</div></div>
+  `;
+  loadUserProgress(selectedUser.id);
+}
+
+function renderGuestEditor() {
+  const container = document.getElementById('usersEditor');
+  if (!selectedGuest) { container.innerHTML = '<div class="empty-state"><h2>Выберите гостя</h2></div>'; return; }
+  container.innerHTML = userTabsHtml() + `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h2>Гость #${selectedGuest.id}</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-danger btn-sm" onclick="deleteGuest(${selectedGuest.id})">🗑 Удалить</button>
+      </div>
+    </div>
+    <div class="user-detail-grid">
+      <div class="card"><h4>ID</h4><p>${selectedGuest.id}</p></div>
+      <div class="card"><h4>Дата создания</h4><p>${new Date(selectedGuest.created_at).toLocaleString('ru-RU')}</p></div>
+    </div>
+    <div style="margin-top:16px;" id="userProgressArea"><div class="empty-state">Загрузка прогресса...</div></div>
+  `;
+  loadGuestProgress(selectedGuest.id);
+}
+
+async function loadUserProgress(id) {
+  try {
+    const data = await api('/admin/users/' + id);
+    const area = document.getElementById('userProgressArea');
+    const progress = data.user?.progress || [];
+    const coins = data.user?.coins ? [data.user.coins] : [];
+    const achievements = data.user?.achievements || [];
+    area.innerHTML = `
+      <div class="card" style="margin-bottom:12px;"><h4>Прогресс по эпизодам</h4>
+        ${progress.length ? `<table class="user-table"><thead><tr><th>Эпизод</th><th>Кадр</th><th>Обновлено</th></tr></thead><tbody>${progress.map(p => `<tr><td>${p.episode_id}</td><td>${p.frame_index}</td><td>${new Date(p.updated_at).toLocaleDateString('ru-RU')}</td></tr>`).join('')}</tbody></table>` : '<p>Нет прогресса</p>'}
+      </div>
+      <div class="card" style="margin-bottom:12px;"><h4>Монеты</h4>
+        ${coins.length ? `<table class="user-table"><thead><tr><th>Количество</th><th>Дата</th></tr></thead><tbody>${coins.map(c => `<tr><td>${c.amount}</td><td>${new Date(c.updated_at).toLocaleDateString('ru-RU')}</td></tr>`).join('')}</tbody></table>` : '<p>Нет записей</p>'}
+      </div>
+      <div class="card"><h4>Достижения</h4>
+        ${achievements.length ? `<table class="user-table"><thead><tr><th>ID</th><th>Дата</th></tr></thead><tbody>${achievements.map(a => `<tr><td>${a.achievement_id}</td><td>${new Date(a.unlocked_at).toLocaleDateString('ru-RU')}</td></tr>`).join('')}</tbody></table>` : '<p>Нет достижений</p>'}
+      </div>
+    `;
+  } catch (e) {
+    const area = document.getElementById('userProgressArea');
+    if (area) area.innerHTML = '<div class="empty-state">Ошибка загрузки прогресса</div>';
+  }
+}
+
+async function loadGuestProgress(id) {
+  try {
+    const data = await api('/admin/guests/' + id);
+    const area = document.getElementById('userProgressArea');
+    const progress = data.guest?.progress || [];
+    area.innerHTML = `
+      <div class="card"><h4>Прогресс по эпизодам</h4>
+        ${progress.length ? `<table class="user-table"><thead><tr><th>Эпизод</th><th>Кадр</th><th>Обновлено</th></tr></thead><tbody>${progress.map(p => `<tr><td>${p.episode_id}</td><td>${p.frame_index}</td><td>${new Date(p.updated_at).toLocaleDateString('ru-RU')}</td></tr>`).join('')}</tbody></table>` : '<p>Нет прогресса</p>'}
+      </div>
+    `;
+  } catch (e) {
+    const area = document.getElementById('userProgressArea');
+    if (area) area.innerHTML = '<div class="empty-state">Ошибка загрузки прогресса</div>';
+  }
+}
+
+async function deleteUser(id) {
+  if (!confirm('Удалить пользователя? Это также удалит весь прогресс, монеты и достижения.')) return;
+  try {
+    await api('/admin/users/' + id, { method: 'DELETE' });
+    selectedUser = null;
+    document.getElementById('usersEditor').innerHTML = '<div class="empty-state"><h2>Выберите пользователя или гостя</h2></div>';
+    await loadUsers();
+    renderUserSidebar();
+    toast('Пользователь удалён');
+  } catch (e) { toast('Ошибка удаления: ' + e.message, 'error'); }
+}
+
+async function deleteGuest(id) {
+  if (!confirm('Удалить гостя? Это также удалит весь прогресс.')) return;
+  try {
+    await api('/admin/guests/' + id, { method: 'DELETE' });
+    selectedGuest = null;
+    document.getElementById('usersEditor').innerHTML = '<div class="empty-state"><h2>Выберите пользователя или гостя</h2></div>';
+    await loadGuests();
+    renderUserSidebar();
+    toast('Гость удалён');
+  } catch (e) { toast('Ошибка удаления: ' + e.message, 'error'); }
+}
+
+function openUserModal() {
+  if (!selectedUser) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'userModalOverlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-header"><h3>Редактировать пользователя</h3><button class="modal-close" onclick="closeUserModal()">×</button></div>
+      <div class="modal-body">
+        <div class="form-group"><label>Никнейм</label><input id="editNickname" value="${escapeHtml(selectedUser.nickname || '')}"></div>
+        <div class="form-group"><label>Email</label><input id="editEmail" value="${escapeHtml(selectedUser.email || '')}"></div>
+        <div class="form-group"><label>Телефон</label><input id="editPhone" value="${escapeHtml(selectedUser.phone || '')}"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary btn-sm" onclick="closeUserModal()">Отмена</button>
+        <button class="btn btn-sm" onclick="saveUserModal()">Сохранить</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function closeUserModal() {
+  const el = document.getElementById('userModalOverlay');
+  if (el) el.remove();
+}
+
+async function saveUserModal() {
+  if (!selectedUser) return;
+  const body = {
+    nickname: document.getElementById('editNickname').value.trim(),
+    email: document.getElementById('editEmail').value.trim(),
+    phone: document.getElementById('editPhone').value.trim(),
+  };
+  try {
+    await api('/admin/users/' + selectedUser.id, { method: 'PUT', body: JSON.stringify(body) });
+    closeUserModal();
+    await loadUsers();
+    selectedUser = allUsers.find(u => u.id === selectedUser.id) || null;
+    renderUserSidebar();
+    renderUserEditor();
+    toast('Пользователь обновлён');
+  } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+// Search debounce for users
+let userSearchTimer = null;
+document.addEventListener('DOMContentLoaded', () => {
+  const us = document.getElementById('userSearch');
+  if (us) us.addEventListener('input', () => { clearTimeout(userSearchTimer); userSearchTimer = setTimeout(renderUserSidebar, 250); });
+});
 
 /* ═══════════════════════════════════════════════
    UTILS
