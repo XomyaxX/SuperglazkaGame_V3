@@ -503,6 +503,7 @@
           <span>Согласен с <a href="privacy.html" target="_blank">политикой конфиденциальности</a></span>
         </label>
         <button class="profile-guest-btn" id="registerBtn" data-i18n="auth.registerBtn">🚀 Зарегистрироваться</button>
+        <div style="text-align:center;margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6);"><a href="#" id="landingShowLogin" style="color:var(--neon-purple);text-decoration:none;font-weight:700;">Уже есть аккаунт? Войти</a></div>
       </div>
       <div class="profile-login-form" id="loginForm">
         <input type="email" id="loginEmail" placeholder="Email" data-i18n-placeholder="auth.email">
@@ -517,6 +518,7 @@
           <button class="profile-guest-btn" id="loginGoogleBtn" style="background:#fff;color:#333;font-size:13px;padding:6px 12px;">🔍 Google</button>
           <button class="profile-guest-btn" id="loginVkBtn" style="background:#0077ff;color:#fff;font-size:13px;padding:6px 12px;">VK</button>
         </div>
+        <div style="text-align:center;margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6);"><a href="#" id="landingShowRegister" style="color:var(--neon-purple);text-decoration:none;font-weight:700;">Нет аккаунта? Зарегистрироваться</a></div>
       </div>
       <div class="profile-auth-tabs" id="authTabs">
         <button class="profile-auth-tab active" data-target="guestForm" data-i18n="auth.guest">Гость</button>
@@ -844,6 +846,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const loginVkBtn = document.getElementById('loginVkBtn');
     if (loginVkBtn) {
       loginVkBtn.addEventListener('click', function() { Auth.openOAuth('vk'); });
+    }
+
+    const landingShowLogin = document.getElementById('landingShowLogin');
+    if (landingShowLogin) {
+      landingShowLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showForm('login');
+      });
+    }
+    const landingShowRegister = document.getElementById('landingShowRegister');
+    if (landingShowRegister) {
+      landingShowRegister.addEventListener('click', function(e) {
+        e.preventDefault();
+        showForm('register');
+      });
     }
   }
 
