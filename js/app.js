@@ -1053,6 +1053,12 @@ const App = (function() {
         if (!availableGames.length && f.available_games_json) {
           try { availableGames = JSON.parse(f.available_games_json); } catch(e) {}
         }
+        // Fallback: old DB records may still reference 'tracker'
+        var gameType = f.game_type || f.game || null;
+        if (gameType === 'tracker') gameType = 'peripheral';
+        if (Array.isArray(availableGames)) {
+          availableGames = availableGames.map(function(g) { return g === 'tracker' ? 'peripheral' : g; });
+        }
         return {
           id: f.id != null ? f.id : (idx + 1),
           title: f.title || '',
@@ -1064,7 +1070,7 @@ const App = (function() {
           dialogues: dialogues,
           dialogueAudio: [],
           transitionText: f.transition_text || f.transitionText || null,
-          game: f.game_type || f.game || null,
+          game: gameType,
           videoPrompt: f.video_prompt || f.videoPrompt || '',
           availableGames: availableGames,
           choices: choices
