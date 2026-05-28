@@ -1131,7 +1131,7 @@ function renderFrameEditor() {
             <label>Мини-игра</label>
             <select id="frameGame" onchange="scheduleFrameAutoSave()">
               <option value="">—</option>
-              ${['blink','tracker','runner','gym'].map(g =>
+              ${['blink','peripheral','runner','gym'].map(g =>
                 `<option value="${g}" ${(f.game_type === g || f.game === g) ? 'selected' : ''}>${g}</option>`
               ).join('')}
             </select>
@@ -1140,7 +1140,7 @@ function renderFrameEditor() {
         <div class="form-group">
           <label>Доступные игры (availableGames)</label>
           <div class="checkbox-group" id="availableGamesGroup">
-            ${['blink','tracker','runner','gym'].map(g => `
+            ${['blink','peripheral','runner','gym'].map(g => `
               <label class="checkbox-pill ${availableGames.includes(g) ? 'checked' : ''}">
                 <input type="checkbox" value="${g}" ${availableGames.includes(g) ? 'checked' : ''} onchange="toggleGamePill(this);scheduleFrameAutoSave()">
                 ${g}
