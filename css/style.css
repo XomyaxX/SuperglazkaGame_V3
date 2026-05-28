@@ -2086,16 +2086,16 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   TRACKER GAME
+   PERIPHERAL HUNTER GAME
    ═══════════════════════════════════════════════════════════ */
-#game-overlay-tracker {
+#game-overlay-peripheral {
   background: linear-gradient(180deg, #0f0a1e 0%, #1a0f2e 100%);
   padding: 18px;
   justify-content: flex-start;
   overflow-y: auto;
 }
 
-#tracker-canvas {
+#peripheral-canvas {
   width: 100%;
   max-width: 500px;
   height: auto;
@@ -2103,10 +2103,11 @@ body {
   border: 2px solid rgba(255, 255, 255, 0.15);
   background: rgba(0, 0, 0, 0.3);
   touch-action: none;
+  cursor: crosshair;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
-.tracker-controls {
+.peripheral-controls {
   width: 100%;
   max-width: 500px;
   display: flex;
@@ -2116,7 +2117,7 @@ body {
   margin-top: 10px;
 }
 
-.tracker-hint {
+.peripheral-hint {
   font-size: 15px;
   color: rgba(255, 255, 255, 0.8);
   font-weight: 700;
@@ -2124,20 +2125,6 @@ body {
   padding: 10px 18px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 20px;
-}
-
-.tracker-progress-bar {
-  width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.tracker-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #c084fc, #e879f9);
-  transition: width .3s ease;
 }
 
 

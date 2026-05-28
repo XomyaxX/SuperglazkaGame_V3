@@ -71,9 +71,9 @@
       "title": "眼睛体操",
       "desc": "眨眼、眯眼、睁大眼睛。强化眼部肌肉。"
     },
-    "tracker": {
-      "title": "跟随小球",
-      "desc": "用目光跟随移动的小球。培养眼睛平滑运动。"
+    "peripheral": {
+      "title": "周边猎人",
+      "desc": "不要移开中心视线，点击屏幕边缘的目标。训练周边视力。"
     },
     "play": "▶ 玩",
     "chooseGame": "🎮 选择游戏",
@@ -366,20 +366,20 @@
       "hintRound3": "当进度条在绿色区域时点击！",
       "timesSuffix": "次！"
     },
-    "tracker": {
-      "title": "跟随小球",
-      "follow": "用目光跟随！",
-      "win": "眼睛休息好了！\n+100 🪙",
+    "peripheral": {
+      "title": "周边猎人",
+      "hint": "不要移开中心视线，点击边缘的目标！👁️",
+      "score": "得分",
+      "lives": "生命",
+      "combo": "连击",
+      "fixate": "看这里",
+      "completed": "时间到！成绩很棒！",
+      "gameover": "生命耗尽！再试一次！",
+      "maxCombo": "最高连击",
+      "targets": "目标",
       "stats": "统计",
       "continue": "继续",
-      "phase": "阶段",
-      "hint": "用眼睛跟随小球 👀",
-      "name": "追踪凝视",
-      "hintUpDown": "跟随球上下移动 👆👇",
-      "hintLeftRight": "跟随球左右移动 👈👉",
-      "hintClockwise": "顺时针跟随球 ⭕",
-      "hintCounterClockwise": "逆时针跟随球 🔄",
-      "getReady": "准备..."
+      "name": "周边猎人"
     },
     "stats": {
       "lives": "❤️ 生命",
@@ -478,8 +478,8 @@
     "eye_gymnast_desc": "完成体操3次",
     "blinker": "眨眼者",
     "blinker_desc": "完成「眨眼游戏」",
-    "tracker": "追踪者",
-    "tracker_desc": "完成「跟随小球」",
+    "peripheral": "猎人",
+    "peripheral_desc": "完成「周边猎人」""
     "bookworm": "书虫",
     "bookworm_desc": "完成一章",
     "librarian": "图书馆员",

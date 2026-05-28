@@ -39,7 +39,7 @@
 
   /**
    * Get difficulty configuration for a specific game and level.
-   * @param {string} game - 'runner' | 'blink' | 'gym' | 'tracker'
+   * @param {string} game - 'runner' | 'blink' | 'gym' | 'peripheral'
    * @param {number} [level] - optional override level
    */
   function getConfig(game, level) {
@@ -50,7 +50,7 @@
         case 'runner': return getRunnerConfig(lv);
         case 'blink':  return getBlinkConfig(lv);
         case 'gym':    return getGymConfig(lv);
-        case 'tracker':return getTrackerConfig(lv);
+        case 'peripheral':return getPeripheralConfig(lv);
         default: return {};
       }
     } catch (e) {
@@ -125,23 +125,21 @@
     };
   }
 
-  // ─── TRACKER ───
-  function getTrackerConfig(lv) {
-    var patterns = ['updown','leftright','cw','ccw'];
-    if (lv >= 3) patterns.push('figure8');
-    if (lv >= 5) patterns.push('zigzag');
-    if (lv >= 7) patterns.push('spiral');
-    if (lv >= 10) patterns.push('random');
+  // ─── PERIPHERAL HUNTER ───
+  function getPeripheralConfig(lv) {
     return {
       level: lv,
-      phaseCount: Math.min(8, 3 + Math.floor(lv / 2)),
-      phaseDuration: Math.max(3500, 9000 - lv * 450),
-      pauseDuration: Math.max(400, 1800 - lv * 120),
-      speedFactor: 3 + lv * 0.6,
-      radius: Math.min(0.48, 0.32 + lv * 0.015),
-      patterns: patterns,
-      trailOpacity: Math.max(0.05, 0.2 - lv * 0.015),
-      showHint: lv <= 3
+      duration: Math.max(30000, 65000 - lv * 1500),
+      lives: Math.max(1, 4 - Math.floor((lv - 1) / 5)),
+      spawnMin: Math.max(300, 1100 - lv * 70),
+      spawnMax: Math.max(500, 2000 - lv * 120),
+      targetLifetime: Math.max(1200, 3200 - lv * 160),
+      trapChance: lv >= 3 ? Math.min(0.35, 0.05 + (lv - 3) * 0.04) : 0,
+      movingChance: lv >= 2 ? Math.min(0.3, 0.08 + (lv - 2) * 0.03) : 0,
+      fadingChance: lv >= 4 ? Math.min(0.25, 0.05 + (lv - 4) * 0.03) : 0,
+      goldenChance: lv >= 5 ? Math.min(0.15, 0.02 + (lv - 5) * 0.02) : 0,
+      maxActive: Math.min(7, 2 + Math.floor(lv / 2)),
+      showHint: lv <= 2
     };
   }
 

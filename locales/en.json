@@ -71,9 +71,9 @@
       "title": "Eye Gymnastics",
       "desc": "Blink, squint and open your eyes wide. Strengthens eye muscles."
     },
-    "tracker": {
-      "title": "Follow the Ball",
-      "desc": "Follow the moving ball with your eyes. Develops smooth eye movements."
+    "peripheral": {
+      "title": "Peripheral Hunter",
+      "desc": "Click targets on the edges of the screen without looking away from the center. Trains peripheral vision."
     },
     "play": "▶ Play",
     "chooseGame": "🎮 Choose a game",
@@ -366,20 +366,20 @@
       "hintRound3": "Click when the bar is in the green zone!",
       "timesSuffix": " times!"
     },
-    "tracker": {
-      "title": "Follow the Ball",
-      "follow": "Follow with your eyes!",
-      "win": "Eyes rested!\n+100 🪙",
+    "peripheral": {
+      "title": "Peripheral Hunter",
+      "hint": "Click targets on the edges without looking away from the center! 👁️",
+      "score": "Score",
+      "lives": "Lives",
+      "combo": "Combo",
+      "fixate": "Look here",
+      "completed": "Time's up! Great result!",
+      "gameover": "Out of lives! Try again!",
+      "maxCombo": "Max Combo",
+      "targets": "Targets",
       "stats": "Statistics",
       "continue": "Continue",
-      "phase": "Phase",
-      "hint": "Follow the ball with your eyes 👀",
-      "name": "Tracker-gaze",
-      "hintUpDown": "Follow the ball up and down 👆👇",
-      "hintLeftRight": "Follow the ball left and right 👈👉",
-      "hintClockwise": "Follow the ball clockwise ⭕",
-      "hintCounterClockwise": "Follow the ball counter-clockwise 🔄",
-      "getReady": "Get ready..."
+      "name": "Peripheral Hunter"
     },
     "stats": {
       "lives": "❤️ Lives",
@@ -478,8 +478,8 @@
     "eye_gymnast_desc": "Complete gymnastics 3 times",
     "blinker": "Blinker",
     "blinker_desc": "Complete \"Blink Game\"",
-    "tracker": "Tracker",
-    "tracker_desc": "Complete \"Follow the Ball\"",
+    "peripheral": "Hunter",
+    "peripheral_desc": "Complete \"Peripheral Hunter\""",
     "bookworm": "Bookworm",
     "bookworm_desc": "Complete one chapter",
     "librarian": "Librarian",

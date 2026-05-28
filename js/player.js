@@ -20,7 +20,7 @@ const PlayerProfile = (function() {
       },
       games: {
         blink: { played: 0, bestScore: 0 },
-        tracker: { played: 0, bestScore: 0 },
+        peripheral: { played: 0, bestScore: 0 },
         runner: { played: 0, bestScore: 0 },
         gym: { played: 0, bestScore: 0 }
       }
@@ -247,7 +247,7 @@ const PlayerProfile = (function() {
     if (gamesList) {
       var names = {
         blink: window.I18n ? I18n.t('games.blink.title') : 'Моргайка',
-        tracker: window.I18n ? I18n.t('games.tracker.title') : 'Следи за шариком',
+        peripheral: window.I18n ? I18n.t('games.peripheral.title') : 'Периферийный охотник',
         runner: window.I18n ? I18n.t('games.runner.title') : 'Погоня',
         gym: window.I18n ? I18n.t('games.gym.title') : 'Ваня vs Ленивус'
       };

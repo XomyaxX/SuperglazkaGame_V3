@@ -667,28 +667,45 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
-     TRACKER GAME OVERLAY
+     PERIPHERAL HUNTER GAME OVERLAY
      ═══════════════════════════════════════════════════════════ -->
-<div class="overlay" id="game-overlay-tracker">
+<div class="overlay" id="game-overlay-peripheral">
   <div class="game-header">
-    <div class="score-pill"><span class="score-lbl" data-i18n="games.tracker.phase">Фаза</span><span class="score-val" id="tracker-phase">1/4</span></div>
-    <div class="score-pill"><span class="score-lbl">⚡</span><span class="score-val" id="tracker-difficulty">1</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.peripheral.score">Счёт</span><span class="score-val" id="peripheral-score">0</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.peripheral.lives">❤️</span><span class="score-val" id="peripheral-lives">❤️❤️❤️</span></div>
+    <div class="score-pill"><span class="score-lbl" data-i18n="games.peripheral.combo">Комбо</span><span class="score-val" id="peripheral-combo"></span></div>
+    <div class="score-pill"><span class="score-lbl">⏱️</span><span class="score-val" id="peripheral-time">60s</span></div>
+    <div class="score-pill"><span class="score-lbl">⚡</span><span class="score-val" id="peripheral-difficulty">1</span></div>
   </div>
-  <canvas id="tracker-canvas" width="500" height="400"></canvas>
-  <div class="tracker-controls">
-    <div class="tracker-hint" id="tracker-hint" data-i18n="games.tracker.hint">Следи за шариком глазами 👀</div>
-    <div class="tracker-progress-bar"><div class="tracker-progress-fill" id="tracker-progress" style="width:0%"></div></div>
+  <canvas id="peripheral-canvas" width="500" height="400"></canvas>
+  <div class="peripheral-controls">
+    <div class="peripheral-hint" id="peripheral-hint" data-i18n="games.peripheral.hint">Кликай по целям по краям экрана, не отводя взгляд от центра! 👁️</div>
   </div>
-  <button class="skip-btn" onclick="closeTracker(true)" data-i18n="app.skip">Пропустить ▸</button>
+  <button class="skip-btn" onclick="closePeripheral(true)" data-i18n="app.skip">Пропустить ▸</button>
 </div>
 
-<div class="overlay" id="tracker-win-overlay">
+<div class="overlay" id="peripheral-stats-overlay">
   <div class="win-stars"><span class="win-star">⭐</span><span class="win-star">⭐</span><span class="win-star">⭐</span></div>
-  <div class="win-title" data-i18n="app.great">Отлично!</div>
-  <div class="win-sub" data-i18n="games.tracker.win">Глаза отдохнули!<br>+100 🪙</div>
-  <div class="win-sub" id="tracker-best-score" style="font-size:13px;color:var(--neon-cyan);margin-top:4px;">🏆 Рекорд: —</div>
-  <button class="win-btn" onclick="closeTrackerContinue()" data-i18n="app.continue">Продолжить ➜</button>
-  <button class="win-btn" onclick="Leaderboard.showModal('tracker')" style="margin-top:8px;background:rgba(255,255,255,0.08);color:var(--neon-cyan);font-size:13px;">🏆 Топ-5</button>
+  <div class="win-title" id="peripheral-stats-status" data-i18n="games.peripheral.completed">Время вышло! Отличный результат!</div>
+  <div class="win-sub">
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px 0;">
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--neon-cyan);" id="peripheral-stats-score">0</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="games.peripheral.score">Счёт</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--neon-pink);" id="peripheral-stats-combo">0x</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="games.peripheral.maxCombo">Макс. комбо</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:28px;font-weight:800;color:var(--neon-green);" id="peripheral-stats-targets">0</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);" data-i18n="games.peripheral.targets">Целей</div>
+      </div>
+    </div>
+  </div>
+  <div class="win-sub" id="peripheral-stats-best" style="font-size:13px;color:var(--neon-cyan);margin-top:4px;">🏆 Рекорд: —</div>
+  <button class="win-btn" onclick="closePeripheralContinue()" data-i18n="app.continue">Продолжить ➜</button>
+  <button class="win-btn" onclick="Leaderboard.showModal('peripheral')" style="margin-top:8px;background:rgba(255,255,255,0.08);color:var(--neon-cyan);font-size:13px;">🏆 Топ-5</button>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -731,7 +748,7 @@ if ('serviceWorker' in navigator) {
 <script src="js/game_runner.js" defer></script>
 <script src="js/game_gymnastics.js" defer></script>
 <script src="js/game_blink.js" defer></script>
-<script src="js/game_tracker.js" defer></script>
+<script src="js/game_peripheral.js" defer></script>
 <script src="js/achievements.js" defer></script>
 <script src="js/daily-reward.js" defer></script>
 <script src="js/app.js" defer></script>

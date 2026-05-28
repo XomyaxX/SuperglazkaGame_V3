@@ -100,7 +100,7 @@
       runner: 'Погоня',
       gym: 'Битва с Ленивусом',
       blink: 'Моргайка',
-      tracker: 'Следи за шариком'
+      peripheral: 'Периферийный охотник'
     };
     var gameName = gameNames[game] || game;
 

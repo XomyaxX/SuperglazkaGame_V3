@@ -16,11 +16,11 @@ function getSpeakerName(key) {
 function getGameName(key) {
   var names = {
     blink: window.I18n ? I18n.t('games.blink.name') : 'Моргай-зарядка',
-    tracker: window.I18n ? I18n.t('games.tracker.name') : 'Трекер-взгляд'
+    peripheral: window.I18n ? I18n.t('games.peripheral.name') : 'Периферийный охотник'
   };
   return names[key] || key;
 }
-const GAME_ICONS = { blink: '⚡', tracker: '👀' };
+const GAME_ICONS = { blink: '⚡', peripheral: '🎯' };
 
 /**
  * Try loading WebP version of an image, fallback to original on error.
@@ -1474,10 +1474,10 @@ const App = (function() {
         if (typeof startBlinkGame === 'function') { startBlinkGame(); }
         else { console.error('[App] startBlinkGame is not a function'); }
       });
-    } else if (gameType === 'tracker') {
-      showGameTransition('🔮 Следи за шариком!', 'Следи глазами за светящимся шариком — тренируем внимание!', () => {
-        if (typeof startTrackerGame === 'function') { startTrackerGame(); }
-        else { console.error('[App] startTrackerGame is not a function'); }
+    } else if (gameType === 'peripheral') {
+      showGameTransition('🎯 Периферийный охотник!', 'Кликай по целям по краям экрана, не отводя взгляд от центра — тренируем периферическое зрение!', () => {
+        if (typeof startPeripheralGame === 'function') { startPeripheralGame(); }
+        else { console.error('[App] startPeripheralGame is not a function'); }
       });
     }
   }
@@ -1496,8 +1496,8 @@ const App = (function() {
       if (typeof startGymGame === 'function') startGymGame();
     } else if (gameType === 'blink') {
       if (typeof startBlinkGame === 'function') startBlinkGame();
-    } else if (gameType === 'tracker') {
-      if (typeof startTrackerGame === 'function') startTrackerGame();
+    } else if (gameType === 'peripheral') {
+      if (typeof startPeripheralGame === 'function') startPeripheralGame();
     }
   }
 
@@ -2350,7 +2350,7 @@ const App = (function() {
       startEpisode(parseInt(directEpisode, 10), 0);
     }
     var directGame = urlParams.get('game');
-    if (directGame && ['runner', 'gym', 'blink', 'tracker'].indexOf(directGame) !== -1) {
+    if (directGame && ['runner', 'gym', 'blink', 'peripheral'].indexOf(directGame) !== -1) {
       launchGame(directGame);
     }
 
