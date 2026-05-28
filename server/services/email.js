@@ -36,7 +36,10 @@ async function sendNewEpisodeNotification(to, episodeTitle, episodeNumber, episo
     subject: '\uD83C\uDF1F Новая глава Суперглазки: ' + (episodeTitle || 'Глава ' + episodeNumber),
     html: html
   });
-
+  if (result.error) {
+    console.error('[Email] sendNewEpisodeNotification failed:', result.error);
+    throw new Error(result.error.message || 'Resend email error');
+  }
   return result;
 }
 
@@ -66,7 +69,10 @@ async function sendConfirmationEmail(to, confirmToken) {
     subject: 'Подтвердите подписку на Суперглазку',
     html: html
   });
-
+  if (result.error) {
+    console.error('[Email] sendConfirmationEmail failed:', result.error);
+    throw new Error(result.error.message || 'Resend email error');
+  }
   return result;
 }
 
@@ -83,7 +89,10 @@ async function sendVerificationEmail(to, token) {
     subject: 'Подтвердите email для Суперглазки',
     html: html
   });
-
+  if (result.error) {
+    console.error('[Email] sendVerificationEmail failed:', result.error);
+    throw new Error(result.error.message || 'Resend email error');
+  }
   return result;
 }
 
@@ -100,7 +109,10 @@ async function sendPasswordResetEmail(to, token) {
     subject: 'Сброс пароля в Суперглазке',
     html: html
   });
-
+  if (result.error) {
+    console.error('[Email] sendPasswordResetEmail failed:', result.error);
+    throw new Error(result.error.message || 'Resend email error');
+  }
   return result;
 }
 

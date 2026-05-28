@@ -244,7 +244,11 @@ router.post('/forgot-password', async (req, res) => {
     const resetToken = uuidv4();
     const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hour
     await run('UPDATE users SET reset_token = ?, reset_expires_at = ? WHERE id = ?', [resetToken, expires, user.id]);
-    await sendPasswordResetEmail(email, resetToken);
+    try {
+      await sendPasswordResetEmail(email, resetToken);
+    } catch (emailErr) {
+      console.error('[Auth] Failed to send password reset email to', email, ':', emailErr.message);
+    }
     res.json({ message: 'If this email exists, a reset link has been sent.' });
   } catch (err) {
     if (err instanceof z.ZodError) return res.status(400).json({ error: err.errors });
