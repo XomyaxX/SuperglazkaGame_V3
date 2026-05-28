@@ -155,7 +155,7 @@ router.get('/verify/:token', async (req, res) => {
     if (!user) return res.status(400).json({ error: 'Invalid or expired verification token' });
 
     await run('UPDATE users SET email_verified = 1, verification_token = NULL, verification_sent_at = NULL WHERE id = ?', [user.id]);
-    res.redirect(FRONTEND_URL + '/app.html?verified=1');
+    res.redirect(FRONTEND_URL + '/?verified=1');
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });

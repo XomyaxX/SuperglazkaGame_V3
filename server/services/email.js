@@ -71,7 +71,7 @@ async function sendConfirmationEmail(to, confirmToken) {
 }
 
 async function sendVerificationEmail(to, token) {
-  const verifyUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/app.html?verify=' + encodeURIComponent(token);
+  const verifyUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/?verify=' + encodeURIComponent(token);
   const html = loadTemplate('verify-email', {
     verifyUrl: verifyUrl,
     year: String(new Date().getFullYear())
@@ -88,7 +88,7 @@ async function sendVerificationEmail(to, token) {
 }
 
 async function sendPasswordResetEmail(to, token) {
-  const resetUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/app.html?reset=' + encodeURIComponent(token);
+  const resetUrl = (process.env.FRONTEND_URL || 'https://vidial-media.ru') + '/?reset=' + encodeURIComponent(token);
   const html = loadTemplate('reset-password', {
     resetUrl: resetUrl,
     year: String(new Date().getFullYear())

@@ -520,6 +520,36 @@
         </div>
         <div style="text-align:center;margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6);"><a href="#" id="landingShowRegister" style="color:var(--neon-purple);text-decoration:none;font-weight:700;">Нет аккаунта? Зарегистрироваться</a></div>
       </div>
+      <!-- Verify pending panel -->
+      <div class="profile-register-form" id="landingVerifyPanel" style="display:none;">
+        <div style="text-align:center;color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:12px;">📧 Письмо с подтверждением отправлено на ваш email. Нажмите ссылку в письме, чтобы активировать аккаунт.</div>
+        <button class="profile-guest-btn" id="landingResendBtn">📧 Отправить повторно</button>
+        <div style="text-align:center;margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6);"><a href="#" id="landingVerifyShowLogin" style="color:var(--neon-purple);text-decoration:none;font-weight:700;">← Войти</a></div>
+      </div>
+
+      <!-- Forgot password panel -->
+      <div class="profile-login-form" id="landingForgotPanel" style="display:none;">
+        <div style="text-align:center;color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:12px;">Введите email, и мы отправим ссылку для сброса пароля.</div>
+        <input type="email" id="landingForgotEmail" placeholder="Email" data-i18n-placeholder="auth.email">
+        <button class="profile-guest-btn" id="landingForgotSubmitBtn">📧 Отправить</button>
+        <div style="text-align:center;margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6);"><a href="#" id="landingForgotShowLogin" style="color:var(--neon-purple);text-decoration:none;font-weight:700;">← Войти</a></div>
+      </div>
+
+      <!-- Reset password panel -->
+      <div class="profile-login-form" id="landingResetPanel" style="display:none;">
+        <div style="text-align:center;color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:12px;">Придумайте новый пароль.</div>
+        <input type="password" id="landingResetPassword" placeholder="Новый пароль (минимум 6 символов)" data-i18n-placeholder="auth.passwordMin">
+        <input type="password" id="landingResetPassword2" placeholder="Повторите пароль" data-i18n-placeholder="auth.passwordRepeat">
+        <button class="profile-guest-btn" id="landingResetSubmitBtn">🔑 Сохранить пароль</button>
+        <div style="text-align:center;margin-top:8px;font-size:13px;color:rgba(255,255,255,0.6);"><a href="#" id="landingResetShowLogin" style="color:var(--neon-purple);text-decoration:none;font-weight:700;">← Войти</a></div>
+      </div>
+
+      <!-- Verified success panel -->
+      <div class="profile-register-form" id="landingVerifiedPanel" style="display:none;">
+        <div style="text-align:center;color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:12px;">✅ Email подтверждён! Теперь можно войти.</div>
+        <button class="profile-guest-btn" id="landingVerifiedLoginBtn">🔑 Войти</button>
+      </div>
+
       <div class="profile-auth-tabs" id="authTabs">
         <button class="profile-auth-tab active" data-target="guestForm" data-i18n="auth.guest">Гость</button>
         <button class="profile-auth-tab" data-target="registerForm" data-i18n="auth.register">Регистрация</button>
@@ -737,11 +767,31 @@ document.addEventListener('DOMContentLoaded', function() {
     const guestForm = document.getElementById('guestForm');
     const registerForm = document.getElementById('registerForm');
     const loginForm = document.getElementById('loginForm');
+    const verifyPanel = document.getElementById('landingVerifyPanel');
+    const forgotPanel = document.getElementById('landingForgotPanel');
+    const resetPanel = document.getElementById('landingResetPanel');
+    const verifiedPanel = document.getElementById('landingVerifiedPanel');
 
-    function showForm(name) {
-      guestForm.style.display = name === 'guest' ? 'flex' : 'none';
-      registerForm.classList.toggle('active', name === 'register');
-      loginForm.classList.toggle('active', name === 'login');
+    function hideAllPanels() {
+      guestForm.style.display = 'none';
+      registerForm.style.display = 'none';
+      loginForm.style.display = 'none';
+      if (verifyPanel) verifyPanel.style.display = 'none';
+      if (forgotPanel) forgotPanel.style.display = 'none';
+      if (resetPanel) resetPanel.style.display = 'none';
+      if (verifiedPanel) verifiedPanel.style.display = 'none';
+    }
+
+    function showPanel(name) {
+      hideAllPanels();
+      if (name === 'guest') guestForm.style.display = 'flex';
+      else if (name === 'register') registerForm.style.display = 'flex';
+      else if (name === 'login') loginForm.style.display = 'flex';
+      else if (name === 'verify' && verifyPanel) verifyPanel.style.display = 'flex';
+      else if (name === 'forgot' && forgotPanel) forgotPanel.style.display = 'flex';
+      else if (name === 'reset' && resetPanel) resetPanel.style.display = 'flex';
+      else if (name === 'verified' && verifiedPanel) verifiedPanel.style.display = 'flex';
+
       tabs.forEach(function(t) {
         t.classList.toggle('active', t.dataset.target === (name === 'guest' ? 'guestForm' : name === 'register' ? 'registerForm' : 'loginForm'));
       });
@@ -750,12 +800,16 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
 
+    function showForm(name) {
+      showPanel(name);
+    }
+
     tabs.forEach(function(tab) {
       tab.addEventListener('click', function() {
         var target = tab.dataset.target;
-        if (target === 'guestForm') showForm('guest');
-        else if (target === 'registerForm') showForm('register');
-        else if (target === 'loginForm') showForm('login');
+        if (target === 'guestForm') showPanel('guest');
+        else if (target === 'registerForm') showPanel('register');
+        else if (target === 'loginForm') showPanel('login');
       });
     });
 
@@ -793,7 +847,7 @@ document.addEventListener('DOMContentLoaded', function() {
           try {
             await Auth.register(email, '', password, nick);
             if (typeof trackEvent === 'function') trackEvent('registration_completed', { method: 'email', source: 'landing' });
-            alert('Регистрация успешна! Проверьте email для подтверждения аккаунта.');
+            showPanel('verify');
           } catch (e) {
             alert('Ошибка: ' + (e.message || 'Не удалось зарегистрироваться'));
           }
@@ -814,7 +868,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.reload();
           } catch (e) {
             if (e.code === 'EMAIL_NOT_VERIFIED') {
-              alert('Пожалуйста, подтвердите email. Повторная отправка...');
+              showPanel('verify');
               try { await Auth.resendVerification(email); } catch (_) {}
             } else {
               alert('Ошибка: ' + (e.message || 'Неверный email или пароль'));
@@ -826,16 +880,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const landingForgot = document.getElementById('landingForgot');
     if (landingForgot) {
-      landingForgot.addEventListener('click', async function(e) {
+      landingForgot.addEventListener('click', function(e) {
         e.preventDefault();
-        const email = document.getElementById('loginEmail').value.trim();
+        showPanel('forgot');
+      });
+    }
+
+    const landingForgotSubmitBtn = document.getElementById('landingForgotSubmitBtn');
+    if (landingForgotSubmitBtn) {
+      landingForgotSubmitBtn.addEventListener('click', async function() {
+        const email = document.getElementById('landingForgotEmail').value.trim();
         if (!email || !validateEmail(email)) { alert('Введи корректный email!'); return; }
         try {
           await Auth.forgotPassword(email);
           alert('Если email зарегистрирован, ссылка отправлена!');
+          showPanel('login');
         } catch (err) {
           alert('Ошибка: ' + (err.message || 'Не удалось'));
         }
+      });
+    }
+
+    const landingResendBtn = document.getElementById('landingResendBtn');
+    if (landingResendBtn) {
+      landingResendBtn.addEventListener('click', async function() {
+        const email = document.getElementById('regEmail').value.trim() || document.getElementById('loginEmail').value.trim();
+        if (!email || !validateEmail(email)) { alert('Введи корректный email!'); return; }
+        try {
+          await Auth.resendVerification(email);
+          alert('Письмо отправлено!');
+        } catch (e) {
+          alert('Ошибка: ' + (e.message || 'Не удалось отправить'));
+        }
+      });
+    }
+
+    const landingResetSubmitBtn = document.getElementById('landingResetSubmitBtn');
+    if (landingResetSubmitBtn) {
+      landingResetSubmitBtn.addEventListener('click', async function() {
+        const p1 = document.getElementById('landingResetPassword').value;
+        const p2 = document.getElementById('landingResetPassword2').value;
+        if (!p1 || p1.length < 6) { alert('Пароль минимум 6 символов!'); return; }
+        if (p1 !== p2) { alert('Пароли не совпадают!'); return; }
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('reset');
+        if (!token) { alert('Неверная ссылка'); return; }
+        try {
+          await Auth.resetPassword(token, p1);
+          alert('Пароль обновлён! Теперь можно войти.');
+          var cleanUrl = window.location.pathname + window.location.hash;
+          window.history.replaceState({}, document.title, cleanUrl);
+          showPanel('login');
+        } catch (e) {
+          alert('Ошибка: ' + (e.message || 'Не удалось сбросить пароль'));
+        }
+      });
+    }
+
+    const landingVerifiedLoginBtn = document.getElementById('landingVerifiedLoginBtn');
+    if (landingVerifiedLoginBtn) {
+      landingVerifiedLoginBtn.addEventListener('click', function() {
+        showPanel('login');
       });
     }
 
@@ -852,16 +957,58 @@ document.addEventListener('DOMContentLoaded', function() {
     if (landingShowLogin) {
       landingShowLogin.addEventListener('click', function(e) {
         e.preventDefault();
-        showForm('login');
+        showPanel('login');
       });
     }
     const landingShowRegister = document.getElementById('landingShowRegister');
     if (landingShowRegister) {
       landingShowRegister.addEventListener('click', function(e) {
         e.preventDefault();
-        showForm('register');
+        showPanel('register');
       });
     }
+    const landingVerifyShowLogin = document.getElementById('landingVerifyShowLogin');
+    if (landingVerifyShowLogin) {
+      landingVerifyShowLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('login');
+      });
+    }
+    const landingForgotShowLogin = document.getElementById('landingForgotShowLogin');
+    if (landingForgotShowLogin) {
+      landingForgotShowLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('login');
+      });
+    }
+    const landingResetShowLogin = document.getElementById('landingResetShowLogin');
+    if (landingResetShowLogin) {
+      landingResetShowLogin.addEventListener('click', function(e) {
+        e.preventDefault();
+        showPanel('login');
+      });
+    }
+
+    // Handle URL params for auth flow
+    function handleLandingAuth() {
+      const params = new URLSearchParams(window.location.search);
+      const verified = params.get('verified');
+      const reset = params.get('reset');
+
+      if (verified === '1') {
+        showPanel('verified');
+        var cleanUrl = window.location.pathname + window.location.hash;
+        window.history.replaceState({}, document.title, cleanUrl);
+        return;
+      }
+
+      if (reset) {
+        showPanel('reset');
+        return;
+      }
+    }
+
+    handleLandingAuth();
   }
 
   if (document.readyState === 'loading') {
