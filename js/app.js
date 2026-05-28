@@ -1064,9 +1064,11 @@ const App = (function() {
           title: f.title || '',
           narration: f.narration || '',
           bgImage: resolveMediaPath(f.background_image || f.bgImage),
+          bgImageMobile: resolveMediaPath(f.background_image_mobile || f.bgImageMobile),
           bgGradient: f.bg_gradient || f.bgGradient || f.mood || null,
           audioSrc: resolveMediaPath(f.audio_src || f.audioSrc),
           videoSrc: resolveMediaPath(f.background_video || f.videoSrc),
+          videoSrcMobile: resolveMediaPath(f.background_video_mobile || f.videoSrcMobile),
           dialogues: dialogues,
           dialogueAudio: [],
           transitionText: f.transition_text || f.transitionText || null,
@@ -1088,12 +1090,16 @@ const App = (function() {
     const videoLayer = document.createElement('div');
     videoLayer.className = 'video-layer';
 
-    if (frameData.videoSrc) {
+    const isMobile = window.IS_MOBILE || false;
+    const activeVideoSrc = isMobile && frameData.videoSrcMobile ? frameData.videoSrcMobile : frameData.videoSrc;
+    const activeBgImage = isMobile && frameData.bgImageMobile ? frameData.bgImageMobile : frameData.bgImage;
+
+    if (activeVideoSrc) {
       const img = document.createElement('img');
       img.className = 'frame-preview';
       img.alt = '';
       videoLayer.appendChild(img);
-      loadWebP(img, frameData.bgImage || '');
+      loadWebP(img, activeBgImage || '');
 
       const info = document.createElement('div');
       info.className = 'frame-preview-info';
@@ -1113,7 +1119,7 @@ const App = (function() {
       videoLayer.appendChild(btn);
 
       const video = document.createElement('video');
-      video.src = frameData.videoSrc;
+      video.src = activeVideoSrc;
       video.setAttribute('playsinline', '');
       video.setAttribute('muted', '');
       video.setAttribute('preload', 'metadata');

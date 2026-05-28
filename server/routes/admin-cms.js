@@ -105,9 +105,9 @@ router.put('/episodes/:id', async (req, res) => {
 router.delete('/episodes/:id', async (req, res) => {
   try {
     // Delete associated files
-    const frames = await all('SELECT background_image, background_video, audio_src, dialogue_audio_json FROM frames WHERE episode_id = ?', [req.params.id]);
+    const frames = await all('SELECT background_image, background_video, background_image_mobile, background_video_mobile, audio_src, dialogue_audio_json FROM frames WHERE episode_id = ?', [req.params.id]);
     for (const f of frames) {
-      for (const field of ['background_image', 'background_video', 'audio_src']) {
+      for (const field of ['background_image', 'background_video', 'background_image_mobile', 'background_video_mobile', 'audio_src']) {
         if (f[field]) {
           const p = path.join(UPLOAD_DIR, f[field]);
           if (fs.existsSync(p)) fs.unlinkSync(p);
@@ -151,14 +151,14 @@ router.post('/episodes/:id/publish', async (req, res) => {
 // POST /api/admin/episodes/:id/frames
 router.post('/episodes/:id/frames', async (req, res) => {
   try {
-    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
+    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
     const result = await run(
-      'INSERT INTO frames (episode_id, "order", title, narration, dialogue_json, dialogue_audio_json, background_image, background_video, audio_src, mood, game_type, choices_json, transition_text, video_prompt, available_games_json, bg_gradient) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO frames (episode_id, "order", title, narration, dialogue_json, dialogue_audio_json, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices_json, transition_text, video_prompt, available_games_json, bg_gradient) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         req.params.id, order ?? 0, title || '', narration || '',
         dialogue ? JSON.stringify(dialogue) : '[]',
         dialogue_audio ? JSON.stringify(dialogue_audio) : '[]',
-        background_image || '', background_video || '', audio_src || '', mood || '', game_type || '',
+        background_image || '', background_video || '', background_image_mobile || '', background_video_mobile || '', audio_src || '', mood || '', game_type || '',
         choices ? JSON.stringify(choices) : '[]',
         transition_text || '', video_prompt || '',
         available_games ? JSON.stringify(available_games) : '[]',
@@ -175,14 +175,14 @@ router.post('/episodes/:id/frames', async (req, res) => {
 // PUT /api/admin/frames/:id
 router.put('/frames/:id', async (req, res) => {
   try {
-    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
+    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
     await run(
-      'UPDATE frames SET "order" = ?, title = ?, narration = ?, dialogue_json = ?, dialogue_audio_json = ?, background_image = ?, background_video = ?, audio_src = ?, mood = ?, game_type = ?, choices_json = ?, transition_text = ?, video_prompt = ?, available_games_json = ?, bg_gradient = ? WHERE id = ?',
+      'UPDATE frames SET "order" = ?, title = ?, narration = ?, dialogue_json = ?, dialogue_audio_json = ?, background_image = ?, background_video = ?, background_image_mobile = ?, background_video_mobile = ?, audio_src = ?, mood = ?, game_type = ?, choices_json = ?, transition_text = ?, video_prompt = ?, available_games_json = ?, bg_gradient = ? WHERE id = ?',
       [
         order ?? 0, title || '', narration || '',
         dialogue ? JSON.stringify(dialogue) : '[]',
         dialogue_audio ? JSON.stringify(dialogue_audio) : '[]',
-        background_image || '', background_video || '', audio_src || '', mood || '', game_type || '',
+        background_image || '', background_video || '', background_image_mobile || '', background_video_mobile || '', audio_src || '', mood || '', game_type || '',
         choices ? JSON.stringify(choices) : '[]',
         transition_text || '', video_prompt || '',
         available_games ? JSON.stringify(available_games) : '[]',
@@ -200,9 +200,9 @@ router.put('/frames/:id', async (req, res) => {
 // DELETE /api/admin/frames/:id
 router.delete('/frames/:id', async (req, res) => {
   try {
-    const frame = await get('SELECT background_image, background_video, audio_src, dialogue_audio_json FROM frames WHERE id = ?', [req.params.id]);
+    const frame = await get('SELECT background_image, background_video, background_image_mobile, background_video_mobile, audio_src, dialogue_audio_json FROM frames WHERE id = ?', [req.params.id]);
     if (frame) {
-      for (const field of ['background_image', 'background_video', 'audio_src']) {
+      for (const field of ['background_image', 'background_video', 'background_image_mobile', 'background_video_mobile', 'audio_src']) {
         if (frame[field]) {
           const p = path.join(UPLOAD_DIR, frame[field]);
           if (fs.existsSync(p)) fs.unlinkSync(p);

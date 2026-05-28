@@ -1072,10 +1072,24 @@ function renderFrameEditor() {
           </div>
         </div>
         <div class="form-group">
+          <label>📱 Вертикальное изображение (мобильные)</label>
+          <div class="dropzone" onclick="document.getElementById('frameImgMobileInput').click()" id="frameImgMobileDropzone">
+            <input type="file" id="frameImgMobileInput" accept="image/*" onchange="handleFrameMediaUpload(this, 'bgImageMobile')">
+            ${f.background_image_mobile || f.bgImageMobile ? `<img src="${UPLOADS_BASE}${f.background_image_mobile || f.bgImageMobile}">` : '<div>Загрузить вертикальное изображение</div>'}
+          </div>
+        </div>
+        <div class="form-group">
           <label>Фоновое видео</label>
           <div class="dropzone" onclick="document.getElementById('frameVidInput').click()" id="frameVidDropzone">
             <input type="file" id="frameVidInput" accept="video/*" onchange="handleFrameMediaUpload(this, 'videoSrc')">
             ${f.background_video || f.videoSrc ? `<video controls style="max-width:100%;max-height:160px;border-radius:8px;" src="${UPLOADS_BASE}${f.background_video || f.videoSrc}"></video>` : '<div>Загрузить видео</div>'}
+          </div>
+        </div>
+        <div class="form-group">
+          <label>📱 Вертикальное видео (мобильные)</label>
+          <div class="dropzone" onclick="document.getElementById('frameVidMobileInput').click()" id="frameVidMobileDropzone">
+            <input type="file" id="frameVidMobileInput" accept="video/*" onchange="handleFrameMediaUpload(this, 'videoSrcMobile')">
+            ${f.background_video_mobile || f.videoSrcMobile ? `<video controls style="max-width:100%;max-height:160px;border-radius:8px;" src="${UPLOADS_BASE}${f.background_video_mobile || f.videoSrcMobile}"></video>` : '<div>Загрузить вертикальное видео</div>'}
           </div>
         </div>
         <div class="form-group">
@@ -1421,6 +1435,8 @@ function collectFramePayload() {
     dialogue_audio: dlgAudio,
     background_image: uploads.bgImage || selectedFrame.background_image || selectedFrame.bgImage || '',
     background_video: uploads.videoSrc || selectedFrame.background_video || selectedFrame.videoSrc || '',
+    background_image_mobile: uploads.bgImageMobile || selectedFrame.background_image_mobile || selectedFrame.bgImageMobile || '',
+    background_video_mobile: uploads.videoSrcMobile || selectedFrame.background_video_mobile || selectedFrame.videoSrcMobile || '',
     audio_src: uploads.audioSrc || selectedFrame.audio_src || selectedFrame.audioSrc || '',
     mood: document.getElementById('frameMood')?.value || '',
     game_type: document.getElementById('frameGame')?.value || '',
@@ -1445,6 +1461,8 @@ async function saveFrameNow(silent = false) {
       dialogueAudio: payload.dialogue_audio,
       background_image: payload.background_image,
       background_video: payload.background_video,
+      background_image_mobile: payload.background_image_mobile,
+      background_video_mobile: payload.background_video_mobile,
       audio_src: payload.audio_src,
       mood: payload.mood,
       game_type: payload.game_type,

@@ -173,6 +173,14 @@ async function init() {
       await run(`ALTER TABLE frames ADD COLUMN bg_gradient TEXT`);
       console.log('Migration applied: added bg_gradient to frames');
     }
+    if (!colNames.includes('background_image_mobile')) {
+      await run(`ALTER TABLE frames ADD COLUMN background_image_mobile TEXT`);
+      console.log('Migration applied: added background_image_mobile to frames');
+    }
+    if (!colNames.includes('background_video_mobile')) {
+      await run(`ALTER TABLE frames ADD COLUMN background_video_mobile TEXT`);
+      console.log('Migration applied: added background_video_mobile to frames');
+    }
   } catch (migErr) {
     console.warn('Frames migration check skipped:', migErr.message);
   }
