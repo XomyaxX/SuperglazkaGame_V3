@@ -12,6 +12,7 @@
     { key: 'eye_gymnast', titleKey: 'achievements.eye_gymnast', descKey: 'achievements.eye_gymnast_desc', icon: '👁️', type: 'game_count', value: 'gym', count: 3, reward: 100 },
     { key: 'blinker', titleKey: 'achievements.blinker', descKey: 'achievements.blinker_desc', icon: '✨', type: 'game', value: 'blink', reward: 50 },
     { key: 'peripheral', titleKey: 'achievements.peripheral', descKey: 'achievements.peripheral_desc', icon: '🎯', type: 'game', value: 'peripheral', reward: 50 },
+    { key: 'scrollshoter', titleKey: 'achievements.scrollshoter', descKey: 'achievements.scrollshoter_desc', icon: '🚀', type: 'game', value: 'scrollshoter', reward: 50 },
     { key: 'bookworm', titleKey: 'achievements.bookworm', descKey: 'achievements.bookworm_desc', icon: '📖', type: 'episode', value: '1', reward: 100 },
     { key: 'librarian', titleKey: 'achievements.librarian', descKey: 'achievements.librarian_desc', icon: '📚', type: 'episode_all', reward: 200 },
     { key: 'rich', titleKey: 'achievements.rich', descKey: 'achievements.rich_desc', icon: '💰', type: 'coins', value: '500', reward: 100 }

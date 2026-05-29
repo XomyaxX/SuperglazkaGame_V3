@@ -1,4 +1,4 @@
-const CACHE_NAME = 'superglazka-v45';
+const CACHE_NAME = 'superglazka-v46';
 
 const STATIC_ASSETS = [
   '/',
@@ -22,6 +22,9 @@ const STATIC_ASSETS = [
   '/js/game_gymnastics.js',
   '/js/game_runner.js',
   '/js/game_peripheral.js',
+  '/js/game_scrollshoter.js',
+  '/js/scrollshoter_game.js',
+  '/js/scrollshoter_shaders.js',
   '/js/error-reporter.js',
   '/js/mood-detector.js',
   '/js/background-music.js',

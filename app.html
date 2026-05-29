@@ -709,6 +709,35 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
+     SCROLL SHOOTER GAME OVERLAY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="game-overlay-scrollshoter" style="background:#0a0015;padding:0;overflow:hidden;">
+  <div id="game-container" style="position:absolute;inset:0;z-index:1;"></div>
+  
+  <!-- HUD -->
+  <div id="boss-hud" style="position:absolute;top:0;left:0;right:0;z-index:10;padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;background:linear-gradient(180deg,rgba(10,0,20,0.9),transparent);font-family:Nunito,sans-serif;font-size:13px;font-weight:700;color:#fff;pointer-events:none;">
+    <span id="wave-display" style="color:#00ffff;text-shadow:0 0 8px #00ffff;">УРОВЕНЬ: 1</span>
+    <span id="hp-display" style="color:#ff4444;text-shadow:0 0 8px #ff4444;">Здоровье базы: 100</span>
+    <span id="shooters-display" style="color:#ffff00;text-shadow:0 0 8px #ffff00;">Стрелки: 1</span>
+    <span id="firerate-display" style="color:#ffaa00;text-shadow:0 0 8px #ffaa00;">Скорость стрельбы: 1.0x</span>
+    <span id="time-display" style="color:#ff00ff;text-shadow:0 0 8px #ff00ff;">До Босса: 25 сек</span>
+  </div>
+  
+  <!-- Wave clear / level complete flash -->
+  <div id="wave-clear-flash" style="display:none;position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;"></div>
+  
+  <!-- Game Over -->
+  <div id="game-over" style="display:none;position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0.85);flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:Nunito,sans-serif;">
+    <div style="font-size:42px;color:#ff4444;text-shadow:0 0 20px #ff4444;margin-bottom:12px;">💀 БАЗА УНИЧТОЖЕНА</div>
+    <div id="final-wave" style="font-size:18px;color:#fff;margin-bottom:24px;">База пала на 1 уровне</div>
+    <button class="win-btn" onclick="closeScrollShooterContinue()" style="margin-bottom:8px;">Продолжить ➜</button>
+    <button class="win-btn" onclick="Leaderboard.showModal('scrollshoter')" style="background:rgba(255,255,255,0.08);color:var(--neon-cyan);font-size:13px;">🏆 Топ-5</button>
+  </div>
+  
+  <button class="skip-btn" onclick="closeScrollShooter(true)" style="position:absolute;bottom:16px;right:16px;z-index:15;">Пропустить ▸</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
      TRANSITION OVERLAY
      ═══════════════════════════════════════════════════════════ -->
 <div id="transition-overlay">
@@ -749,6 +778,7 @@ if ('serviceWorker' in navigator) {
 <script src="js/game_gymnastics.js" defer></script>
 <script src="js/game_blink.js" defer></script>
 <script src="js/game_peripheral.js" defer></script>
+<script src="js/game_scrollshoter.js" defer></script>
 <script src="js/achievements.js" defer></script>
 <script src="js/daily-reward.js" defer></script>
 <script src="js/app.js" defer></script>

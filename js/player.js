@@ -21,6 +21,7 @@ const PlayerProfile = (function() {
       games: {
         blink: { played: 0, bestScore: 0 },
         peripheral: { played: 0, bestScore: 0 },
+        scrollshoter: { played: 0, bestScore: 0 },
         runner: { played: 0, bestScore: 0 },
         gym: { played: 0, bestScore: 0 }
       }

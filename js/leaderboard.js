@@ -100,7 +100,8 @@
       runner: 'Погоня',
       gym: 'Битва с Ленивусом',
       blink: 'Моргайка',
-      peripheral: 'Периферийный охотник'
+      peripheral: 'Периферийный охотник',
+      scrollshoter: 'Скролл-шутер'
     };
     var gameName = gameNames[game] || game;
 

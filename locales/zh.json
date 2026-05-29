@@ -75,6 +75,10 @@
       "title": "周边猎人",
       "desc": "不要移开中心视线，点击屏幕边缘的目标。训练周边视力。"
     },
+    "scrollshoter": {
+      "title": "滚动射击",
+      "desc": "驾驶飞船，消灭敌人和首领。训练反应和专注力。"
+    },
     "play": "▶ 玩",
     "chooseGame": "🎮 选择游戏",
     "backToList": "← 返回列表"
@@ -381,6 +385,17 @@
       "continue": "继续",
       "name": "周边猎人"
     },
+    "scrollshoter": {
+      "title": "滚动射击",
+      "hint": "移动鼠标或手指来控制飞船！🚀",
+      "score": "得分",
+      "wave": "关卡",
+      "completed": "关卡通过！成绩很棒！",
+      "gameover": "基地被摧毁！再试一次！",
+      "stats": "统计",
+      "continue": "继续",
+      "name": "滚动射击"
+    },
     "stats": {
       "lives": "❤️ 生命",
       "livesLeft": "剩余生命：",
@@ -479,7 +494,9 @@
     "blinker": "眨眼者",
     "blinker_desc": "完成「眨眼游戏」",
     "peripheral": "猎人",
-    "peripheral_desc": "完成「周边猎人」""
+    "peripheral_desc": "完成「周边猎人」",
+    "scrollshoter": "飞行员",
+    "scrollshoter_desc": "完成「滚动射击」","
     "bookworm": "书虫",
     "bookworm_desc": "完成一章",
     "librarian": "图书馆员",

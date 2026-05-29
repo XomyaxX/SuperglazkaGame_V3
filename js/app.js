@@ -16,11 +16,12 @@ function getSpeakerName(key) {
 function getGameName(key) {
   var names = {
     blink: window.I18n ? I18n.t('games.blink.name') : 'Моргай-зарядка',
-    peripheral: window.I18n ? I18n.t('games.peripheral.name') : 'Периферийный охотник'
+    peripheral: window.I18n ? I18n.t('games.peripheral.name') : 'Периферийный охотник',
+    scrollshoter: window.I18n ? I18n.t('games.scrollshoter.name') : 'Скролл-шутер'
   };
   return names[key] || key;
 }
-const GAME_ICONS = { blink: '⚡', peripheral: '🎯' };
+const GAME_ICONS = { blink: '⚡', peripheral: '🎯', scrollshoter: '🚀' };
 
 /**
  * Try loading WebP version of an image, fallback to original on error.
@@ -1491,6 +1492,11 @@ const App = (function() {
         if (typeof startPeripheralGame === 'function') { startPeripheralGame(); }
         else { console.error('[App] startPeripheralGame is not a function'); }
       });
+    } else if (gameType === 'scrollshoter') {
+      showGameTransition('🚀 Скролл-шутер!', 'Управляй кораблём, уничтожай врагов и босса — тренируем реакцию и концентрацию!', () => {
+        if (typeof startScrollShooterGame === 'function') { startScrollShooterGame(); }
+        else { console.error('[App] startScrollShooterGame is not a function'); }
+      });
     }
   }
 
@@ -1510,6 +1516,8 @@ const App = (function() {
       if (typeof startBlinkGame === 'function') startBlinkGame();
     } else if (gameType === 'peripheral') {
       if (typeof startPeripheralGame === 'function') startPeripheralGame();
+    } else if (gameType === 'scrollshoter') {
+      if (typeof startScrollShooterGame === 'function') startScrollShooterGame();
     }
   }
 
@@ -2362,7 +2370,7 @@ const App = (function() {
       startEpisode(parseInt(directEpisode, 10), 0);
     }
     var directGame = urlParams.get('game');
-    if (directGame && ['runner', 'gym', 'blink', 'peripheral'].indexOf(directGame) !== -1) {
+    if (directGame && ['runner', 'gym', 'blink', 'peripheral', 'scrollshoter'].indexOf(directGame) !== -1) {
       launchGame(directGame);
     }
 

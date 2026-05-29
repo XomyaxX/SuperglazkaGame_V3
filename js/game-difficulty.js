@@ -51,6 +51,7 @@
         case 'blink':  return getBlinkConfig(lv);
         case 'gym':    return getGymConfig(lv);
         case 'peripheral':return getPeripheralConfig(lv);
+        case 'scrollshoter':return getScrollShooterConfig(lv);
         default: return {};
       }
     } catch (e) {
@@ -139,6 +140,19 @@
       fadingChance: lv >= 4 ? Math.min(0.25, 0.05 + (lv - 4) * 0.03) : 0,
       goldenChance: lv >= 5 ? Math.min(0.15, 0.02 + (lv - 5) * 0.02) : 0,
       maxActive: Math.min(7, 2 + Math.floor(lv / 2)),
+      showHint: lv <= 2
+    };
+  }
+
+  // ─── SCROLL SHOOTER ───
+  function getScrollShooterConfig(lv) {
+    return {
+      level: lv,
+      enemyHp: 1 + (lv - 1) * 0.5,
+      enemySpeed: 1 + (lv - 1) * 0.15,
+      bossHp: 50 + (lv - 1) * 20,
+      bossSpawnTime: Math.max(15, 30 - lv * 1.5),
+      panelSpawnRate: Math.max(3, 6 - lv * 0.3),
       showHint: lv <= 2
     };
   }

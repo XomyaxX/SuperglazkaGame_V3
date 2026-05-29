@@ -75,6 +75,10 @@
       "title": "Peripheral Hunter",
       "desc": "Click targets on the edges of the screen without looking away from the center. Trains peripheral vision."
     },
+    "scrollshoter": {
+      "title": "Scroll Shooter",
+      "desc": "Control the ship, destroy enemies and the boss. Trains reaction and concentration."
+    },
     "play": "▶ Play",
     "chooseGame": "🎮 Choose a game",
     "backToList": "← Back to list"
@@ -381,6 +385,17 @@
       "continue": "Continue",
       "name": "Peripheral Hunter"
     },
+    "scrollshoter": {
+      "title": "Scroll Shooter",
+      "hint": "Move mouse or finger to control the ship! 🚀",
+      "score": "Score",
+      "wave": "Wave",
+      "completed": "Wave cleared! Great result!",
+      "gameover": "Base destroyed! Try again!",
+      "stats": "Statistics",
+      "continue": "Continue",
+      "name": "Scroll Shooter"
+    },
     "stats": {
       "lives": "❤️ Lives",
       "livesLeft": "Lives left:",
@@ -479,7 +494,9 @@
     "blinker": "Blinker",
     "blinker_desc": "Complete \"Blink Game\"",
     "peripheral": "Hunter",
-    "peripheral_desc": "Complete \"Peripheral Hunter\""",
+    "peripheral_desc": "Complete \"Peripheral Hunter\"",
+    "scrollshoter": "Pilot",
+    "scrollshoter_desc": "Complete \"Scroll Shooter\"","
     "bookworm": "Bookworm",
     "bookworm_desc": "Complete one chapter",
     "librarian": "Librarian",
