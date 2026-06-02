@@ -21,8 +21,9 @@ Interactive educational comic about eye health for kids. Frontend is vanilla JS 
 ### Deployment workflow
 1. Commit & push locally: `git push origin main`
 2. SSH into server (if key rejected, check `authorized_keys` on server)
-3. `cd /opt/superglazka && git pull origin main`
-4. Restart containers:
+3. `cd /opt/superglazka && bash misc/deploy/backup-db.sh`
+4. `git pull origin main`
+5. Restart containers:
    - `docker restart superglazka-backend superglazka-nginx`
    - Or rebuild if `server/` changed: `docker compose up -d --build backend`
 

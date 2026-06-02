@@ -49,10 +49,14 @@ git commit -m "описание изменений"
 git push origin main
 ```
 
-### 2. На сервере — стянуть изменения и перезапустить
+### 2. На сервере — бэкап, стянуть изменения и перезапустить
 ```bash
 ssh root@83.217.203.41
 cd /opt/superglazka
+
+# Обязательно: бэкап БД перед любыми изменениями
+bash misc/deploy/backup-db.sh
+
 git pull origin main
 
 # Пересобрать backend (если менялся server/)
@@ -121,3 +125,49 @@ docker restart superglazka-nginx
 | `/opt/superglazka/server/data` | SQLite БД (в Docker volume `sqlite_data`) |
 | `/opt/superglazka/server/uploads` | Загруженные через CMS файлы |
 | `/opt/superglazka/certbot-data` | SSL-сертификаты Let's Encrypt |
+
+---
+
+## Бэкап и восстановление БД
+
+### Автоматический бэкап (cron)
+
+```bash
+# Добавить в crontab: бэкап каждый день в 3:00
+0 3 * * * /opt/superglazka/misc/deploy/backup-db.sh >> /var/log/superglazka-backup.log 2>&1
+```
+
+### Ручной бэкап
+
+```bash
+cd /opt/superglazka
+bash misc/deploy/backup-db.sh
+
+# Кастомный путь и срок хранения
+BACKUP_DIR=/root/db-backups RETENTION=60 bash misc/deploy/backup-db.sh
+```
+
+Бэкапы сохраняются в `server/data/backups/superglazka_YYYYMMDD_HHMMSS.db`.
+По умолчанию хранятся последние 30 копий (`RETENTION=30`).
+
+### Восстановление из бэкапа
+
+```bash
+# 1. Остановить backend
+docker stop superglazka-backend
+
+# 2. Скопировать бэкап в контейнер
+docker cp server/data/backups/superglazka_20260602_120000.db superglazka-backend:/app/data/superglazka.db
+
+# 3. Запустить backend
+docker start superglazka-backend
+
+# 4. Проверить
+curl http://localhost:3000/api/health
+```
+
+> **Для non-Docker (PM2):** `pm2 stop superglazka-api`, скопировать файл в `server/data/superglazka.db`, `pm2 start superglazka-api`.
+
+### Бэкап перед SSL-обновлением
+
+SSL-сертификат обновляется через certbot в отдельном контейнере и **не затрагивает** volume `sqlite_data`. Бэкап БД перед `certbot renew` не требуется — сертификаты и данные хранятся в разных volumes.
