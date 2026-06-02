@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { run, get, all } = require('../db');
+const { run, get, all, reopen, init } = require('../db');
 const { requireAdmin } = require('../middleware/admin');
 
 
@@ -464,6 +464,78 @@ router.delete('/guests/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ─── BACKUP ───
+
+const backupStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, '..', 'data');
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'restore_upload_' + Date.now() + '.db');
+  }
+});
+
+const backupUpload = multer({
+  storage: backupStorage,
+  limits: { fileSize: 100 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (file.originalname.endsWith('.db')) cb(null, true);
+    else cb(new Error('Only .db files are allowed'));
+  }
+});
+
+// GET /api/admin/backup/download
+router.get('/backup/download', async (req, res) => {
+  try {
+    const dbPath = path.resolve(__dirname, '..', 'data', 'superglazka.db');
+    if (!fs.existsSync(dbPath)) {
+      return res.status(404).json({ error: 'Database file not found' });
+    }
+    const date = new Date().toISOString().slice(0, 10);
+    res.download(dbPath, 'superglazka_backup_' + date + '.db');
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// POST /api/admin/backup/restore
+router.post('/backup/restore', backupUpload.single('backup'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+    const dbPath = path.resolve(__dirname, '..', 'data', 'superglazka.db');
+
+    // Validate SQLite header magic bytes
+    const fd = fs.openSync(req.file.path, 'r');
+    const buf = Buffer.alloc(16);
+    fs.readSync(fd, buf, 0, 16, 0);
+    fs.closeSync(fd);
+    if (buf.toString('utf8').slice(0, 15) !== 'SQLite format 3') {
+      fs.unlinkSync(req.file.path);
+      return res.status(400).json({ error: 'Invalid SQLite database file' });
+    }
+
+    // Create safety backup before restoring
+    const safetyBackup = 'superglazka.db.restore_backup_' + Date.now();
+    const safetyPath = path.join(path.dirname(dbPath), safetyBackup);
+    fs.copyFileSync(dbPath, safetyPath);
+
+    // Replace database file and hot-reload connection
+    fs.copyFileSync(req.file.path, dbPath);
+    fs.unlinkSync(req.file.path);
+
+    await reopen();
+    await init();
+
+    res.json({ success: true, safetyBackup });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to restore database' });
   }
 });
 

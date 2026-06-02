@@ -3,7 +3,7 @@ const path = require('path');
 
 const DB_PATH = path.resolve(__dirname, 'data', 'superglazka.db').replace(/\\/g, '/');
 
-const db = new sqlite3.Database(DB_PATH, (err) => {
+let db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     console.error('Failed to open database:', err.message);
     process.exit(1);
@@ -337,4 +337,26 @@ async function init() {
   console.log('Database initialized.');
 }
 
-module.exports = { db, run, get, all, init };
+async function close() {
+  return new Promise((resolve, reject) => {
+    db.close((err) => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+async function reopen() {
+  await close();
+  return new Promise((resolve, reject) => {
+    db = new sqlite3.Database(DB_PATH, (err) => {
+      if (err) reject(err);
+      else {
+        db.run('PRAGMA foreign_keys = ON');
+        resolve();
+      }
+    });
+  });
+}
+
+module.exports = { db, run, get, all, init, close, reopen };

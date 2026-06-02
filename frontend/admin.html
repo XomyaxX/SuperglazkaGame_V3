@@ -591,7 +591,12 @@ select option { background-color: #1a1a2e; color: #fff; }
     <div class="episode-list" id="userList" style="display:none;">
       <div class="empty-state">Загрузка...</div>
     </div>
-    <button class="btn btn-secondary btn-sm" onclick="logoutAdmin()" style="margin-top:auto;">🚪 Выйти</button>
+    <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:auto;display:flex;flex-direction:column;gap:4px;">
+      <button class="btn btn-secondary btn-sm" onclick="downloadBackup()" style="font-size:12px;">💾 Скачать бэкап БД</button>
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('restoreInput').click()" style="font-size:12px;">📂 Восстановить БД</button>
+      <input type="file" id="restoreInput" accept=".db" style="display:none" onchange="restoreBackup(this)">
+    </div>
+    <button class="btn btn-secondary btn-sm" onclick="logoutAdmin()" style="margin-top:4px;">🚪 Выйти</button>
   </div>
 
   <!-- Editor Column -->
@@ -2007,6 +2012,62 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+/* ═══════════════════════════════════════════════
+   BACKUP
+   ═══════════════════════════════════════════════ */
+async function downloadBackup() {
+  try {
+    const res = await fetch(API_BASE + '/admin/backup/download', {
+      headers: { 'X-Admin-Key': ADMIN_KEY }
+    });
+    if (!res.ok) throw new Error('Download failed');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'superglazka_backup_' + new Date().toISOString().slice(0, 10) + '.db';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('Бэкап скачан', 'success');
+  } catch (e) {
+    toast('Ошибка скачивания: ' + e.message, 'error');
+  }
+}
+
+async function restoreBackup(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (!file.name.endsWith('.db')) {
+    toast('Выберите .db файл', 'error');
+    input.value = '';
+    return;
+  }
+  if (!confirm('Восстановить БД из файла "' + file.name + '"? Текущие данные будут заменены. Перед восстановлением будет создан автоматический бэкап.')) {
+    input.value = '';
+    return;
+  }
+  try {
+    const form = new FormData();
+    form.append('backup', file);
+    const res = await fetch(API_BASE + '/admin/backup/restore', {
+      method: 'POST',
+      headers: { 'X-Admin-Key': ADMIN_KEY },
+      body: form
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Restore failed');
+    }
+    const data = await res.json();
+    toast('БД восстановлена. Автобэкап: ' + data.safetyBackup, 'success');
+  } catch (e) {
+    toast('Ошибка восстановления: ' + e.message, 'error');
+  }
+  input.value = '';
 }
 </script>
 
