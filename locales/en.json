@@ -81,7 +81,11 @@
     },
     "play": "▶ Play",
     "chooseGame": "🎮 Choose a game",
-    "backToList": "← Back to list"
+    "backToList": "← Back to list",
+    "tracker": {
+      "title": "Track the ball",
+      "desc": "Follow the moving ball with your eyes. Develops smooth eye movements."
+    }
   },
   "episodes": {
     "title": "Chapters",
@@ -313,7 +317,10 @@
       "ach1": "Caught Pixelko!",
       "ach2": "Table Defender",
       "time": "Time: ",
-      "hint": "👆 TAP = jump · Double tap = double jump"
+      "hint": "👆 TAP = jump · Double tap = double jump",
+      "tutorial1": "👆 TAP = jump. Tap the screen to jump over obstacles.",
+      "tutorial2": "Double tap = double jump. Use for high barriers!",
+      "tutorial3": "Collect 💎 bonuses for extra points!"
     },
     "gym": {
       "title": "Vanya vs Lenivus!",
@@ -416,7 +423,17 @@
       "time": "Time: ",
       "totalScoreShort": "Total score: ",
       "greatJob": "🎉 Great job!",
-      "avgAimTime": "Average aim time:"
+      "avgAimTime": "Average aim time:",
+      "timeLabel": "⏱️ Time: 0:00",
+      "best": "🏆 Best: "
+    },
+    "tracker": {
+      "getReady": "Get ready...",
+      "hint": "Follow the ball with your eyes 👀",
+      "hintClockwise": "Follow the ball in a circle clockwise ⭕",
+      "hintCounterClockwise": "Follow the ball counter-clockwise 🔄",
+      "hintLeftRight": "Follow the ball left and right 👈👉",
+      "hintUpDown": "Follow the ball up and down 👆👇"
     }
   },
   "profile": {
@@ -476,7 +493,11 @@
     "teamMember": "Now you are part of the Superglazka team!",
     "passwordMin": "Password (min 6 chars)",
     "loginLink": "Log in",
-    "parentAllowed": "Parents allowed to play"
+    "parentAllowed": "Parents allowed to play",
+    "forgotPassword": "Forgot password?",
+    "passwordRepeat": "Repeat password",
+    "rememberMe": "Remember me",
+    "resend": "Resend"
   },
   "achievements": {
     "unlocked": "🏆 Achievement unlocked!",
@@ -496,7 +517,7 @@
     "peripheral": "Hunter",
     "peripheral_desc": "Complete \"Peripheral Hunter\"",
     "scrollshoter": "Pilot",
-    "scrollshoter_desc": "Complete \"Scroll Shooter\"","
+    "scrollshoter_desc": "Complete \"Scroll Shooter\"",
     "bookworm": "Bookworm",
     "bookworm_desc": "Complete one chapter",
     "librarian": "Librarian",
@@ -579,7 +600,32 @@
     "q9": "Where to find eye health tips?",
     "a9": "All useful materials are collected in the Blog section on the website, as well as in the parents' checklist. There you will find the 20-20-20 rule, eye gymnastics, nutrition and daily routine tips.",
     "q10": "How to contact the authors of Superglazka?",
-    "a10": "Write to us through the feedback form on the website or in the official VK and Telegram communities. We are always happy to receive feedback, suggestions and ideas!"
+    "a10": "Write to us through the feedback form on the website or in the official VK and Telegram communities. We are always happy to receive feedback, suggestions and ideas!",
+    "controls": {
+      "question": "How to control?",
+      "answer": "On computer: use up/down arrows or Space key to go to the next frame. Esc key hides/shows the interface.",
+      "answer2": "On phone: swipe up/down to switch frames. Tap the screen to pause the video."
+    },
+    "sound": {
+      "question": "What to do if sound doesn't work?",
+      "answer": "1. Check that the required audio tracks are enabled in settings. 2. On iOS, sound only turns on after the user's first touch — this is a Safari limitation. 3. Check the device volume and whether silent mode is on. 4. Reload the page — sometimes the browser blocks autoplay."
+    },
+    "coins": {
+      "question": "How to earn coins?",
+      "answer": "Coins are awarded for completing frames and mini-games. The better the game result (more stars), the more coins. You can also get bonus coins for replaying a chapter."
+    },
+    "locked": {
+      "question": "Why is the chapter locked?",
+      "answer": "Chapters open sequentially. To unlock the next chapter, you need to finish watching the previous one. Progress is saved automatically."
+    },
+    "subtitles": {
+      "question": "How to turn on subtitles?",
+      "answer": "Open settings → 'Subtitles' section → toggle the switch. You can also choose font size: small, medium or large."
+    },
+    "theme": {
+      "question": "How to change theme?",
+      "answer": "In settings → 'Interface' section → 'Dark theme' toggle. The choice is saved and works on both pages."
+    }
   },
   "checklistPage": {
     "title": "10 Eye Health Rules",
@@ -647,33 +693,6 @@
     "minutes": "minutes",
     "seconds": "seconds"
   },
-  "faq": {
-    "controls": {
-      "question": "How to control?",
-      "answer": "On computer: use up/down arrows or Space key to go to the next frame. Esc key hides/shows the interface.",
-      "answer2": "On phone: swipe up/down to switch frames. Tap the screen to pause the video."
-    },
-    "sound": {
-      "question": "What to do if sound doesn't work?",
-      "answer": "1. Check that the required audio tracks are enabled in settings. 2. On iOS, sound only turns on after the user's first touch — this is a Safari limitation. 3. Check the device volume and whether silent mode is on. 4. Reload the page — sometimes the browser blocks autoplay."
-    },
-    "coins": {
-      "question": "How to earn coins?",
-      "answer": "Coins are awarded for completing frames and mini-games. The better the game result (more stars), the more coins. You can also get bonus coins for replaying a chapter."
-    },
-    "locked": {
-      "question": "Why is the chapter locked?",
-      "answer": "Chapters open sequentially. To unlock the next chapter, you need to finish watching the previous one. Progress is saved automatically."
-    },
-    "subtitles": {
-      "question": "How to turn on subtitles?",
-      "answer": "Open settings → 'Subtitles' section → toggle the switch. You can also choose font size: small, medium or large."
-    },
-    "theme": {
-      "question": "How to change theme?",
-      "answer": "In settings → 'Interface' section → 'Dark theme' toggle. The choice is saved and works on both pages."
-    }
-  },
   "brand": {
     "subtitle": "Game Tale"
   },
@@ -709,5 +728,10 @@
     "item9": "Do not rub eyes with dirty hands. Infections are a common cause of vision problems.",
     "print": "🖨️ Print checklist",
     "reset": "↺ Reset progress"
+  },
+  "tutorial": {
+    "next": "Next →",
+    "skip": "Skip tutorial",
+    "start": "Start game 🎮"
   }
 }

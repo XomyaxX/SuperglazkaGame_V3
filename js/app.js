@@ -5,10 +5,10 @@
 function getSpeakerName(key) {
   var names = {
     hrust: window.I18n ? I18n.t('characters.hrust.name') : 'Мудрый Хрусталик',
-    sovet: window.I18n ? I18n.t('characters.sovet.name') : 'Советник',
+    sovet: window.I18n ? I18n.t('characters.sovet') : 'Советник',
     dev: window.I18n ? I18n.t('characters.dev.name') : 'Девочка',
     tolpa: window.I18n ? I18n.t('characters.tolpa.name') : 'Толпа',
-    nar: window.I18n ? I18n.t('characters.nar') : 'Рассказчик'
+    nar: window.I18n ? I18n.t('characters.nar.name') : 'Рассказчик'
   };
   return names[key] || key;
 }
