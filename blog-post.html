@@ -14,19 +14,19 @@
 <link rel="alternate" hreflang="zh" href="https://vidial-media.ru/blog-post.html?lang=zh">
 <link rel="alternate" hreflang="x-default" href="https://vidial-media.ru/blog-post.html">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" href="assets/shared/characters/superglazka.png">
+<link rel="icon" type="image/png" href="icons/logo.png">
 <link rel="apple-touch-icon" href="icons/icon-180x180.png">
 <link rel="manifest" href="manifest.json">
 <meta property="og:title" content="Блог — Суперглазка">
 <meta property="og:description" content="Полезные статьи о здоровье глаз, мультипликации и образовании для детей.">
-<meta property="og:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<meta property="og:image" content="https://vidial-media.ru/icons/logo.png">
 <meta property="og:url" content="https://vidial-media.ru/blog-post.html">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="ru_RU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Блог — Суперглазка">
 <meta name="twitter:description" content="Полезные статьи о здоровье глаз, мультипликации и образовании для детей.">
-<meta name="twitter:image" content="https://vidial-media.ru/assets/shared/characters/superglazka.png">
+<meta name="twitter:image" content="https://vidial-media.ru/icons/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Comfortaa:wght@700&display=swap" rel="stylesheet">
@@ -320,10 +320,10 @@ if ('serviceWorker' in navigator) {
       '@type': 'Article',
       headline: post.title,
       description: post.excerpt || '',
-      image: post.image ? 'https://vidial-media.ru/' + post.image : 'https://vidial-media.ru/assets/shared/characters/superglazka.png',
+      image: post.image ? 'https://vidial-media.ru/' + post.image : 'https://vidial-media.ru/icons/logo.png',
       datePublished: post.created_at,
       author: { '@type': 'Organization', name: 'Суперглазка', '@id': 'https://vidial-media.ru/#organization' },
-      publisher: { '@type': 'Organization', name: 'Суперглазка', logo: { '@type': 'ImageObject', url: 'https://vidial-media.ru/assets/shared/characters/superglazka.png' } },
+      publisher: { '@type': 'Organization', name: 'Суперглазка', logo: { '@type': 'ImageObject', url: 'https://vidial-media.ru/icons/logo.png' } },
       mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://vidial-media.ru/blog-post.html?slug=' + post.slug }
     });
     document.head.appendChild(script);
