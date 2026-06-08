@@ -244,7 +244,15 @@ router.post('/episodes/:id/reorder', async (req, res) => {
 // ─── UPLOAD ───
 
 // POST /api/admin/upload
-router.post('/upload', upload.single('file'), async (req, res) => {
+router.post('/upload', (req, res, next) => {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(400).json({ error: err.message || 'Upload failed' });
+    }
+    next();
+  });
+}, async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
     const relativePath = 'temp/' + req.file.filename;
