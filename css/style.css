@@ -700,6 +700,27 @@ body {
   opacity: 0.5;
 }
 
+.episode-mini-featured {
+  padding: 0;
+  overflow: hidden;
+}
+.episode-mini-featured .episode-mini-cover {
+  width: 100%;
+  height: auto;
+  max-height: 320px;
+  min-height: 120px;
+  object-fit: contain;
+  background: rgba(0,0,0,0.25);
+  border-radius: 0;
+  margin-bottom: 0;
+  border: none;
+}
+.episode-mini-featured .episode-mini-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+}
+
 .progress-track {
   width: 100%;
   height: 4px;

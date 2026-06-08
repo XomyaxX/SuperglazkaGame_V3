@@ -967,6 +967,11 @@ const App = (function() {
   let uiHideTimeout = null;
   let subtitleSyncCleanup = null;
 
+  // Interaction & tutorial state
+  let hasUserInteracted = false;
+  let frameTutorialShown = false;
+  let gameTutorialShown = false;
+
   const episodesCache = {};
 
   const mainMenu = document.getElementById('main-menu');
@@ -1393,6 +1398,9 @@ const App = (function() {
 
     if (frameData?.game) {
       BottomSheet.showGameIsland(frameData.game);
+      if (!gameTutorialShown) {
+        setTimeout(showGameTutorial, 600);
+      }
     } else {
       BottomSheet.hideGameIsland();
     }
@@ -1421,6 +1429,14 @@ const App = (function() {
     episodeViewer.classList.remove('ui-hidden');
 
     updateNavArrows();
+
+    // Show floating hint for new users
+    showFloatNextHint();
+
+    // Show tutorial on first frame of any episode for new users
+    if (idx === 0 && !frameTutorialShown) {
+      setTimeout(showFrameTutorial, 800);
+    }
   }
 
   function updateNavArrows() {
@@ -1458,6 +1474,74 @@ const App = (function() {
         showEndScreen();
       }
     }
+  }
+
+  // ─── FLOATING HINT & TUTORIAL ───
+  function showFloatNextHint() {
+    var el = document.getElementById('floatNextHint');
+    if (el && !hasUserInteracted && currentFrameIdx < frames.length - 1) {
+      el.style.display = 'flex';
+    }
+  }
+  function hideFloatNextHint() {
+    var el = document.getElementById('floatNextHint');
+    if (el) el.style.display = 'none';
+  }
+  function markUserInteraction() {
+    if (!hasUserInteracted) {
+      hasUserInteracted = true;
+      hideFloatNextHint();
+    }
+  }
+
+  function showFrameTutorial() {
+    if (frameTutorialShown) return;
+    frameTutorialShown = true;
+    var overlay = document.createElement('div');
+    overlay.id = 'frame-tutorial-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:120px;pointer-events:auto;transition:opacity 0.4s;';
+    overlay.innerHTML = '<div style="background:rgba(15,10,30,0.95);border:1px solid rgba(168,85,247,0.4);border-radius:16px;padding:16px 24px;max-width:320px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:tutorialPop 0.4s ease-out;">' +
+      '<div style="font-size:28px;margin-bottom:8px;">👆</div>' +
+      '<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;">Листай вверх, чтобы идти дальше</div>' +
+      '<div style="font-size:13px;color:rgba(255,255,255,0.7);">Или жми стрелку вниз ↓</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    var remove = function() {
+      overlay.style.opacity = '0';
+      setTimeout(function() { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 400);
+      markUserInteraction();
+    };
+    overlay.addEventListener('click', remove);
+    overlay.addEventListener('touchstart', remove, { once: true });
+    document.addEventListener('keydown', remove, { once: true });
+  }
+
+  function showGameTutorial() {
+    if (gameTutorialShown) return;
+    gameTutorialShown = true;
+    var island = document.getElementById('bsGameIsland');
+    if (!island) return;
+    var rect = island.getBoundingClientRect();
+    var overlay = document.createElement('div');
+    overlay.id = 'game-tutorial-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5);pointer-events:auto;transition:opacity 0.4s;';
+    var tip = document.createElement('div');
+    tip.style.cssText = 'position:fixed;background:rgba(168,85,247,0.95);color:#fff;font-weight:700;font-size:14px;padding:10px 18px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.4);z-index:501;white-space:nowrap;animation:tutorialPop 0.4s ease-out;';
+    tip.textContent = '🎮 Нажми сюда, чтобы поиграть!';
+    overlay.appendChild(tip);
+    document.body.appendChild(overlay);
+    var posTip = function() {
+      var r = island.getBoundingClientRect();
+      tip.style.left = (r.left + r.width / 2 - tip.offsetWidth / 2) + 'px';
+      tip.style.top = (r.top - tip.offsetHeight - 12) + 'px';
+    };
+    requestAnimationFrame(posTip);
+    var remove = function() {
+      overlay.style.opacity = '0';
+      setTimeout(function() { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 400);
+    };
+    overlay.addEventListener('click', remove);
+    island.addEventListener('click', remove, { once: true });
   }
 
   function prevFrame() {
@@ -1775,32 +1859,68 @@ const App = (function() {
       return;
     }
 
+    // If only one book, hide tabs and show a simple heading
+    var singleBook = APP_BOOKS.length === 1;
+    if (singleBook) {
+      tabsContainer.style.display = 'none';
+    } else {
+      tabsContainer.style.display = '';
+    }
+
+    var hasAnyProgress = false;
+    try {
+      var prof = PlayerProfile.load();
+      for (var _ek in prof.episodes) {
+        if (prof.episodes[_ek].maxFrame >= 0) { hasAnyProgress = true; break; }
+      }
+    } catch (_e) {}
+
     APP_BOOKS.forEach(function(book, bookIdx) {
-      var tab = document.createElement('button');
-      tab.className = 'book-tab' + (bookIdx === 0 ? ' active' : '');
-      tab.textContent = (window.I18n ? I18n.t('app.book') : 'Книга') + ' ' + book.num;
-      tab.addEventListener('click', function() {
-        tabsContainer.querySelectorAll('.book-tab').forEach(function(t) { t.classList.remove('active'); });
-        tab.classList.add('active');
-        contentContainer.querySelectorAll('.book-grid').forEach(function(g) { g.classList.add('hidden'); });
-        var target = document.getElementById('bookGrid' + book.num);
-        if (target) target.classList.remove('hidden');
-      });
-      tabsContainer.appendChild(tab);
+      if (!singleBook) {
+        var tab = document.createElement('button');
+        tab.className = 'book-tab' + (bookIdx === 0 ? ' active' : '');
+        tab.textContent = (window.I18n ? I18n.t('app.book') : 'Книга') + ' ' + book.num;
+        tab.addEventListener('click', function() {
+          tabsContainer.querySelectorAll('.book-tab').forEach(function(t) { t.classList.remove('active'); });
+          tab.classList.add('active');
+          contentContainer.querySelectorAll('.book-grid').forEach(function(g) { g.classList.add('hidden'); });
+          var target = document.getElementById('bookGrid' + book.num);
+          if (target) target.classList.remove('hidden');
+        });
+        tabsContainer.appendChild(tab);
+      } else {
+        var heading = document.createElement('h2');
+        heading.textContent = window.I18n ? I18n.t('app.chapters') : 'Главы';
+        heading.style.cssText = 'margin:0 0 16px;font-size:22px;font-weight:800;color:#fff;';
+        contentContainer.appendChild(heading);
+      }
 
       var grid = document.createElement('div');
       grid.className = 'book-grid' + (bookIdx === 0 ? '' : ' hidden');
       grid.id = 'bookGrid' + book.num;
+      if (singleBook) grid.classList.remove('hidden');
 
       book.episodes.forEach(function(ep, epIdx) {
         var locked = isEpisodeLocked(book.episodes, epIdx);
         var status = getEpisodeStatus(ep.id);
         var progress = getEpisodeProgress(ep.id);
+        var isFirst = epIdx === 0;
+        var cached = episodesCache[ep.id];
+
         var mini = document.createElement('div');
-        mini.className = 'episode-mini' + (locked ? ' locked' : '');
+        // First episode for new players gets a highlight style
+        if (isFirst && !hasAnyProgress && !locked) {
+          mini.className = 'episode-mini episode-mini-featured';
+          mini.style.cssText = 'grid-column:1 / -1;border:2px solid #a855f7;box-shadow:0 0 20px rgba(168,85,247,0.3);';
+        } else {
+          mini.className = 'episode-mini' + (locked ? ' locked' : '');
+        }
+        if (locked) {
+          mini.style.opacity = '0.5';
+          mini.style.filter = 'grayscale(0.6)';
+        }
         mini.dataset.episode = ep.id;
 
-        var cached = episodesCache[ep.id];
         var coverImg = document.createElement('img');
         coverImg.className = 'episode-mini-cover';
         coverImg.alt = '';
@@ -1810,24 +1930,29 @@ const App = (function() {
         loadWebP(coverImg, coverSrc);
         coverImg.onerror = function() { coverImg.style.display = 'none'; };
 
-        var numEl = document.createElement('div');
-        numEl.className = 'episode-mini-num';
-        numEl.textContent = (window.I18n ? I18n.t('app.ep') : 'Эп.') + ' ' + ep.id;
+        var infoWrap = document.createElement('div');
+        infoWrap.style.cssText = 'padding:10px 12px;display:flex;flex-direction:column;gap:4px;flex:1;';
 
         var titleEl = document.createElement('div');
         titleEl.className = 'episode-mini-title';
         titleEl.textContent = cached && cached.title ? cached.title : ep.title;
+        titleEl.style.fontSize = isFirst && !hasAnyProgress && !locked ? '16px' : '';
+        titleEl.style.fontWeight = isFirst && !hasAnyProgress && !locked ? '800' : '';
 
-        var statusEl = document.createElement('div');
-        statusEl.className = 'episode-mini-status';
+        var metaEl = document.createElement('div');
+        metaEl.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.6);';
         if (locked) {
-          statusEl.textContent = '\uD83D\uDD12';
+          metaEl.textContent = '🔒 Пройди предыдущую главу';
         } else if (status.completed) {
-          statusEl.textContent = '\u2705';
+          metaEl.textContent = '✅ Пройдена';
         } else if (status.seen) {
-          statusEl.textContent = '\u25B6';
+          metaEl.textContent = '▶ Продолжить (' + Math.round(progress.percent) + '%)';
+        } else if (isFirst && !hasAnyProgress) {
+          metaEl.textContent = '▶ Начни отсюда';
+          metaEl.style.color = '#e879f9';
+          metaEl.style.fontWeight = '700';
         } else {
-          statusEl.textContent = '\u26AA';
+          metaEl.textContent = '⚪ Не начата';
         }
 
         var progressTrack = document.createElement('div');
@@ -1837,44 +1962,18 @@ const App = (function() {
         progressFill.style.width = progress.percent + '%';
         progressTrack.appendChild(progressFill);
 
+        infoWrap.appendChild(titleEl);
+        infoWrap.appendChild(metaEl);
+        if (!locked) infoWrap.appendChild(progressTrack);
+
         mini.appendChild(coverImg);
-        mini.appendChild(numEl);
-        mini.appendChild(titleEl);
-        mini.appendChild(statusEl);
-        mini.appendChild(progressTrack);
+        mini.appendChild(infoWrap);
 
         if (!locked) {
           mini.addEventListener('click', function() {
             startEpisode(ep.id);
           });
         }
-
-        // Hover preview
-        mini.addEventListener('mouseenter', function(e) {
-          var tip = document.getElementById('episode-hover-tip');
-          if (!tip) {
-            tip = document.createElement('div');
-            tip.id = 'episode-hover-tip';
-            tip.style.cssText = 'position:fixed;z-index:1000;background:rgba(15,8,35,0.95);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:12px;max-width:220px;pointer-events:none;box-shadow:0 20px 40px rgba(0,0,0,0.5);transition:opacity 0.2s;';
-            document.body.appendChild(tip);
-          }
-          var desc = cached && cached.description ? cached.description : '';
-          tip.innerHTML = '<img src="' + (coverImg.src || '') + '" style="width:100%;height:auto;border-radius:8px;margin-bottom:8px;display:block;">' +
-            '<div style="font-weight:700;font-size:13px;color:#fff;margin-bottom:4px;">' + (cached && cached.title ? cached.title : ep.title) + '</div>' +
-            '<div style="font-size:12px;color:rgba(255,255,255,0.7);line-height:1.4;">' + (desc.length > 80 ? desc.substring(0, 80) + '…' : desc) + '</div>';
-          tip.style.opacity = '1';
-          var rect = mini.getBoundingClientRect();
-          var left = rect.right + 8;
-          var top = rect.top;
-          if (left + 220 > window.innerWidth) left = rect.left - 228;
-          if (top + 150 > window.innerHeight) top = window.innerHeight - 160;
-          tip.style.left = left + 'px';
-          tip.style.top = top + 'px';
-        });
-        mini.addEventListener('mouseleave', function() {
-          var tip = document.getElementById('episode-hover-tip');
-          if (tip) tip.style.opacity = '0';
-        });
 
         grid.appendChild(mini);
       });
@@ -2001,8 +2100,8 @@ const App = (function() {
       const deltaY = y - startY;
       const deltaX = x - startX;
       if (Math.abs(deltaX) > Math.abs(deltaY)) return;
-      if (deltaY < -SWIPE_THRESHOLD) nextFrame();
-      else if (deltaY > SWIPE_THRESHOLD) prevFrame();
+      if (deltaY < -SWIPE_THRESHOLD) { markUserInteraction(); nextFrame(); }
+      else if (deltaY > SWIPE_THRESHOLD) { markUserInteraction(); prevFrame(); }
     }
 
     frameContainer.addEventListener('touchstart', e => {
@@ -2271,6 +2370,16 @@ const App = (function() {
 
   // ─── INIT ───
   function init() {
+    // Storage version migration — bump to invalidate old player data
+    try {
+      var STORAGE_VERSION = '2';
+      var savedVer = localStorage.getItem('superglazka_version');
+      if (savedVer !== STORAGE_VERSION) {
+        localStorage.clear();
+        localStorage.setItem('superglazka_version', STORAGE_VERSION);
+      }
+    } catch (e) {}
+
     var settingsDropdown = null;
     var faqDropdown = null;
     ThemeManager.init();
@@ -2286,13 +2395,23 @@ const App = (function() {
     initSwipe();
     BottomSheet.init();
     renderContinueButton();
-    startCountdown('2026-05-25T12:00:00'); // TODO: replace with dynamic next chapter date
+    startCountdown('2026-06-18T12:00:00'); // Next chapter release date
+    // Hide top row if both cards are invisible
+    setTimeout(function() {
+      var topRow = document.querySelector('.menu-top-row');
+      if (topRow) {
+        var visible = topRow.querySelectorAll('.continue-card:not([style*="display: none"]), .countdown-card:not([style*="display: none"])');
+        if (!visible.length) topRow.style.display = 'none';
+      }
+    }, 500);
     AudioController.onAudioStart((audio) => syncSubtitles(audio));
 
     const navArrowUp = document.getElementById('navArrowUp');
     const navArrowDown = document.getElementById('navArrowDown');
-    if (navArrowUp) navArrowUp.addEventListener('click', () => prevFrame());
-    if (navArrowDown) navArrowDown.addEventListener('click', () => nextFrame());
+    if (navArrowUp) navArrowUp.addEventListener('click', () => { markUserInteraction(); prevFrame(); });
+    if (navArrowDown) navArrowDown.addEventListener('click', () => { markUserInteraction(); nextFrame(); });
+    var floatHint = document.getElementById('floatNextHint');
+    if (floatHint) floatHint.addEventListener('click', () => { markUserInteraction(); nextFrame(); });
 
     const subOverlay = document.getElementById('subtitleOverlay');
     if (subOverlay) {
@@ -2418,11 +2537,12 @@ const App = (function() {
     document.addEventListener('keydown', (e) => {
       if (!episodeViewer || !episodeViewer.classList.contains('active')) return;
       if (e.key === 'ArrowRight' || e.key === ' ') {
+        markUserInteraction();
         const frameData = frames[currentFrameIdx];
         if (frameData && frameData.game) BottomSheet.showGameIsland(frameData.game);
         else nextFrame();
       }
-      if (e.key === 'ArrowLeft') prevFrame();
+      if (e.key === 'ArrowLeft') { markUserInteraction(); prevFrame(); }
       if (e.key === 'Escape') backToMenu();
     });
   }

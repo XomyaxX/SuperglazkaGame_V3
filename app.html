@@ -29,6 +29,14 @@
 @media (orientation: landscape) and (max-height: 500px) {
   #landscapeHint { display: flex !important; }
 }
+@keyframes floatPulse {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes tutorialPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
 .lang-switcher { position:relative; display:inline-flex; align-items:center; }
 .lang-switcher-trigger {
   background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
@@ -89,10 +97,7 @@ if ('serviceWorker' in navigator) {
     <nav class="app-nav" aria-label="Основная навигация">
       <a href="index.html" data-i18n="nav.home">Главная</a>
       <a href="blog.html" data-i18n="nav.blog">Блог</a>
-      <a href="parents.html" data-i18n="nav.parents">Родителям</a>
-      <a href="checklist.html" data-i18n="nav.checklist">Чек-лист</a>
       <button id="menuSettingsBtn" aria-label="Настройки" data-i18n="nav.settings">⚙️</button>
-      <button class="achievements-menu-btn" id="achievementsMenuBtn" title="Достижения" aria-label="Достижения" data-i18n-title="nav.achievements">🏆</button>
       <button class="profile-btn" id="menuProfileBtn" title="Профиль" aria-label="Профиль" data-i18n-title="nav.profile">
         <span>👤</span>
         <span class="profile-coins-val">0</span>
@@ -107,10 +112,7 @@ if ('serviceWorker' in navigator) {
     <button class="app-nav-mobile-close" id="appNavClose" aria-label="Закрыть">✕</button>
     <a href="index.html" data-i18n="nav.home">Главная</a>
     <a href="blog.html" data-i18n="nav.blog">Блог</a>
-    <a href="parents.html" data-i18n="nav.parents">Родителям</a>
-    <a href="checklist.html" data-i18n="nav.checklist">Чек-лист</a>
     <button id="menuSettingsBtnMobile" class="app-nav-mobile-btn" data-i18n="nav.settings">⚙️ Настройки</button>
-    <button class="achievements-menu-btn app-nav-mobile-btn" id="achievementsMenuBtnMobile" title="Достижения" aria-label="Достижения" data-i18n-title="nav.achievements">🏆 Достижения</button>
     <button class="profile-btn app-nav-mobile-btn" id="menuProfileBtnMobile" title="Профиль" aria-label="Профиль" data-i18n-title="nav.profile">
       <span>👤</span>
       <span data-i18n="nav.profile">Профиль</span>
@@ -394,6 +396,11 @@ if ('serviceWorker' in navigator) {
   <div class="nav-arrows" id="navArrows">
     <button class="nav-arrow nav-arrow-up" id="navArrowUp" title="Предыдущий кадр" aria-label="Предыдущий кадр">▲</button>
     <button class="nav-arrow nav-arrow-down" id="navArrowDown" title="Следующий кадр" aria-label="Следующий кадр">▼</button>
+  </div>
+
+  <!-- Floating next hint -->
+  <div id="floatNextHint" style="position:fixed;bottom:32px;right:32px;z-index:200;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,0.95);box-shadow:0 4px 20px rgba(0,0,0,0.3);display:none;align-items:center;justify-content:center;cursor:pointer;animation:floatPulse 1.5s ease-in-out infinite;">
+    <span style="font-size:24px;color:#7c3aed;">↓</span>
   </div>
 </div>
 
