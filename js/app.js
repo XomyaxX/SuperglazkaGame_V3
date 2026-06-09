@@ -194,6 +194,12 @@ const AppSettings = {
       AudioController.currentAudio.volume = AudioController.volume;
     }
 
+    // Sync video audio volume with narration volume when using video audio
+    const activeVideo = document.querySelector('.frame.active .video-layer video[data-use-video-audio="1"]');
+    if (activeVideo) {
+      activeVideo.volume = (d.narrationVolume || 0) / 100;
+    }
+
     if (typeof BackgroundMusic !== 'undefined') {
       const bgmOn = (d.bgMusicVolume || 0) > 0;
       BackgroundMusic.setEnabled(bgmOn);
@@ -1065,6 +1071,7 @@ const App = (function() {
         if (Array.isArray(availableGames)) {
           availableGames = availableGames.map(function(g) { return g === 'tracker' ? 'peripheral' : g; });
         }
+        var useVideoAudio = !!(f.use_video_audio || f.useVideoAudio);
         return {
           id: f.id != null ? f.id : (idx + 1),
           title: f.title || '',
@@ -1072,7 +1079,7 @@ const App = (function() {
           bgImage: resolveMediaPath(f.background_image || f.bgImage),
           bgImageMobile: resolveMediaPath(f.background_image_mobile || f.bgImageMobile),
           bgGradient: f.bg_gradient || f.bgGradient || f.mood || null,
-          audioSrc: resolveMediaPath(f.audio_src || f.audioSrc),
+          audioSrc: useVideoAudio ? '' : resolveMediaPath(f.audio_src || f.audioSrc),
           videoSrc: resolveMediaPath(f.background_video || f.videoSrc),
           videoSrcMobile: resolveMediaPath(f.background_video_mobile || f.videoSrcMobile),
           dialogues: dialogues,
@@ -1081,7 +1088,8 @@ const App = (function() {
           game: gameType,
           videoPrompt: f.video_prompt || f.videoPrompt || '',
           availableGames: availableGames,
-          choices: choices
+          choices: choices,
+          useVideoAudio: useVideoAudio
         };
       })
     };
@@ -1127,8 +1135,13 @@ const App = (function() {
       const video = document.createElement('video');
       video.src = activeVideoSrc;
       video.setAttribute('playsinline', '');
-      video.setAttribute('muted', '');
       video.setAttribute('preload', 'metadata');
+      if (frameData.useVideoAudio) {
+        video.dataset.useVideoAudio = '1';
+        video.volume = (AppSettings.get('narrationVolume') || 0) / 100;
+      } else {
+        video.setAttribute('muted', '');
+      }
 
       video.addEventListener('error', function() {
         videoLayer.classList.add('video-error');
@@ -2057,8 +2070,13 @@ const App = (function() {
         if (previewInfo) previewInfo.classList.add('hidden');
         if (video) {
           video.classList.add('visible');
-          video.muted = true;
-          video.volume = 0;
+          if (video.dataset.useVideoAudio === '1') {
+            video.muted = false;
+            video.volume = (AppSettings.get('narrationVolume') || 0) / 100;
+          } else {
+            video.muted = true;
+            video.volume = 0;
+          }
           video.play().catch(() => {});
         }
         playBtn.style.display = 'none';

@@ -151,9 +151,10 @@ router.post('/episodes/:id/publish', async (req, res) => {
 // POST /api/admin/episodes/:id/frames
 router.post('/episodes/:id/frames', async (req, res) => {
   try {
-    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
+    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient, use_video_audio } = req.body;
+    const useVideoAudioVal = (use_video_audio === true || use_video_audio === 1) ? 1 : 0;
     const result = await run(
-      'INSERT INTO frames (episode_id, "order", title, narration, dialogue_json, dialogue_audio_json, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices_json, transition_text, video_prompt, available_games_json, bg_gradient) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO frames (episode_id, "order", title, narration, dialogue_json, dialogue_audio_json, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices_json, transition_text, video_prompt, available_games_json, bg_gradient, use_video_audio) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         req.params.id, order ?? 0, title || '', narration || '',
         dialogue ? JSON.stringify(dialogue) : '[]',
@@ -162,7 +163,8 @@ router.post('/episodes/:id/frames', async (req, res) => {
         choices ? JSON.stringify(choices) : '[]',
         transition_text || '', video_prompt || '',
         available_games ? JSON.stringify(available_games) : '[]',
-        bg_gradient || ''
+        bg_gradient || '',
+        useVideoAudioVal
       ]
     );
     res.json({ success: true, id: result.lastID });
@@ -175,9 +177,10 @@ router.post('/episodes/:id/frames', async (req, res) => {
 // PUT /api/admin/frames/:id
 router.put('/frames/:id', async (req, res) => {
   try {
-    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient } = req.body;
+    const { order, title, narration, dialogue, dialogue_audio, background_image, background_video, background_image_mobile, background_video_mobile, audio_src, mood, game_type, choices, transition_text, video_prompt, available_games, bg_gradient, use_video_audio } = req.body;
+    const useVideoAudioVal = (use_video_audio === true || use_video_audio === 1) ? 1 : 0;
     await run(
-      'UPDATE frames SET "order" = ?, title = ?, narration = ?, dialogue_json = ?, dialogue_audio_json = ?, background_image = ?, background_video = ?, background_image_mobile = ?, background_video_mobile = ?, audio_src = ?, mood = ?, game_type = ?, choices_json = ?, transition_text = ?, video_prompt = ?, available_games_json = ?, bg_gradient = ? WHERE id = ?',
+      'UPDATE frames SET "order" = ?, title = ?, narration = ?, dialogue_json = ?, dialogue_audio_json = ?, background_image = ?, background_video = ?, background_image_mobile = ?, background_video_mobile = ?, audio_src = ?, mood = ?, game_type = ?, choices_json = ?, transition_text = ?, video_prompt = ?, available_games_json = ?, bg_gradient = ?, use_video_audio = ? WHERE id = ?',
       [
         order ?? 0, title || '', narration || '',
         dialogue ? JSON.stringify(dialogue) : '[]',
@@ -187,6 +190,7 @@ router.put('/frames/:id', async (req, res) => {
         transition_text || '', video_prompt || '',
         available_games ? JSON.stringify(available_games) : '[]',
         bg_gradient || '',
+        useVideoAudioVal,
         req.params.id
       ]
     );

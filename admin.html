@@ -1094,6 +1094,10 @@ function renderFrameEditor() {
             ${uploads.videoSrcMobile || f.background_video_mobile || f.videoSrcMobile ? `<video controls style="max-width:100%;max-height:160px;border-radius:8px;" src="${UPLOADS_BASE}${uploads.videoSrcMobile || f.background_video_mobile || f.videoSrcMobile}"></video>` : '<div>Загрузить вертикальное видео</div>'}
           </div>
         </div>
+        <div class="form-group" style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <input type="checkbox" id="frameUseVideoAudio" ${f.use_video_audio || f.useVideoAudio ? 'checked' : ''} onchange="scheduleFrameAutoSave()">
+          <label for="frameUseVideoAudio" style="margin:0;font-weight:500;">🔊 Использовать звук из видео вместо озвучки</label>
+        </div>
         <div class="form-group">
           <label>Озвучка повествования</label>
           <div class="dropzone" onclick="document.getElementById('frameAudioInput').click()" id="frameAudioDropzone">
@@ -1441,6 +1445,7 @@ function collectFramePayload() {
     background_image_mobile: uploads.bgImageMobile || selectedFrame.background_image_mobile || selectedFrame.bgImageMobile || '',
     background_video_mobile: uploads.videoSrcMobile || selectedFrame.background_video_mobile || selectedFrame.videoSrcMobile || '',
     audio_src: uploads.audioSrc || selectedFrame.audio_src || selectedFrame.audioSrc || '',
+    use_video_audio: document.getElementById('frameUseVideoAudio')?.checked ? 1 : 0,
     mood: document.getElementById('frameMood')?.value || '',
     game_type: document.getElementById('frameGame')?.value || '',
     choices: selectedFrame.choices || [],
@@ -1467,6 +1472,8 @@ async function saveFrameNow(silent = false) {
       background_image_mobile: payload.background_image_mobile,
       background_video_mobile: payload.background_video_mobile,
       audio_src: payload.audio_src,
+      use_video_audio: payload.use_video_audio,
+      useVideoAudio: payload.use_video_audio,
       mood: payload.mood,
       game_type: payload.game_type,
       transition_text: payload.transition_text,

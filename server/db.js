@@ -181,6 +181,10 @@ async function init() {
       await run(`ALTER TABLE frames ADD COLUMN background_video_mobile TEXT`);
       console.log('Migration applied: added background_video_mobile to frames');
     }
+    if (!colNames.includes('use_video_audio')) {
+      await run(`ALTER TABLE frames ADD COLUMN use_video_audio INTEGER DEFAULT 0`);
+      console.log('Migration applied: added use_video_audio to frames');
+    }
   } catch (migErr) {
     console.warn('Frames migration check skipped:', migErr.message);
   }
